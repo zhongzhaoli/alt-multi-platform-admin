@@ -1,0 +1,46 @@
+:root {
+  /* Global */
+  --body-min-width: 1200px;
+
+  /* Normal */
+  --normal-padding: 12px;
+
+  /* Logo */
+  --logo-height: 54px;
+
+  /* Sidebar */
+  --sidebar-width: 220px;
+  /* 背景颜色 */
+  --sidebar-dark-bg-color: #001529;
+  /* SubMenu子集背景色 */
+  --sidebar-sub-dark-bg-color: #0c2135;
+  /* Collapse Item背景色 */
+  --sider-collapse-dark-bg-color: #00061a;
+  /* Collapse宽度 */
+  --sidebar-closed-width: 55px;
+  /* Collapse Item高度 */
+  --sidebar-closed-sub-item-height: 45px;
+  /* Sidebar Item Margin */
+  --sidebar-margin: 4px;
+
+  /* Navbar */
+  --navbar-height: var(--logo-height);
+  /* 背景颜色 */
+  --navbar-background-color: #fff;
+  /* 小功能组件大小 */
+  --navbar-widget-size: 44px;
+  /* Navbar边距 */
+  --navbar-padding: 0 5px;
+
+  /* TagsView */
+  --tagsView-height: 40px;
+  /* 激活背景颜色 */
+  --tagsView-active-background-color: var(--el-color-primary-light-9);
+  /* 激活文字颜色 */
+  --tagsView-active-text-color: var(--el-color-primary);
+
+  /* AppMain */
+  --appMain-height: calc(100vh - var(--navbar-height) - var(--tagsView-height));
+  /* 背景颜色 */
+  --appMain-background-color: #f6f8f9;
+}

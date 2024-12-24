@@ -1,0 +1,290 @@
+// 样式变量
+@use './variables.css' as *;
+// Element Plus 样式覆盖
+@use './element-plus.scss' as *;
+// 混合样式
+@use './mixins.scss' as *;
+// 动画样式
+@use './transition.scss' as *;
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  vertical-align: bottom;
+}
+
+// scroll
+::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(0 0 0 / 5%);
+}
+
+::-webkit-scrollbar-thumb {
+  // background-color: rgba(144, 147, 153, 0.3);
+  // background: rgba(0, 0, 0, 0.6);
+  background-color: rgb(144 147 153 / 20%);
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 1%);
+}
+
+.scrollContainer {
+  padding: var(--normal-padding);
+  box-sizing: border-box;
+}
+
+.container {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--normal-padding);
+  box-sizing: border-box;
+  & > .filterBox {
+    @include containerBox();
+    padding-bottom: 0;
+  }
+  &.tabsBox {
+    & > .el-tabs {
+      height: 100%;
+      & .el-tab-pane {
+        height: 100%;
+      }
+    }
+  }
+  & > .tableBox {
+    @include containerBox();
+    margin-top: var(--normal-padding);
+    flex: 1;
+    overflow: hidden;
+    .el-table {
+      & th > .cell {
+        font-size: 13px;
+        font-weight: bold;
+        color: #333333;
+      }
+    }
+  }
+}
+
+// Navbar 小功能
+.navbarWidgetItem {
+  @extend .flex-center;
+  width: var(--navbar-widget-size);
+  height: var(--navbar-widget-size);
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+  & > i[class^='ri-'] {
+    font-size: 18px;
+    color: var(--navbar-widget-icon-color);
+  }
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.tooltipTitle {
+  max-width: 200px;
+  word-break: break-all;
+}
+
+.copyLinkPopover {
+  padding: 6px 10px !important;
+  min-width: 80px !important;
+  width: unset !important;
+  text-align: center;
+  & > .link {
+    font-size: 12px;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.2s;
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
+}
+
+.dialogPsBox {
+  margin-bottom: var(--normal-padding);
+  .title {
+    font-size: 14px;
+    color: var(--text-color);
+    margin-bottom: 10px;
+  }
+  .desc {
+    font-size: 12px;
+    color: #888;
+    line-height: 20px;
+  }
+}
+
+.coverPreview {
+  padding: 0 !important;
+  width: 240px !important;
+  & > .el-image {
+    vertical-align: bottom;
+  }
+}
+
+// loading
+
+.loading-circle {
+  border: 2px solid var(--el-color-primary);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.flex-center {
+  @extend .d-flex;
+  @extend .align-center;
+  @extend .justify-center;
+}
+
+#nprogress {
+  pointer-events: none;
+
+  .bar {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    opacity: 0.75;
+    background-color: var(--el-color-primary);
+  }
+}
+
+// 下载 A 链接
+.downloadLinkElement {
+  color: var(--el-color-primary);
+  cursor: pointer;
+}
+
+// 复制Icon
+.renderCopyIcon {
+  width: unset;
+  display: inline-block;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-weight: normal;
+  &.primary {
+    color: var(--el-color-primary);
+  }
+  &.ml {
+    margin-left: 4px;
+  }
+  &.mr {
+    margin-right: 4px;
+  }
+  &:hover {
+    color: var(--el-color-primary);
+  }
+}
+
+.allowCreateSelectPopper {
+  display: none;
+}
+
+// 时间节点下拉框
+.timePopover {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  & > div {
+    position: relative;
+    padding-left: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    &.info {
+      &::before {
+        background-color: var(--el-color-info);
+      }
+    }
+    &.success {
+      &::before {
+        background-color: var(--el-color-success);
+      }
+    }
+    &.danger {
+      &::before {
+        background-color: var(--el-color-danger);
+      }
+    }
+    &::before {
+      content: ' ';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      left: 0;
+      position: absolute;
+    }
+  }
+  & > div:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
+
+// Item监控Echart
+.itemMonitorEchartBox {
+  & > .date {
+    margin-bottom: 10px;
+  }
+  & > .item {
+    display: flex;
+    align-items: center;
+    &.index_1 {
+      margin-top: 20px;
+    }
+    &:not(:last-child) {
+      margin-bottom: 4px;
+    }
+    &:last-child {
+      margin-top: 0;
+    }
+    & > .value {
+      text-align: right;
+      flex: 1;
+      font-weight: bold;
+    }
+  }
+}

@@ -1,0 +1,65 @@
+// Display
+$display: (block, inline, inline-block, flex, none, inline-flex);
+@each $name in $display {
+  .d-#{$name} {
+    display: #{$name};
+  }
+}
+
+$align: (center, start, end, baseline, stretch);
+@each $name in $align {
+  .align-#{$name} {
+    align-items: #{$name};
+  }
+}
+
+$justify: (center, start, end, space-between, around);
+@each $name in $justify {
+  .justify-#{$name} {
+    justify-content: #{$name};
+  }
+}
+
+$fl-type: (column, column-reverse);
+@each $name in $fl-type {
+  .fl-#{$name} {
+    flex-flow: #{$name};
+  }
+}
+
+@mixin containerBox() {
+  background-color: #fff;
+  padding: var(--normal-padding);
+  border-radius: 4px;
+}
+
+@for $i from 0 through 50 {
+  .mt-#{$i} {
+    margin-top: #{$i}px;
+  }
+}
+
+// 文字溢出省略号
+@mixin text-ellipsis($line: 1) {
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mb-normalPadding {
+  margin-bottom: var(--normal-padding);
+}
+.mt-normalPadding {
+  margin-top: var(--normal-padding);
+}
+.ml-normalPadding {
+  margin-left: var(--normal-padding);
+}
+.mr-normalPadding {
+  margin-right: var(--normal-padding);
+}
+
+.w-100 {
+  width: 100%;
+}
