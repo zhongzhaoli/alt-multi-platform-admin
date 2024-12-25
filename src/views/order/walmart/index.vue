@@ -174,7 +174,7 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
-import ProductItem from '../components/productItem.vue';
+import ProductItem from '../components/ProductItem.vue';
 import * as config from './config';
 import { ref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
@@ -287,10 +287,6 @@ const batchSetting = () => {
         height: 20px;
         background-color: #eaeaea;
         margin: 0 12px;
-      }
-      & > .frequencyText {
-        font-size: 14px;
-        color: #bdbdbd;
       }
     }
   }
