@@ -37,9 +37,6 @@
           <el-button link type="primary" @click="editStore(row)">
             店铺
           </el-button>
-          <el-button link type="primary" @click="editUserLevel(row)">
-            下级
-          </el-button>
           <el-button link type="primary" @click="deleteUser(row)">
             删除
           </el-button>
@@ -176,26 +173,6 @@
       @closed="selectStoreClosed"
       @submit="submitStoreFun"
     />
-    <SelectTarget
-      ref="selectUserRef"
-      name-key="user_name"
-      value-key="user_id"
-      :submit-loading="submitLoading"
-      :loading="selectLoading"
-      :api="API_USERS.getUserList"
-      :default-select-list="defaultSelectUserList"
-      :extra-params="{ all: true }"
-      :multiple="true"
-      @closed="selectUserClosed"
-      @submit="submitUserFun"
-    >
-      <template #title="{ row }">
-        <div class="selectTargetTitle">
-          <span>{{ row.user_name }}</span>
-          <span v-if="row.is_delete" class="desc">（已离职）</span>
-        </div>
-      </template>
-    </SelectTarget>
   </div>
 </template>
 <script setup lang="ts">
@@ -428,43 +405,6 @@ const editStore = async (row: API_USERS.UserProps) => {
 };
 const selectStoreClosed = () => {
   defaultSelectStoreList.value = [];
-};
-
-// 绑定下级
-const selectUserRef = ref<SelectTargetInstance | null>(null);
-const defaultSelectUserList = ref<string[]>([]);
-const submitUserFun = async (list: StoreProps['shop_id'][]) => {
-  if (tempUser.value && !submitLoading.value) {
-    submitLoading.value = true;
-    try {
-      await API_USERS.updateLevel({
-        user_id: list,
-        p_user_id: tempUser.value.user_id,
-      });
-      ElMessage.success('操作成功');
-      selectUserRef.value?.closeDialog();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      submitLoading.value = false;
-    }
-  }
-};
-const editUserLevel = async (row: API_USERS.UserProps) => {
-  tempUser.value = cloneDeep(row);
-  selectLoading.value = true;
-  selectUserRef.value?.openDialog();
-  try {
-    const { datas } = await API_USERS.getUserLevel(row.user_id);
-    defaultSelectUserList.value = datas || [];
-  } catch (err) {
-    console.log(err);
-  } finally {
-    selectLoading.value = false;
-  }
-};
-const selectUserClosed = () => {
-  defaultSelectUserList.value = [];
 };
 </script>
 <style lang="scss" scoped>

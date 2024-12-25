@@ -9,9 +9,7 @@ import { useTagsViewStore } from './tagsView';
 export interface UserInfo {
   user_id: string;
   user_name: string;
-  department_id: string;
   role_id: string;
-  department_name: string;
   role_name: string;
   permissions: Array<string>;
 }

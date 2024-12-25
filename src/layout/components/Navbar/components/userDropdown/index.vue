@@ -2,7 +2,7 @@
   <el-dropdown trigger="hover" @command="handleCommand">
     <div class="userDropdownContainer navbarWidgetItem">
       <div class="userInfo">
-        <span class="department">{{ userInfo?.department_name || '无部门' }} - {{ userInfo?.role_name || '无角色' }}</span>
+        <span class="department">{{ userInfo?.role_name || '无角色' }}</span>
         <span class="name">{{ userInfo?.user_name || '' }}</span>
       </div>
       <el-avatar class="avatar" shape="square" :size="32" :src="logo" />
@@ -23,7 +23,9 @@ import { useRouter } from 'vue-router';
 import { logout as logoutApi } from '@/api/user/login';
 import { ElMessage } from 'element-plus';
 import logo from '@/assets/avatar.jpg';
-import ChangePassword, { type ChangePasswordInstance } from './components/changePassword.vue';
+import ChangePassword, {
+  type ChangePasswordInstance,
+} from './components/changePassword.vue';
 
 const userStore = useUserStore();
 const routerStore = useRouter();
@@ -42,7 +44,8 @@ const handleCommand = async (command: string | number | object) => {
       ElMessage.success('退出成功');
     }, 0);
   }
-  if (command === 'updatePassword') if (changePasswrd.value) changePasswrd.value.openDialog();
+  if (command === 'updatePassword')
+    if (changePasswrd.value) changePasswrd.value.openDialog();
 };
 </script>
 <style lang="scss" scoped>
