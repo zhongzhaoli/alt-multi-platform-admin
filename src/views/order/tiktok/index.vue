@@ -169,7 +169,7 @@ import {
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
 
-// 或者列表
+// 获取列表
 const filterValue = ref<Partial<TiktokOrderFilterProps>>({});
 const tableData = ref<TiktokOrderProps[]>([]);
 const loading = ref(false);
