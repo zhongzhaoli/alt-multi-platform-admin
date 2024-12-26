@@ -1,7 +1,11 @@
-import type { TableColumnProps } from "tsx-element-table";
+import type {
+  HandleRightColumnProps,
+  TableColumnProps,
+} from "tsx-element-table";
 import { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { TiktokStausEnum } from "@/api/order/tiktok";
 import { h } from "vue";
+import { Download } from "@element-plus/icons-vue";
 
 const tiktokStatusMap: Array<{ label: string; value: TiktokStausEnum }> = [
   {
@@ -185,5 +189,15 @@ export const tableColumns: TableColumnProps[] = [
     width: 100,
     fixed: "right",
     prop: "action",
+  },
+];
+
+// 右侧导出按钮
+export const handleRightColumns: HandleRightColumnProps[] = [
+  {
+    key: "export",
+    tooltip: "数据导出",
+    loading: false,
+    icon: Download,
   },
 ];

@@ -1,7 +1,11 @@
-import type { TableColumnProps } from "tsx-element-table";
+import type {
+  HandleRightColumnProps,
+  TableColumnProps,
+} from "tsx-element-table";
 import { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { h } from "vue";
 import { WalmartStausEnum } from "@/api/order/walmart";
+import { Download } from "@element-plus/icons-vue";
 
 const walmartStatusMap: Array<{ label: string; value: WalmartStausEnum }> = [
   {
@@ -165,5 +169,15 @@ export const tableColumns: TableColumnProps[] = [
     width: 100,
     fixed: "right",
     prop: "action",
+  },
+];
+
+// 右侧导出按钮
+export const handleRightColumns: HandleRightColumnProps[] = [
+  {
+    key: "export",
+    tooltip: "数据导出",
+    loading: false,
+    icon: Download,
   },
 ];

@@ -1,6 +1,10 @@
 import { ProductStatusEnum } from "@/api/product/tiktok";
 import type { FilterColumnsProp } from "@/components/FilterContainer/types";
-import type { TableColumnProps } from "tsx-element-table";
+import { Download } from "@element-plus/icons-vue";
+import type {
+  HandleRightColumnProps,
+  TableColumnProps,
+} from "tsx-element-table";
 import { h } from "vue";
 
 const tiktokProductStatusMap: Array<{
@@ -107,5 +111,15 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     prop: "stockWarning",
     minWidth: 140,
+  },
+];
+
+// 右侧导出按钮
+export const handleRightColumns: HandleRightColumnProps[] = [
+  {
+    key: "export",
+    tooltip: "数据导出",
+    loading: false,
+    icon: Download,
   },
 ];

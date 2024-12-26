@@ -19,6 +19,7 @@
         }"
         :handle="{
           show: true,
+          rightColumns: config.handleRightColumns,
         }"
         :pagination="{
           total,
