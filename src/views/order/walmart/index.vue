@@ -64,13 +64,14 @@
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              type="ordinary"
-              :item="{
-                imageUrl: row.productImageUrl,
-                productName: row.productName,
-                skuPrefix: 'MSKU：',
-                sku: row.productSku,
-              }"
+              :image-url="row.productImageUrl"
+              :product-name="row.productName"
+              :desc-list="[
+                {
+                  text: row.productSku,
+                  prefix: 'SKU：',
+                },
+              ]"
             />
             <div class="quantityAmount">x{{ row.orderLineQuantity || 0 }}</div>
           </div>
@@ -91,19 +92,7 @@
         </template>
         <template #table-logisticsInfo="{ row }">
           <div>{{ row.carrierName }}</div>
-          <div>
-            <a
-              v-if="row.trackingNumber && row.trackingURL"
-              class="numberHrefItem"
-              :href="row.trackingURL"
-              target="_blank"
-            >
-              <i class="ri-share-box-line" />
-              <span class="productId">
-                <TextEllipsis :text="row.trackingNumber" />
-              </span>
-            </a>
-          </div>
+          <LinkItem :href="row.trackingURL" :text="row.trackingNumber" />
         </template>
         <template #table-action="{ row }">
           <el-button link type="primary" @click="singleDeliver(row)">
@@ -169,44 +158,45 @@
   </div>
 </template>
 <script setup lang="ts">
-import TsxElementTable from 'tsx-element-table';
-import FilterContainer from '@/components/FilterContainer/index.vue';
-import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import { RenderCopyIcon } from '@/utils/index';
-import TextEllipsis from '@/components/TextEllipsis/index.vue';
-import ProductItem from '../components/ProductItem.vue';
-import * as config from './config';
-import { ref } from 'vue';
-import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { WalmartOrderProps } from '@/api/order/walmart';
-import { cloneDeep } from 'lodash-es';
-import { ElMessage } from 'element-plus';
+import TsxElementTable from "tsx-element-table";
+import FilterContainer from "@/components/FilterContainer/index.vue";
+import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
+import { RenderCopyIcon } from "@/utils/index";
+import TextEllipsis from "@/components/TextEllipsis/index.vue";
+import LinkItem from "@/components/LinkItem/index.vue";
+import ProductItem from "@/components/ProductItem/index.vue";
+import * as config from "./config";
+import { ref } from "vue";
+import { PAGE, PAGE_SIZE } from "@/constants/app";
+import { WalmartOrderProps } from "@/api/order/walmart";
+import { cloneDeep } from "lodash-es";
+import { ElMessage } from "element-plus";
 
 // 或者列表
 const tableData = ref<WalmartOrderProps[]>([
   {
     id: 1,
-    shopName: '星与-沃尔玛-花仙兽',
-    purchaseOrderId: '108933798083879',
-    customerOrderId: '200012208264099',
-    orderStatus: 'Created',
+    shopName: "星与-沃尔玛-花仙兽",
+    purchaseOrderId: "108933798083879",
+    customerOrderId: "200012208264099",
+    orderStatus: "Created",
     productImageUrl:
-      'https://i5.walmartimages.com/asr/69065a2c-7bde-441f-a287-950cf514087f.10bb29be470fcf9020b4672fa59e2d28.jpeg?odnWidth=300&odnHeight=300',
+      "https://i5.walmartimages.com/asr/69065a2c-7bde-441f-a287-950cf514087f.10bb29be470fcf9020b4672fa59e2d28.jpeg?odnWidth=300&odnHeight=300",
     productName:
-      'Younghome Knife Set, 13 PCS Stainless Steel Kitchen Knife Block Set with Built-in Sharpener',
-    productSku: 'Zoe-Knifeset-13',
+      "Younghome Knife Set, 13 PCS Stainless Steel Kitchen Knife Block Set with Built-in Sharpener",
+    productSku: "Zoe-Knifeset-13",
     orderLineQuantity: 1,
-    asin: '108936145814153',
-    orderTime: '2024/08/01 12:00:00',
-    updateTime: '2024/08/01 12:00:00',
-    phone: '9196215516',
-    address1: '309 Southglen Drive',
+    asin: "108936145814153",
+    orderTime: "2024/08/01 12:00:00",
+    updateTime: "2024/08/01 12:00:00",
+    phone: "9196215516",
+    address1: "309 Southglen Drive",
     address2: null,
-    city: 'Cary',
-    state: 'NC',
-    carrierName: 'FedEx',
-    trackingNumber: '745444571803',
-    trackingURL: 'https://www.walmart.com/tracking?tracking_id=745444571803',
+    city: "Cary",
+    state: "NC",
+    carrierName: "FedEx",
+    trackingNumber: "745444571803",
+    trackingURL: "https://www.walmart.com/tracking?tracking_id=745444571803",
     totalAmount: 39.99,
     productAmount: 34.59,
     shippingFee: 4.4,
@@ -232,21 +222,21 @@ const singleDeliver = (row: WalmartOrderProps) => {
   dialogVisible.value = true;
 };
 const multipleDeliver = () => {
-  if (!selectionList.value.length) return ElMessage.warning('请选择订单');
+  if (!selectionList.value.length) return ElMessage.warning("请选择订单");
   selectedRows.value = cloneDeep(selectionList.value);
   dialogVisible.value = true;
 };
 const dialogClosed = () => {
-  batchName.value = '';
-  batchNumber.value = '';
+  batchName.value = "";
+  batchNumber.value = "";
   selectedRows.value = [];
 };
 
 // 批量设置
-const batchName = ref('');
-const batchNumber = ref('');
+const batchName = ref("");
+const batchNumber = ref("");
 const batchSetting = () => {
-  if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
+  if (!selectedRows.value.length) return ElMessage.warning("未选择订单");
   selectedRows.value.forEach((row: WalmartOrderProps) => {
     row.carrierName = batchName.value;
     row.trackingNumber = batchNumber.value;
@@ -260,7 +250,7 @@ const batchSetting = () => {
       flex: 1;
     }
     & .quantityAmount {
-      margin-left: 10px;
+      margin-left: var(--normal-padding);
       width: 30px;
       height: 30px;
       line-height: 30px;
@@ -268,18 +258,6 @@ const batchSetting = () => {
       font-size: 12px;
       background-color: #f6f6f6;
       border-radius: 6px;
-    }
-    & .numberHrefItem {
-      color: var(--el-color-primary);
-      transition: color 0.2s;
-      display: inline-flex;
-      &:hover {
-        color: var(--el-color-primary-light-5);
-      }
-      & > .productId {
-        margin-left: 4px;
-        cursor: pointer;
-      }
     }
     & .handleLeftBox {
       & > .vr {

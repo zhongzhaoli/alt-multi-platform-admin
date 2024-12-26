@@ -1,3 +1,15 @@
+export enum TiktokStausEnum {
+  "ON_HOLD" = "ON_HOLD",
+  "UNPAID" = "UNPAID",
+  "AWAITING_SHIPMENT" = "AWAITING_SHIPMENT",
+  "PARTIALLY_SHIPPING" = "PARTIALLY_SHIPPING",
+  "AWAITING_COLLECTION" = "AWAITING_COLLECTION",
+  "IN_TRANSIT" = "IN_TRANSIT",
+  "DELIVERED" = "DELIVERED",
+  "COMPLETED" = "COMPLETED",
+  "CANCELLED" = "CANCELLED",
+}
+
 export interface TiktokOrderProps {
   id: number;
   shopName: string;
