@@ -26,7 +26,7 @@ import {
   GetStoreDto,
   getStoreListAuth,
   StoreProps,
-} from "@/api/system/walmartStore";
+} from "@/api/system/tiktokStore";
 import SelectLoadMore from "@/components/SelectLoadMore/index.vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import { useVModel } from "@vueuse/core";

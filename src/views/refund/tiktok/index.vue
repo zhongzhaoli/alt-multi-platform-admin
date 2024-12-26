@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <div class="filterBox">
-      <FilterContainer :columns="config.filterColumns" />
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+      >
+        <template #shopId="{ form, row }">
+          <SelectTiktokStore v-model="form[row.prop]" @change="getListFun" />
+        </template>
+      </FilterContainer>
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -19,6 +27,8 @@
         :pagination="{
           total,
         }"
+        @table-refresh="getListFun"
+        @page-change="getListFun"
       >
         <template #handle-left>
           <div class="frequencyText">更新频率：每 3 个小时</div>
@@ -50,10 +60,24 @@
         <template #table-reason="{ row }">
           <TextEllipsis :text="row.reason" :line="2" />
         </template>
-        <template #table-action>
-          <el-button link type="primary">取消</el-button>
-          <el-button link type="primary">同意</el-button>
-          <el-button link type="primary">拒绝</el-button>
+        <template #table-action="{ row }">
+          <el-button link type="primary" @click="cancelOrderFun(row.orderSn)">
+            取消
+          </el-button>
+          <el-button
+            link
+            type="primary"
+            @click="reviewRefundFun(row.orderSn, true)"
+          >
+            同意
+          </el-button>
+          <el-button
+            link
+            type="primary"
+            @click="reviewRefundFun(row.orderSn, false)"
+          >
+            拒绝
+          </el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -61,37 +85,77 @@
 </template>
 <script setup lang="ts">
 import FilterContainer from "@/components/FilterContainer/index.vue";
+import SelectTiktokStore from "@/components/SelectTiktokStore/index.vue";
 import TsxElementTable from "tsx-element-table";
 import ProductItem from "@/components/ProductItem/index.vue";
 import TextEllipsis from "@/components/TextEllipsis/index.vue";
 import * as config from "./config";
 import { ref } from "vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
-import { RefundTiktokProps } from "@/api/refund/tiktok";
+import {
+  getTiktokRefundList,
+  cancelOrder,
+  reviewRefund,
+  RefundTiktokProps,
+  TiktokRefunFilterProps,
+} from "@/api/refund/tiktok";
 import { RenderCopyIcon } from "@/utils/index";
+import { useMessageBox } from "@/hooks/useMessageBox";
+import { ElMessage } from "element-plus";
 
-const tableData = ref<RefundTiktokProps[]>([
-  {
-    id: 1,
-    orderSn: "108933798083879",
-    shopName: "星与-沃尔玛-花仙兽",
-    orderStatus: "已发起",
-    productImageUrl:
-      "https://i5.walmartimages.com/asr/69065a2c-7bde-441f-a287-950cf514087f.10bb29be470fcf9020b4672fa59e2d28.jpeg?odnWidth=300&odnHeight=300",
-    productName:
-      "Younghome Knife Set, 13 PCS Stainless Steel Kitchen Knife Block Set with Built-in Sharpener",
-    productSku: "Zoe-Knifeset-13",
-    name: "cynthia palma",
-    reason:
-      "I want to return the product. Beautiful product, but not what I expected.",
-    orderAmount: 102.33,
-    requestDate: "2024/08/01 12:00:00",
-  },
-]);
+const filterValue = ref<Partial<TiktokRefunFilterProps>>({});
+const tableData = ref<RefundTiktokProps[]>([]);
 const total = ref(0);
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
 const loading = ref(false);
+const getListFun = async () => {
+  loading.value = true;
+  try {
+    const { datas } = await getTiktokRefundList({
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...filterValue.value,
+    });
+    tableData.value = datas?.data || [];
+    total.value = datas?.total || 0;
+    loading.value = false;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
+};
+getListFun();
+
+// 取消订单
+const cancelOrderFun = (orderSn: string) => {
+  useMessageBox("确定取消订单吗？", async () => {
+    try {
+      await cancelOrder(orderSn);
+      ElMessage.success("取消成功");
+      getListFun();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+// 审核退款
+const reviewRefundFun = (orderSn: string, review: boolean) => {
+  useMessageBox(
+    `确定 ${review ? "同意" : "拒绝"} 此订单的退款吗？`,
+    async () => {
+      try {
+        await reviewRefund(orderSn, review);
+        ElMessage.success("操作成功");
+        getListFun();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  );
+};
 </script>
 <style lang="scss" scoped>
 .container {

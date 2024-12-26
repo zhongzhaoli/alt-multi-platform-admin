@@ -1,7 +1,11 @@
 <template>
   <div class="container">
     <div class="filterBox">
-      <FilterContainer :columns="config.filterColumns" />
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+      />
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -19,6 +23,8 @@
         :pagination="{
           total,
         }"
+        @page-change="getListFun"
+        @table-refresh="getListFun"
       >
         <template #handle-left>
           <div class="frequencyText">更新频率：每天 1 点更新</div>
@@ -28,19 +34,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import FilterContainer from '@/components/FilterContainer/index.vue';
-import TsxElementTable from 'tsx-element-table';
-import * as config from './config';
-import { ref } from 'vue';
-import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { ListingProps } from '@/api/listing';
+import FilterContainer from "@/components/FilterContainer/index.vue";
+import TsxElementTable from "tsx-element-table";
+import * as config from "./config";
+import { ref } from "vue";
+import { PAGE, PAGE_SIZE } from "@/constants/app";
+import {
+  ListingFilterProps,
+  type ListingProps,
+  getListingList,
+} from "@/api/listing";
 
+// 获取列表
+const filterValue = ref<Partial<ListingFilterProps>>({});
 const tableData = ref<ListingProps[]>([
   {
     id: 1,
-    platform: '沃尔玛',
-    shopName: '星与-沃尔玛-花仙兽',
-    shopId: '101133243',
+    platform: "沃尔玛",
+    shopName: "星与-沃尔玛-花仙兽",
+    shopId: "101133243",
     totalLinkCount: 39123,
     onSaleLinkCount: 28192,
     todayOnSaleLinkCount: 1203,
@@ -51,5 +63,22 @@ const loading = ref(false);
 const total = ref(0);
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
+const getListFun = async () => {
+  loading.value = true;
+  try {
+    const { datas } = await getListingList({
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...filterValue.value,
+    });
+    tableData.value = datas?.data || [];
+    total.value = datas?.total || 0;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
+};
+getListFun();
 </script>
 <style lang="scss" scoped></style>

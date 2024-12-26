@@ -1,9 +1,9 @@
-import { ProductStatusEnum } from "@/api/product/walmart";
+import { ProductStatusEnum } from "@/api/product/tiktok";
 import type { FilterColumnsProp } from "@/components/FilterContainer/types";
 import type { TableColumnProps } from "tsx-element-table";
 import { h } from "vue";
 
-const walmartProductStatusMap: Array<{
+const tiktokProductStatusMap: Array<{
   label: string;
   value: ProductStatusEnum;
 }> = [
@@ -42,7 +42,7 @@ export const filterColumns: FilterColumnsProp[] = [
     label: "状态",
     prop: "status",
     type: "select",
-    selectOptions: walmartProductStatusMap,
+    selectOptions: tiktokProductStatusMap,
   },
 ];
 
@@ -88,7 +88,7 @@ export const tableColumns: TableColumnProps[] = [
     prop: "status",
     formatter: (_row, _column, cellValue) => {
       return (
-        walmartProductStatusMap.find((item) => item.value === cellValue)
+        tiktokProductStatusMap.find((item) => item.value === cellValue)
           ?.label || cellValue
       );
     },

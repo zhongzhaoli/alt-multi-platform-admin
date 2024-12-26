@@ -1,80 +1,130 @@
-import type { FilterColumnsProp } from '@/components/FilterContainer/types';
-import type { TableColumnProps } from 'tsx-element-table';
-import { h } from 'vue';
+import { OrderStatusEnum, TrackingStatusEnum } from "@/api/refund/walmart";
+import type { FilterColumnsProp } from "@/components/FilterContainer/types";
+import type { TableColumnProps } from "tsx-element-table";
+import { h } from "vue";
+
+export const orderStatusMap: Array<{
+  label: string;
+  value: OrderStatusEnum;
+}> = [
+  {
+    label: "已发起",
+    value: OrderStatusEnum.INITIATED,
+  },
+  {
+    label: "已取消",
+    value: OrderStatusEnum.CANCELLED,
+  },
+  {
+    label: "已退款",
+    value: OrderStatusEnum.REFUNDED,
+  },
+];
+
+export const trackingStatusMap: Array<{
+  label: string;
+  value: TrackingStatusEnum;
+}> = [
+  {
+    label: "已发起",
+    value: TrackingStatusEnum.INITIATED,
+  },
+  {
+    label: "在途",
+    value: TrackingStatusEnum.SHIPPING,
+  },
+  {
+    label: "已退回",
+    value: TrackingStatusEnum.RETURNED,
+  },
+];
 
 export const filterColumns: FilterColumnsProp[] = [
   {
-    label: '店铺名称',
-    prop: 'shopName',
-    type: 'select',
+    label: "店铺名称",
+    prop: "shopId",
   },
   {
-    label: 'PO单号',
-    type: 'multiple',
-    prop: 'poNo',
+    label: "PO单号",
+    type: "multiple",
+    prop: "poNo",
   },
   {
-    label: 'CO单号',
-    type: 'multiple',
-    prop: 'coNo',
+    label: "CO单号",
+    type: "multiple",
+    prop: "coNo",
   },
   {
-    label: '请求日期',
-    type: 'dateRange',
-    prop: 'requestDate',
+    label: "请求日期",
+    type: "dateRange",
+    startKey: "startDate",
+    endKey: "endDate",
+    prop: "requestDate",
   },
 ];
 
 export const tableColumns: TableColumnProps[] = [
   {
-    label: '订单号',
-    align: 'center',
+    label: "订单号",
+    align: "center",
     width: 220,
-    prop: 'orderNo',
+    prop: "orderNo",
   },
   {
-    label: '店铺名称',
-    align: 'center',
+    label: "店铺名称",
+    align: "center",
     width: 200,
-    prop: 'shopName',
+    prop: "shopName",
   },
   {
-    label: '商品信息',
-    align: 'center',
+    label: "商品信息",
+    align: "center",
     minWidth: 300,
-    prop: 'productInfo',
+    prop: "productInfo",
   },
   {
-    label: '订单总金额',
-    align: 'center',
-    prop: 'totalAmount',
+    label: "订单总金额",
+    align: "center",
+    prop: "orderAmount",
     minWidth: 140,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
   },
   {
-    label: '订单状态',
-    align: 'center',
+    label: "订单状态",
+    align: "center",
     minWidth: 120,
-    prop: 'orderStatus',
+    prop: "orderStatus",
+    formatter: (_row, _column, cellValue) => {
+      return (
+        orderStatusMap.find((item) => item.value === cellValue)?.label ||
+        cellValue
+      );
+    },
   },
   {
-    label: '追踪状态',
-    align: 'center',
-    prop: 'trackingStatus',
+    label: "追踪状态",
+    align: "center",
+    prop: "trackingStatus",
     minWidth: 120,
+    formatter: (_row, _column, cellValue) => {
+      return (
+        trackingStatusMap.find((item) => item.value === cellValue)?.label ||
+        cellValue
+      );
+    },
   },
   {
-    label: '客户姓名',
-    align: 'center',
-    prop: 'name',
+    label: "客户姓名",
+    align: "center",
+    prop: "name",
     minWidth: 140,
   },
   {
-    label: '请求日期',
-    align: 'center',
-    prop: 'requestDate',
+    label: "请求日期",
+    align: "center",
+    prop: "requestDate",
     minWidth: 140,
   },
 ];

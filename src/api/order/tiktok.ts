@@ -1,3 +1,6 @@
+import { ResponsePageJson } from "@/config/request";
+import { request } from "@/utils/request";
+
 export enum TiktokStausEnum {
   "ON_HOLD" = "ON_HOLD",
   "UNPAID" = "UNPAID",
@@ -36,4 +39,40 @@ export interface TiktokOrderProps {
   productAmount: number;
   shippingFee: number;
   taxFee: number;
+}
+
+export interface TiktokOrderFilterProps {
+  shopId: string;
+  orderSn: string;
+  orderStatus: TiktokStausEnum;
+}
+
+export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
+  page: number;
+  pageSize?: number;
+}
+
+// 列表
+export function getTiktokOrderList(
+  params: GetOrderDto,
+): Promise<ResponsePageJson<TiktokOrderProps>> {
+  return request({
+    url: "/order/tiktok/list",
+    method: "get",
+    params,
+  });
+}
+
+// 发货
+export interface DeliverProductsDto {
+  orderSn: string;
+  carrierName: string;
+  trackingNumber: string;
+}
+export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
+  return request({
+    url: "/order/tiktok/deliver",
+    method: "post",
+    data,
+  });
 }

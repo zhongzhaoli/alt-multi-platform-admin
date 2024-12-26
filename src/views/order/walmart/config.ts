@@ -1,134 +1,169 @@
-import type { TableColumnProps } from 'tsx-element-table';
-import { FilterColumnsProp } from '@/components/FilterContainer/types';
-import { h } from 'vue';
+import type { TableColumnProps } from "tsx-element-table";
+import { FilterColumnsProp } from "@/components/FilterContainer/types";
+import { h } from "vue";
+import { WalmartStausEnum } from "@/api/order/walmart";
+
+const walmartStatusMap: Array<{ label: string; value: WalmartStausEnum }> = [
+  {
+    label: "已创建",
+    value: WalmartStausEnum.Created,
+  },
+  {
+    label: "已确认",
+    value: WalmartStausEnum.Acknowledged,
+  },
+  {
+    label: "在途",
+    value: WalmartStausEnum.Shipped,
+  },
+  {
+    label: "已送达",
+    value: WalmartStausEnum.Delivered,
+  },
+  {
+    label: "已取消",
+    value: WalmartStausEnum.Cancelled,
+  },
+  {
+    label: "退款",
+    value: WalmartStausEnum.Refund,
+  },
+];
 
 export const filterColumns: FilterColumnsProp[] = [
   {
-    label: '所属店铺',
-    prop: 'shopId',
+    label: "所属店铺",
+    prop: "shopId",
   },
   {
-    label: 'PO单号',
-    type: 'multiple',
-    prop: 'poNo',
+    label: "PO单号",
+    type: "multiple",
+    prop: "poNo",
   },
   {
-    label: 'CO单号',
-    type: 'multiple',
-    prop: 'coNo',
+    label: "CO单号",
+    type: "multiple",
+    prop: "coNo",
   },
   {
-    label: '订单状态',
-    type: 'select',
-    prop: 'orderStatus',
+    label: "订单状态",
+    type: "select",
+    prop: "orderStatus",
+    selectOptions: walmartStatusMap,
   },
 ];
 
 export const tableColumns: TableColumnProps[] = [
   {
-    label: '#',
+    label: "#",
     width: 50,
-    align: 'center',
-    type: 'selection',
+    align: "center",
+    type: "selection",
     reserveSelection: true,
-    prop: 'selection',
+    prop: "selection",
   },
   {
-    label: '订单号',
-    align: 'center',
+    label: "订单号",
+    align: "center",
     width: 220,
-    prop: 'orderNo',
+    prop: "orderNo",
   },
   {
-    label: '商品信息',
-    align: 'center',
+    label: "商品信息",
+    align: "center",
     minWidth: 300,
-    prop: 'productInfo',
+    prop: "productInfo",
   },
   {
-    label: '店铺名称',
-    align: 'center',
+    label: "店铺名称",
+    align: "center",
     width: 180,
     showOverflowTooltip: true,
-    prop: 'shopName',
+    prop: "shopName",
   },
   {
-    label: '订单状态',
-    align: 'center',
-    minWidth: 100,
-    prop: 'orderStatus',
+    label: "订单状态",
+    align: "center",
+    minWidth: 140,
+    prop: "orderStatus",
+    formatter: (_row, _column, cellValue) => {
+      return (
+        walmartStatusMap.find((item) => item.value === cellValue)?.label ||
+        cellValue
+      );
+    },
   },
   {
-    label: '匹对ASIN',
-    align: 'center',
+    label: "匹对ASIN",
+    align: "center",
     width: 180,
-    prop: 'asin',
+    prop: "asin",
   },
   {
-    label: '总金额',
-    align: 'center',
-    prop: 'totalAmount',
+    label: "总金额",
+    align: "center",
+    prop: "totalAmount",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
   },
   {
-    label: '产品金额',
-    align: 'center',
-    prop: 'productAmount',
+    label: "产品金额",
+    align: "center",
+    prop: "productAmount",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
   },
   {
-    label: '运费',
-    align: 'center',
-    prop: 'shippingFee',
+    label: "运费",
+    align: "center",
+    prop: "shippingFee",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
   },
   {
-    label: '税费',
-    align: 'center',
-    prop: 'taxFee',
+    label: "税费",
+    align: "center",
+    prop: "taxFee",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
   },
   {
-    label: '下单时间',
-    align: 'center',
-    prop: 'orderTime',
+    label: "下单时间",
+    align: "center",
+    prop: "orderTime",
     minWidth: 120,
   },
   {
-    label: '更新时间',
-    align: 'center',
-    prop: 'updateTime',
+    label: "更新时间",
+    align: "center",
+    prop: "updateTime",
     minWidth: 120,
   },
   {
-    label: '收货地址',
-    align: 'center',
+    label: "收货地址",
+    align: "center",
     minWidth: 200,
-    prop: 'address',
+    prop: "address",
   },
   {
-    label: '物流信息',
-    align: 'center',
+    label: "物流信息",
+    align: "center",
     minWidth: 200,
-    prop: 'logisticsInfo',
+    prop: "logisticsInfo",
   },
   {
-    label: '操作',
-    align: 'center',
+    label: "操作",
+    align: "center",
     width: 100,
-    fixed: 'right',
-    prop: 'action',
+    fixed: "right",
+    prop: "action",
   },
 ];

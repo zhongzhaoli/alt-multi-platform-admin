@@ -1,7 +1,11 @@
 <template>
   <div class="container">
     <div class="filterBox">
-      <FilterContainer :columns="config.filterColumns" />
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+      />
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -19,6 +23,8 @@
         :pagination="{
           total,
         }"
+        @table-refresh="getListFun"
+        @page-change="getListFun"
       >
         <template #handle-left>
           <div class="frequencyText">更新频率：每 6 个小时</div>
@@ -68,29 +74,35 @@ import TsxElementTable from "tsx-element-table";
 import * as config from "./config";
 import { ref } from "vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
-import { LocalProductProps } from "@/api/product/local";
+import {
+  getLocalProductList,
+  type LocalProductProps,
+  type LocalProductFilterProps,
+} from "@/api/product/local";
 import ProductItem from "@/components/ProductItem/index.vue";
 
+const filterValue = ref<Partial<LocalProductFilterProps>>({});
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
-const tableData = ref<LocalProductProps[]>([
-  {
-    platform: "亚马逊",
-    productImageUrl:
-      "https://i5.walmartimages.com/asr/69065a2c-7bde-441f-a287-950cf514087f.10bb29be470fcf9020b4672fa59e2d28.jpeg?odnWidth=300&odnHeight=300",
-    productName:
-      "Younghome Knife Set, 13 PCS Stainless Steel Kitchen Knife Block Set with Built-in Sharpener",
-    productSku: "Zoe-Knifeset-13",
-    productAsin: "B0CT4BB651",
-    sellerCountry: "US",
-    brand: "STANLEY",
-    status: "在售",
-    price: 35,
-    deliveryMethod: true,
-    deliveryTime: false,
-  },
-]);
+const tableData = ref<LocalProductProps[]>([]);
 const loading = ref(false);
 const total = ref(0);
+const getListFun = async () => {
+  loading.value = true;
+  try {
+    const { datas } = await getLocalProductList({
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...filterValue.value,
+    });
+    tableData.value = datas?.data || [];
+    total.value = datas?.total || 0;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
+};
+getListFun();
 </script>
 <style lang="scss" scoped></style>

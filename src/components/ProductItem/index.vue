@@ -1,7 +1,6 @@
 <template>
   <div class="productItem d-flex align-center">
     <ImageLoad
-      :params="{ odnWidth: 300, odnHeight: 300 }"
       :src="imageUrl"
       :width="`${size || 40}px`"
       :height="`${size || 40}px`"

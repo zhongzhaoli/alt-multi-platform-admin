@@ -1,26 +1,35 @@
-import { ResponsePageJson } from '@/config/request';
-import { getAppEnvConfig } from '@/utils/env';
-import { request } from '@/utils/request';
-const baseURL = getAppEnvConfig().VITE_GLOB_API_URL_TIKTOK;
+import { ResponsePageJson } from "@/config/request";
+import { request } from "@/utils/request";
+
 export interface StoreProps {
-  shop_id: string;
-  seller_name: string;
-  create_time: string;
+  shopId: string;
+  shopName: string;
+  createTime: string;
 }
 export interface GetStoreDto {
   page: number;
-  page_size?: number;
-  shop_name?: string;
+  pageSize?: number;
+  shopName?: string;
 }
 
 // 获取店铺列表
 export function getStoreList(
-  params?: GetStoreDto
+  params?: GetStoreDto,
 ): Promise<ResponsePageJson<StoreProps>> {
   return request({
-    baseURL,
-    url: '/tk/shops/list',
-    method: 'get',
+    url: "/tiktok/shop/list",
+    method: "get",
+    params,
+  });
+}
+
+// 获取店铺列表 - 权限限制
+export function getStoreListAuth(
+  params?: GetStoreDto,
+): Promise<ResponsePageJson<StoreProps>> {
+  return request({
+    url: "/tiktok/shop/user/list",
+    method: "get",
     params,
   });
 }

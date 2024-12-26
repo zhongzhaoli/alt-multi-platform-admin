@@ -22,12 +22,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import TsxElementTable from 'tsx-element-table';
-import * as config from './config';
-import { ref } from 'vue';
-import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { jsonDateTimeFormat } from '@/utils';
-import * as API_TIKTOK from '@/api/system/tiktokStore';
+import TsxElementTable from "tsx-element-table";
+import * as config from "./config";
+import { ref } from "vue";
+import { PAGE, PAGE_SIZE } from "@/constants/app";
+import * as API_TIKTOK from "@/api/system/tiktokStore";
 
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
@@ -41,14 +40,9 @@ const getListFun = async () => {
   try {
     const { datas } = await API_TIKTOK.getStoreList({
       page: currentPage.value,
-      page_size: pageSize.value,
+      pageSize: pageSize.value,
     });
-    tableData.value = (datas?.data || []).map((item) => {
-      return {
-        ...item,
-        create_time: jsonDateTimeFormat(item.create_time),
-      };
-    });
+    tableData.value = datas?.data || [];
     total.value = datas?.total || 0;
   } catch (err) {
     console.log(err);
@@ -60,7 +54,7 @@ const getListFun = async () => {
 getListFun();
 </script>
 <style lang="scss" scoped>
-@use '@/styles/mixins.scss' as *;
+@use "@/styles/mixins.scss" as *;
 .container {
   & > .tableBox {
     margin-top: 0;

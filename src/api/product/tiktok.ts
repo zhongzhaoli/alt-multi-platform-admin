@@ -7,7 +7,7 @@ export enum ProductStatusEnum {
   "ERROR" = "ERROR",
 }
 
-export interface WalmartProductProps {
+export interface TiktokProductProps {
   platform: string;
   shopName: string;
   shopId: string;
@@ -21,22 +21,22 @@ export interface WalmartProductProps {
   stockWarning: boolean;
 }
 
-export interface WalmartProductFilterProps {
+export interface TiktokProductFilterProps {
   platform: string;
   shopId: string;
   status: ProductStatusEnum;
 }
 
-export interface GetProductDto extends Partial<WalmartProductFilterProps> {
+export interface GetProductDto extends Partial<TiktokProductFilterProps> {
   page: number;
   pageSize?: number;
 }
 
-export function getWalmartProductList(
+export function getTiktokProductList(
   params: GetProductDto,
-): Promise<ResponsePageJson<WalmartProductProps>> {
+): Promise<ResponsePageJson<TiktokProductProps>> {
   return request({
-    url: "/product/walmart/list",
+    url: "/product/tiktok/list",
     method: "get",
     params,
   });

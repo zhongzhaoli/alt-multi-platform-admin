@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <div class="filterBox">
-      <FilterContainer :columns="config.filterColumns" />
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+      >
+        <template #shopId="{ form, row }">
+          <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" />
+        </template>
+      </FilterContainer>
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -10,6 +18,7 @@
         :table-columns="config.tableColumns"
         :table="{
           data: tableData,
+          rowKey: 'id',
           border: true,
           loading,
         }"
@@ -20,6 +29,8 @@
           total,
         }"
         @selection-change="selectionChange"
+        @table-refresh="getListFun"
+        @page-change="getListFun"
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
@@ -87,7 +98,7 @@
         <template #table-address="{ row }">
           <div>{{ row.phone }}</div>
           <TextEllipsis
-            :text="`${row.city} ${row.state} ${row.address1} ${row.address2}`"
+            :text="`${row.city} ${row.state} ${row.address1 || ''} ${row.address2 || ''}`"
           />
         </template>
         <template #table-logisticsInfo="{ row }">
@@ -104,8 +115,11 @@
     <ConfirmDialog
       v-model="dialogVisible"
       width="600px"
+      top="10vh"
       title="订单发货"
+      :submit-loading="submitLoading"
       @closed="dialogClosed"
+      @submit="dialogSubmit"
     >
       <div class="dialogPsBox">
         <div class="title">注意事项：</div>
@@ -129,7 +143,7 @@
           <el-button type="primary" @click="batchSetting">批量设置</el-button>
         </div>
       </div>
-      <el-table :data="selectedRows" border>
+      <el-table :data="selectedRows" :max-height="400" border>
         <el-table-column
           label="客户订单号"
           align="center"
@@ -141,7 +155,7 @@
         </el-table-column>
         <el-table-column label="物流承运商" align="center" prop="carrierName">
           <template #default="{ row }">
-            <el-input v-model="row.carrierName" placholder="物流承运商" />
+            <el-input v-model="row.carrierName" placeholder="物流承运商" />
           </template>
         </el-table-column>
         <el-table-column
@@ -150,7 +164,7 @@
           prop="trackingNumber"
         >
           <template #default="{ row }">
-            <el-input v-model="row.trackingNumber" placholder="物流追踪号" />
+            <el-input v-model="row.trackingNumber" placeholder="物流追踪号" />
           </template>
         </el-table-column>
       </el-table>
@@ -160,6 +174,7 @@
 <script setup lang="ts">
 import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
+import SelectWalmartStore from "@/components/SelectWalmartStore/index.vue";
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
 import { RenderCopyIcon } from "@/utils/index";
 import TextEllipsis from "@/components/TextEllipsis/index.vue";
@@ -168,45 +183,40 @@ import ProductItem from "@/components/ProductItem/index.vue";
 import * as config from "./config";
 import { ref } from "vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
-import { WalmartOrderProps } from "@/api/order/walmart";
+import {
+  type WalmartOrderProps,
+  getWalmartOrderList,
+  deliverProducts,
+  type DeliverProductsDto,
+  type WalmartOrderFilterProps,
+} from "@/api/order/walmart";
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
 
-// 或者列表
-const tableData = ref<WalmartOrderProps[]>([
-  {
-    id: 1,
-    shopName: "星与-沃尔玛-花仙兽",
-    purchaseOrderId: "108933798083879",
-    customerOrderId: "200012208264099",
-    orderStatus: "Created",
-    productImageUrl:
-      "https://i5.walmartimages.com/asr/69065a2c-7bde-441f-a287-950cf514087f.10bb29be470fcf9020b4672fa59e2d28.jpeg?odnWidth=300&odnHeight=300",
-    productName:
-      "Younghome Knife Set, 13 PCS Stainless Steel Kitchen Knife Block Set with Built-in Sharpener",
-    productSku: "Zoe-Knifeset-13",
-    orderLineQuantity: 1,
-    asin: "108936145814153",
-    orderTime: "2024/08/01 12:00:00",
-    updateTime: "2024/08/01 12:00:00",
-    phone: "9196215516",
-    address1: "309 Southglen Drive",
-    address2: null,
-    city: "Cary",
-    state: "NC",
-    carrierName: "FedEx",
-    trackingNumber: "745444571803",
-    trackingURL: "https://www.walmart.com/tracking?tracking_id=745444571803",
-    totalAmount: 39.99,
-    productAmount: 34.59,
-    shippingFee: 4.4,
-    taxFee: 1,
-  },
-]);
+// 获取列表
+const filterValue = ref<Partial<WalmartOrderFilterProps>>({});
+const tableData = ref<WalmartOrderProps[]>([]);
 const loading = ref(false);
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
 const total = ref(0);
+const getListFun = async () => {
+  loading.value = true;
+  try {
+    const { datas } = await getWalmartOrderList({
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...filterValue.value,
+    });
+    tableData.value = datas?.data || [];
+    total.value = datas?.total || 0;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
+};
+getListFun();
 
 // 多选
 const selectionList = ref<WalmartOrderProps[]>([]);
@@ -216,6 +226,7 @@ const selectionChange = (rows: WalmartOrderProps[]) => {
 
 // 发货
 const dialogVisible = ref(false);
+const submitLoading = ref(false);
 const selectedRows = ref<WalmartOrderProps[]>([]);
 const singleDeliver = (row: WalmartOrderProps) => {
   selectedRows.value = [cloneDeep(row)];
@@ -230,6 +241,32 @@ const dialogClosed = () => {
   batchName.value = "";
   batchNumber.value = "";
   selectedRows.value = [];
+};
+const dialogSubmit = async () => {
+  const carrierNameIsEmpty = selectedRows.value.some((row) => !row.carrierName);
+  const trackingNumberIsEmpty = selectedRows.value.some(
+    (row) => !row.trackingNumber,
+  );
+  if (carrierNameIsEmpty || trackingNumberIsEmpty) {
+    return ElMessage.warning("请填写物流承运商或物流追踪号");
+  }
+  submitLoading.value = true;
+  const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
+    purchaseOrderId: row.purchaseOrderId,
+    customerOrderId: row.customerOrderId,
+    carrierName: row.carrierName,
+    trackingNumber: row.trackingNumber,
+  }));
+  try {
+    await deliverProducts(deliverList);
+    ElMessage.success("发货成功");
+    dialogVisible.value = false;
+    getListFun();
+  } catch (err) {
+    console.log(err);
+  } finally {
+    submitLoading.value = false;
+  }
 };
 
 // 批量设置

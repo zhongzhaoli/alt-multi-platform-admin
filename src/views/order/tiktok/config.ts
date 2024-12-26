@@ -73,7 +73,7 @@ export const tableColumns: TableColumnProps[] = [
     label: "订单号",
     align: "center",
     width: 180,
-    prop: "orderNo",
+    prop: "orderSn",
   },
   {
     label: "商品信息",
@@ -91,8 +91,14 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "订单状态",
     align: "center",
-    minWidth: 100,
+    minWidth: 140,
     prop: "orderStatus",
+    formatter: (_row, _column, cellValue) => {
+      return (
+        tiktokStatusMap.find((item) => item.value === cellValue)?.label ||
+        cellValue
+      );
+    },
   },
   {
     label: "匹对ASIN",
@@ -165,7 +171,6 @@ export const tableColumns: TableColumnProps[] = [
     label: "买家备注",
     align: "center",
     prop: "remark",
-    showOverflowTooltip: true,
     minWidth: 160,
   },
   {
