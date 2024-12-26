@@ -1,6 +1,7 @@
 import { OrderStatusEnum } from "@/api/refund/tiktok";
 import type { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { Download } from "@element-plus/icons-vue";
+import { ElText } from "element-plus";
 import type {
   HandleRightColumnProps,
   TableColumnProps,
@@ -10,18 +11,22 @@ import { h } from "vue";
 export const orderStatusMap: Array<{
   label: string;
   value: OrderStatusEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
 }> = [
   {
     label: "已发起",
     value: OrderStatusEnum.INITIATED,
+    type: "info",
   },
   {
     label: "已取消",
     value: OrderStatusEnum.CANCELLED,
+    type: "danger",
   },
   {
     label: "已退款",
     value: OrderStatusEnum.REFUNDED,
+    type: "success",
   },
 ];
 
@@ -84,10 +89,8 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 120,
     prop: "orderStatus",
     formatter: (_row, _column, cellValue) => {
-      return (
-        orderStatusMap.find((item) => item.value === cellValue)?.label ||
-        cellValue
-      );
+      const status = orderStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {

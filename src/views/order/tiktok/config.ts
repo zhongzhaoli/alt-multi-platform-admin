@@ -6,43 +6,57 @@ import { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { TiktokStausEnum } from "@/api/order/tiktok";
 import { h } from "vue";
 import { Download } from "@element-plus/icons-vue";
+import { ElText } from "element-plus";
 
-const tiktokStatusMap: Array<{ label: string; value: TiktokStausEnum }> = [
+const tiktokStatusMap: Array<{
+  label: string;
+  value: TiktokStausEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
+}> = [
   {
     label: "待支付",
     value: TiktokStausEnum.UNPAID,
+    type: "info",
   },
   {
     label: "已被接受",
     value: TiktokStausEnum.ON_HOLD,
+    type: "info",
   },
   {
     label: "等待发货",
     value: TiktokStausEnum.AWAITING_SHIPMENT,
+    type: "warning",
   },
   {
     label: "部分发货",
     value: TiktokStausEnum.PARTIALLY_SHIPPING,
+    type: "info",
   },
   {
     label: "等待收货",
     value: TiktokStausEnum.AWAITING_COLLECTION,
+    type: "info",
   },
   {
     label: "在途",
     value: TiktokStausEnum.IN_TRANSIT,
+    type: "info",
   },
   {
     label: "已送达",
     value: TiktokStausEnum.DELIVERED,
+    type: "info",
   },
   {
     label: "已完成",
     value: TiktokStausEnum.COMPLETED,
+    type: "success",
   },
   {
     label: "已取消",
     value: TiktokStausEnum.CANCELLED,
+    type: "danger",
   },
 ];
 
@@ -98,10 +112,8 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 140,
     prop: "orderStatus",
     formatter: (_row, _column, cellValue) => {
-      return (
-        tiktokStatusMap.find((item) => item.value === cellValue)?.label ||
-        cellValue
-      );
+      const status = tiktokStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {

@@ -6,31 +6,42 @@ import { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { h } from "vue";
 import { WalmartStausEnum } from "@/api/order/walmart";
 import { Download } from "@element-plus/icons-vue";
+import { ElText } from "element-plus";
 
-const walmartStatusMap: Array<{ label: string; value: WalmartStausEnum }> = [
+const walmartStatusMap: Array<{
+  label: string;
+  value: WalmartStausEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
+}> = [
   {
     label: "已创建",
     value: WalmartStausEnum.Created,
+    type: "info",
   },
   {
     label: "已确认",
     value: WalmartStausEnum.Acknowledged,
+    type: "info",
   },
   {
     label: "在途",
     value: WalmartStausEnum.Shipped,
+    type: "info",
   },
   {
     label: "已送达",
     value: WalmartStausEnum.Delivered,
+    type: "success",
   },
   {
     label: "已取消",
     value: WalmartStausEnum.Cancelled,
+    type: "danger",
   },
   {
     label: "退款",
     value: WalmartStausEnum.Refund,
+    type: "danger",
   },
 ];
 
@@ -91,10 +102,8 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 140,
     prop: "orderStatus",
     formatter: (_row, _column, cellValue) => {
-      return (
-        walmartStatusMap.find((item) => item.value === cellValue)?.label ||
-        cellValue
-      );
+      const status = walmartStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {

@@ -1,6 +1,7 @@
 import { ProductStatusEnum } from "@/api/product/walmart";
 import type { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { Download } from "@element-plus/icons-vue";
+import { ElText } from "element-plus";
 import type {
   HandleRightColumnProps,
   TableColumnProps,
@@ -10,18 +11,22 @@ import { h } from "vue";
 const walmartProductStatusMap: Array<{
   label: string;
   value: ProductStatusEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
 }> = [
   {
     label: "未发布",
     value: ProductStatusEnum.UNPUBLISHED,
+    type: "info",
   },
   {
     label: "已发布",
     value: ProductStatusEnum.PUBLISHED,
+    type: "success",
   },
   {
     label: "错误",
     value: ProductStatusEnum.ERROR,
+    type: "danger",
   },
 ];
 
@@ -91,10 +96,10 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 140,
     prop: "status",
     formatter: (_row, _column, cellValue) => {
-      return (
-        walmartProductStatusMap.find((item) => item.value === cellValue)
-          ?.label || cellValue
+      const status = walmartProductStatusMap.find(
+        (item) => item.value === cellValue,
       );
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {

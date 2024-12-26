@@ -1,6 +1,7 @@
 import { ProductStatusEnum } from "@/api/product/local";
 import type { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { Download } from "@element-plus/icons-vue";
+import { ElText } from "element-plus";
 import type {
   HandleRightColumnProps,
   TableColumnProps,
@@ -10,18 +11,22 @@ import { h } from "vue";
 const localProductStatusMap: Array<{
   label: string;
   value: ProductStatusEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
 }> = [
   {
     label: "在售",
     value: ProductStatusEnum.ON_SALE,
+    type: "success",
   },
   {
     label: "下架",
     value: ProductStatusEnum.OFF_SALE,
+    type: "danger",
   },
   {
     label: "断货",
     value: ProductStatusEnum.OUT_OF_STOCK,
+    type: "info",
   },
 ];
 
@@ -76,10 +81,10 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 140,
     prop: "status",
     formatter: (_row, _column, cellValue) => {
-      return (
-        localProductStatusMap.find((item) => item.value === cellValue)?.label ||
-        cellValue
+      const status = localProductStatusMap.find(
+        (item) => item.value === cellValue,
       );
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {

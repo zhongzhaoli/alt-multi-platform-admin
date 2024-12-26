@@ -1,6 +1,7 @@
 import { OrderStatusEnum, TrackingStatusEnum } from "@/api/refund/walmart";
 import type { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { Download } from "@element-plus/icons-vue";
+import { ElText } from "element-plus";
 import type {
   HandleRightColumnProps,
   TableColumnProps,
@@ -10,36 +11,44 @@ import { h } from "vue";
 export const orderStatusMap: Array<{
   label: string;
   value: OrderStatusEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
 }> = [
   {
     label: "已发起",
     value: OrderStatusEnum.INITIATED,
+    type: "info",
   },
   {
     label: "已取消",
     value: OrderStatusEnum.CANCELLED,
+    type: "danger",
   },
   {
     label: "已退款",
     value: OrderStatusEnum.REFUNDED,
+    type: "success",
   },
 ];
 
 export const trackingStatusMap: Array<{
   label: string;
   value: TrackingStatusEnum;
+  type: "primary" | "success" | "info" | "warning" | "danger";
 }> = [
   {
     label: "已发起",
     value: TrackingStatusEnum.INITIATED,
+    type: "info",
   },
   {
     label: "在途",
     value: TrackingStatusEnum.SHIPPING,
+    type: "warning",
   },
   {
     label: "已退回",
     value: TrackingStatusEnum.RETURNED,
+    type: "success",
   },
 ];
 
@@ -101,10 +110,8 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 120,
     prop: "orderStatus",
     formatter: (_row, _column, cellValue) => {
-      return (
-        orderStatusMap.find((item) => item.value === cellValue)?.label ||
-        cellValue
-      );
+      const status = orderStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {
@@ -113,10 +120,8 @@ export const tableColumns: TableColumnProps[] = [
     prop: "trackingStatus",
     minWidth: 120,
     formatter: (_row, _column, cellValue) => {
-      return (
-        trackingStatusMap.find((item) => item.value === cellValue)?.label ||
-        cellValue
-      );
+      const status = trackingStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || "info" }, status?.label || "");
     },
   },
   {
