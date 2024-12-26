@@ -1,5 +1,5 @@
-import { ResponseJson, ResponsePageJson } from '@/config/request';
-import { request } from '@/utils/request';
+import { ResponseJson, ResponsePageJson } from "@/config/request";
+import { request } from "@/utils/request";
 
 export interface GetUserListDto {
   page: number;
@@ -27,72 +27,74 @@ export interface UserDto {
   role_id: string;
 }
 
-export type EditUserDto = UserDto & Pick<UserProps, 'id'>;
+export type EditUserDto = UserDto & Pick<UserProps, "id">;
 
 export interface ResetPasswordDto {
   id: number;
   new_password: string;
 }
 
-export function getUserList(params: GetUserListDto): Promise<ResponsePageJson<UserProps>> {
+export function getUserList(
+  params: GetUserListDto,
+): Promise<ResponsePageJson<UserProps>> {
   return request({
-    url: '/users/list',
-    method: 'get',
-    params
+    url: "/users/list",
+    method: "get",
+    params,
   });
 }
 
 export function createUser(data: UserDto) {
   return request({
-    url: '/users/add',
-    method: 'post',
-    data
+    url: "/users/add",
+    method: "post",
+    data,
   });
 }
 
 export function editUser(data: EditUserDto) {
   return request({
-    url: '/users/update',
-    method: 'put',
-    data
+    url: "/users/update",
+    method: "put",
+    data,
   });
 }
 
 export function deleteUser(id: number) {
   return request({
-    url: '/users/delete',
-    method: 'delete',
-    params: { id }
+    url: "/users/delete",
+    method: "delete",
+    params: { id },
   });
 }
 
 export function resetPassword(data: ResetPasswordDto) {
   return request({
-    url: '/users/password/reset',
-    method: 'put',
-    data
+    url: "/users/password/reset",
+    method: "put",
+    data,
   });
 }
 
 export interface UpdateStoreDto {
   user_id: string;
-  shop_ids: string[];
+  shopIds: string[];
 }
 
 export function updateStore(data: UpdateStoreDto) {
   return request({
-    url: '/users/shop/update',
-    method: 'put',
-    data
+    url: "/users/shop/update",
+    method: "put",
+    data,
   });
 }
 
 // 获取用户已绑定的店铺
 export function getUserStore(user_id: string): Promise<ResponseJson<string[]>> {
   return request({
-    url: '/walmart/user/shop/ids',
-    method: 'get',
-    params: { user_id }
+    url: "/walmart/user/shop/ids",
+    method: "get",
+    params: { user_id },
   });
 }
 
@@ -100,8 +102,8 @@ export function getUserStore(user_id: string): Promise<ResponseJson<string[]>> {
 export function getUserLevel(user_id: string): Promise<ResponseJson<string[]>> {
   return request({
     url: `/users/level/list`,
-    method: 'get',
-    params: { p_user_id: user_id }
+    method: "get",
+    params: { p_user_id: user_id },
   });
 }
 
@@ -111,8 +113,8 @@ interface UpdateUserLevelDto {
 }
 export function updateLevel(data: UpdateUserLevelDto): Promise<any> {
   return request({
-    url: '/users/level/add',
-    method: 'post',
-    data
+    url: "/users/level/add",
+    method: "post",
+    data,
   });
 }
