@@ -34,9 +34,6 @@
           <el-button link type="primary" @click="editPasswordFun(row)">
             重置密码
           </el-button>
-          <el-button link type="primary" @click="editStore(row)">
-            店铺
-          </el-button>
           <el-button link type="primary" @click="deleteUser(row)">
             删除
           </el-button>
@@ -161,18 +158,6 @@
         </el-form-item>
       </el-form>
     </ConfirmDialog>
-    <SelectTarget
-      ref="selectStoreRef"
-      name-key="shop_name"
-      value-key="shopId"
-      :submit-loading="submitLoading"
-      :loading="selectLoading"
-      :api="getStoreList"
-      :default-select-list="defaultSelectStoreList"
-      :multiple="true"
-      @closed="selectStoreClosed"
-      @submit="submitStoreFun"
-    />
   </div>
 </template>
 <script setup lang="ts">
@@ -180,9 +165,6 @@ import { ref, unref } from "vue";
 import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
-import SelectTarget from "@/components/SelectTarget/index.vue";
-import { getStoreList, StoreProps } from "@/api/system/walmartStore";
-import { SelectTargetInstance } from "@/components/SelectTarget/useSelectTarget";
 import {
   filterColumns,
   tableColumns,
@@ -366,45 +348,6 @@ const deleteUser = (row: API_USERS.UserProps) => {
       ElMessage.error("删除失败");
     }
   });
-};
-
-// 绑定店铺
-const selectStoreRef = ref<SelectTargetInstance | null>(null);
-// 回显Loading
-const selectLoading = ref(false);
-const defaultSelectStoreList = ref<string[]>([]);
-const submitStoreFun = async (list: StoreProps["shopId"][]) => {
-  if (tempUser.value && !submitLoading.value) {
-    submitLoading.value = true;
-    try {
-      await API_USERS.updateStore({
-        user_id: tempUser.value.user_id,
-        shopIds: list,
-      });
-      ElMessage.success("操作成功");
-      selectStoreRef.value?.closeDialog();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      submitLoading.value = false;
-    }
-  }
-};
-const editStore = async (row: API_USERS.UserProps) => {
-  tempUser.value = cloneDeep(row);
-  selectLoading.value = true;
-  selectStoreRef.value?.openDialog();
-  try {
-    const { datas } = await API_USERS.getUserStore(row.user_id);
-    defaultSelectStoreList.value = datas || [];
-  } catch (err) {
-    console.log(err);
-  } finally {
-    selectLoading.value = false;
-  }
-};
-const selectStoreClosed = () => {
-  defaultSelectStoreList.value = [];
 };
 </script>
 <style lang="scss" scoped>
