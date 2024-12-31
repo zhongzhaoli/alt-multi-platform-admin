@@ -1,5 +1,6 @@
-import { ResponsePageJson } from "@/config/request";
+import { WalmartResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
+import { walmartURL } from "@/config/request";
 export enum WalmartStausEnum {
   "Created" = "Created",
   "Acknowledged" = "Acknowledged",
@@ -11,29 +12,31 @@ export enum WalmartStausEnum {
 
 export interface WalmartOrderProps {
   id: number;
-  shopName: string;
-  purchaseOrderId: string;
-  customerOrderId: string;
-  orderStatus: WalmartStausEnum;
-  productImageUrl: string;
-  productName: string;
-  productSku: string;
-  orderLineQuantity: number;
+  shop_name: string;
+  shop_id: string;
+  purchase_order_id: string;
+  customer_order_id: string;
+  order_line_status: WalmartStausEnum;
+  image_url: string;
+  product_name: string;
+  product_sku: string;
+  order_line_quantity_amount: number;
   asin: string;
-  orderTime: string;
-  updateTime: string;
+  product_amount: number;
+  product_tax_amount: string;
+  shipping_tax_amount: number;
+  taxAmount: number;
+  fee_amount: number;
+  fee_tax_amount: number;
   phone: string;
-  address1: string;
-  address2: string | null;
-  city: string;
-  state: string;
-  carrierName: string;
-  trackingNumber: string;
-  trackingURL: string;
-  totalAmount: number;
-  productAmount: number;
-  shippingFee: number;
-  taxFee: number;
+  postal_address1: string;
+  postal_address2: string | null;
+  postal_city: string;
+  postal_state: string;
+  order_date: string;
+  carrier: string;
+  tracking_url: string;
+  tracking_number: string;
 }
 
 export interface WalmartOrderFilterProps {
@@ -45,15 +48,16 @@ export interface WalmartOrderFilterProps {
 
 export interface GetOrderDto extends Partial<WalmartOrderFilterProps> {
   page: number;
-  pageSize?: number;
+  page_size?: number;
 }
 
 // 列表
 export function getWalmartOrderList(
   params: GetOrderDto,
-): Promise<ResponsePageJson<WalmartOrderProps>> {
+): Promise<WalmartResponsePageJson<WalmartOrderProps>> {
   return request({
-    url: "/order/walmart/list",
+    baseURL: walmartURL,
+    url: "/order",
     method: "get",
     params,
   });

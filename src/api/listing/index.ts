@@ -1,15 +1,14 @@
-import { ResponsePageJson } from "@/config/request";
+import { WalmartResponsePageJson, walmartURL } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface ListingProps {
-  id: number;
+  all_count: number;
+  for_sale_count: number;
+  listing_count: number;
   platform: string;
-  shopName: string;
-  shopId: string;
-  totalLinkCount: number;
-  onSaleLinkCount: number;
-  todayOnSaleLinkCount: number;
-  todayOffSaleLinkCount: number;
+  remove_count: number;
+  shop_id: string;
+  shop_name: string;
 }
 
 export interface ListingFilterProps {
@@ -22,9 +21,10 @@ export interface GetListingDto extends Partial<ListingFilterProps> {
 }
 export function getListingList(
   params: GetListingDto,
-): Promise<ResponsePageJson<ListingProps>> {
+): Promise<WalmartResponsePageJson<ListingProps>> {
   return request({
-    url: "/listing/list",
+    baseURL: walmartURL,
+    url: "/get_all_listing_board",
     method: "get",
     params,
   });

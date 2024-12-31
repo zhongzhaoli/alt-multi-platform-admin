@@ -2,8 +2,8 @@
   <el-dropdown trigger="hover" @command="handleCommand">
     <div class="userDropdownContainer navbarWidgetItem">
       <div class="userInfo">
-        <span class="department">{{ userInfo?.role_name || '无角色' }}</span>
-        <span class="name">{{ userInfo?.user_name || '' }}</span>
+        <span class="department">{{ userInfo?.role_name || "无角色" }}</span>
+        <span class="name">{{ userInfo?.username || "" }}</span>
       </div>
       <el-avatar class="avatar" shape="square" :size="32" :src="logo" />
     </div>
@@ -17,15 +17,15 @@
   <ChangePassword ref="changePasswrd" />
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useUserStore } from '@/store/modules/user';
-import { useRouter } from 'vue-router';
-import { logout as logoutApi } from '@/api/user/login';
-import { ElMessage } from 'element-plus';
-import logo from '@/assets/avatar.jpg';
+import { computed, ref } from "vue";
+import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+import { logout as logoutApi } from "@/api/user/login";
+import { ElMessage } from "element-plus";
+import logo from "@/assets/avatar.jpg";
 import ChangePassword, {
   type ChangePasswordInstance,
-} from './components/changePassword.vue';
+} from "./components/changePassword.vue";
 
 const userStore = useUserStore();
 const routerStore = useRouter();
@@ -34,17 +34,17 @@ const userInfo = computed(() => userStore.userInfo);
 const changePasswrd = ref<ChangePasswordInstance | null>(null);
 
 const handleCommand = async (command: string | number | object) => {
-  if (command === 'logout') {
+  if (command === "logout") {
     if (userInfo.value) {
       await logoutApi({ user_id: userInfo.value.user_id });
     }
     setTimeout(() => {
       userStore.logout();
-      routerStore.push('/login');
-      ElMessage.success('退出成功');
+      routerStore.push("/login");
+      ElMessage.success("退出成功");
     }, 0);
   }
-  if (command === 'updatePassword')
+  if (command === "updatePassword")
     if (changePasswrd.value) changePasswrd.value.openDialog();
 };
 </script>

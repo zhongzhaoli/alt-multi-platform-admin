@@ -69,9 +69,9 @@
             placeholder="请输入企业微信ID"
           />
         </el-form-item>
-        <el-form-item prop="user_name" label="用户名：">
+        <el-form-item prop="username" label="用户名：">
           <el-input
-            v-model="formValue.user_name"
+            v-model="formValue.username"
             clearable
             placeholder="请输入用户名"
           />
@@ -122,9 +122,9 @@
             placeholder="请输入企业微信ID"
           />
         </el-form-item>
-        <el-form-item prop="user_name" label="用户名：">
+        <el-form-item prop="username" label="用户名：">
           <el-input
-            v-model="editFormValue.user_name"
+            v-model="editFormValue.username"
             clearable
             placeholder="请输入用户名"
           />
@@ -217,14 +217,13 @@ const getListFun = async () => {
   if (loading.value) return;
   loading.value = true;
   try {
-    const { datas } = await API_USERS.getUserList({
+    const { data } = await API_USERS.getUserList({
       page: unref(currentPage),
       page_size: unref(pageSize),
-      user_search: true,
       ...unref(filterValue),
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {
@@ -281,16 +280,18 @@ const editUserValidate = async () => {
 };
 const editFun = (row: API_USERS.UserProps) => {
   editDialogVisible.value = true;
-  tempUser.value = cloneDeep(row);
-  editFormValue.value = cloneDeep(row);
+  const cloneRow = cloneDeep(row);
+  if ("password" in cloneRow) delete cloneRow.password;
+  tempUser.value = cloneRow;
+  editFormValue.value = cloneRow;
   editUserFormRef.value?.resetFields();
 };
 const editUserHandle = async () => {
   submitLoading.value = true;
   try {
     const editData = cloneDeep(unref(editFormValue));
-    if (tempUser.value?.user_name === editData.user_name) {
-      delete editData.user_name;
+    if (tempUser.value?.username === editData.username) {
+      delete editData.username;
     }
     await API_USERS.editUser(editData as API_USERS.EditUserDto);
     ElMessage.success("编辑成功");
@@ -325,7 +326,7 @@ const editPasswordHandle = async () => {
   try {
     await API_USERS.resetPassword({
       id: nPasswordFormValue.value.id,
-      new_password: unref(newPassword),
+      password: unref(newPassword),
     });
     ElMessage.success("修改成功");
     nPasswordDialogVisible.value = false;

@@ -3,7 +3,7 @@ import type {
   TableColumnProps,
 } from "tsx-element-table";
 import { FilterColumnsProp } from "@/components/FilterContainer/types";
-import { TiktokStausEnum } from "@/api/order/tiktok";
+import { TiktokStausEnum, TiktokOrderProps } from "@/api/order/tiktok";
 import { h } from "vue";
 import { Download } from "@element-plus/icons-vue";
 import { ElText } from "element-plus";
@@ -67,13 +67,13 @@ export const filterColumns: FilterColumnsProp[] = [
   },
   {
     label: "订单号",
-    type: "multiple",
-    prop: "orderSn",
+    type: "input",
+    prop: "order_id",
   },
   {
     label: "订单状态",
     type: "select",
-    prop: "orderStatus",
+    prop: "order_status",
     selectOptions: tiktokStatusMap,
   },
 ];
@@ -85,12 +85,15 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     type: "selection",
     reserveSelection: true,
+    selectable: (row: TiktokOrderProps) => {
+      return row.order_status === TiktokStausEnum.AWAITING_SHIPMENT;
+    },
     prop: "selection",
   },
   {
     label: "订单号",
     align: "center",
-    width: 180,
+    width: 200,
     prop: "orderSn",
   },
   {
@@ -104,16 +107,20 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     width: 180,
     showOverflowTooltip: true,
-    prop: "shopName",
+    prop: "shop_name",
   },
   {
     label: "订单状态",
     align: "center",
     minWidth: 140,
-    prop: "orderStatus",
+    prop: "order_status",
     formatter: (_row, _column, cellValue) => {
       const status = tiktokStatusMap.find((item) => item.value === cellValue);
-      return h(ElText, { type: status?.type || "info" }, status?.label || "");
+      return h(
+        ElText,
+        { type: status?.type || "info" },
+        () => status?.label || "",
+      );
     },
   },
   {
@@ -125,7 +132,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "总金额",
     align: "center",
-    prop: "totalAmount",
+    prop: "total_amount",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
@@ -134,7 +141,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "产品金额",
     align: "center",
-    prop: "productAmount",
+    prop: "product_sale_price",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
@@ -143,7 +150,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "运费",
     align: "center",
-    prop: "shippingFee",
+    prop: "shipping_fee",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
@@ -152,7 +159,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "税费",
     align: "center",
-    prop: "taxFee",
+    prop: "tax",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
@@ -161,20 +168,20 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "下单时间",
     align: "center",
-    prop: "orderTime",
-    minWidth: 120,
+    prop: "order_create_time",
+    minWidth: 180,
   },
   {
     label: "更新时间",
     align: "center",
-    prop: "updateTime",
-    minWidth: 120,
+    prop: "update_time",
+    minWidth: 180,
   },
   {
     label: "买家姓名",
     align: "center",
-    prop: "name",
-    minWidth: 140,
+    prop: "buyer_name",
+    minWidth: 160,
     showOverflowTooltip: true,
   },
   {
@@ -192,7 +199,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "物流信息",
     align: "center",
-    minWidth: 200,
+    minWidth: 220,
     prop: "logisticsInfo",
   },
   {

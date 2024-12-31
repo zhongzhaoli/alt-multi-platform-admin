@@ -47,28 +47,28 @@
             PO：
             <RenderCopyIcon
               type="primary"
-              :text="row.purchaseOrderId"
+              :text="row.purchase_order_id"
               title="采购订单号"
               margin="r"
             />
             <TextEllipsis
               :line="1"
               placement="right"
-              :text="`${row.purchaseOrderId || '-'}`"
+              :text="`${row.purchase_order_id || '-'}`"
             />
           </div>
           <div class="d-inline-flex">
             CO：
             <RenderCopyIcon
               type="primary"
-              :text="row.customerOrderId"
+              :text="row.customer_order_id"
               title="客户订单号"
               margin="r"
             />
             <TextEllipsis
               :line="1"
               placement="right"
-              :text="`${row.customerOrderId || '-'}`"
+              :text="`${row.customer_order_id || '-'}`"
             />
           </div>
         </template>
@@ -76,16 +76,18 @@
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              :image-url="row.productImageUrl"
-              :product-name="row.productName"
+              :image-url="row.image_url"
+              :product-name="row.product_name"
               :desc-list="[
                 {
-                  text: row.productSku,
+                  text: row.product_sku,
                   prefix: 'SKU：',
                 },
               ]"
             />
-            <div class="quantityAmount">x{{ row.orderLineQuantity || 0 }}</div>
+            <div class="quantityAmount">
+              x{{ row.order_line_quantity_amount || 0 }}
+            </div>
           </div>
         </template>
         <template #table-asin="{ row }">
@@ -99,17 +101,25 @@
         <template #table-address="{ row }">
           <div>{{ row.phone }}</div>
           <TextEllipsis
-            :text="`${row.city} ${row.state} ${row.address1 || ''} ${row.address2 || ''}`"
+            :text="`${row.postal_city} ${row.postal_state} ${row.postal_address1 || ''} ${row.postal_address2 || ''}`"
           />
         </template>
         <template #table-logisticsInfo="{ row }">
-          <div>{{ row.carrierName }}</div>
-          <LinkItem :href="row.trackingURL" :text="row.trackingNumber" />
+          <div>{{ row.carrier }}</div>
+          <LinkItem :href="row.tracking_url" :text="row.tracking_number" />
         </template>
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="singleDeliver(row)">
-            发货
-          </el-button>
+          <template
+            v-if="
+              row.order_line_status === WalmartStausEnum.Created ||
+              row.order_line_status === WalmartStausEnum.Acknowledged
+            "
+          >
+            <el-button link type="primary" @click="singleDeliver(row)">
+              发货
+            </el-button>
+          </template>
+          <template v-else>-</template>
         </template>
       </TsxElementTable>
     </div>
@@ -148,24 +158,24 @@
         <el-table-column
           label="客户订单号"
           align="center"
-          prop="customerOrderId"
+          prop="customer_order_id"
         >
           <template #default="{ row }">
-            <el-input v-model="row.customerOrderId" disabled />
+            <el-input v-model="row.customer_order_id" disabled />
           </template>
         </el-table-column>
-        <el-table-column label="物流承运商" align="center" prop="carrierName">
+        <el-table-column label="物流承运商" align="center" prop="carrier">
           <template #default="{ row }">
-            <el-input v-model="row.carrierName" placeholder="物流承运商" />
+            <el-input v-model="row.carrier" placeholder="物流承运商" />
           </template>
         </el-table-column>
         <el-table-column
           label="物流追踪号"
           align="center"
-          prop="trackingNumber"
+          prop="tracking_number"
         >
           <template #default="{ row }">
-            <el-input v-model="row.trackingNumber" placeholder="物流追踪号" />
+            <el-input v-model="row.tracking_number" placeholder="物流追踪号" />
           </template>
         </el-table-column>
       </el-table>
@@ -190,6 +200,7 @@ import {
   deliverProducts,
   type DeliverProductsDto,
   type WalmartOrderFilterProps,
+  WalmartStausEnum,
 } from "@/api/order/walmart";
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
@@ -206,10 +217,19 @@ const getListFun = async () => {
   try {
     const { datas } = await getWalmartOrderList({
       page: currentPage.value,
-      pageSize: pageSize.value,
+      page_size: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = datas?.data || [];
+    tableData.value = (datas?.data || []).map((row) => {
+      const taxAmount =
+        parseFloat(row.product_tax_amount || "0") +
+        row.fee_tax_amount +
+        row.shipping_tax_amount;
+      return {
+        ...row,
+        taxAmount,
+      };
+    });
     total.value = datas?.total || 0;
   } catch (err) {
     console.log(err);
@@ -244,19 +264,19 @@ const dialogClosed = () => {
   selectedRows.value = [];
 };
 const dialogSubmit = async () => {
-  const carrierNameIsEmpty = selectedRows.value.some((row) => !row.carrierName);
+  const carrierNameIsEmpty = selectedRows.value.some((row) => !row.carrier);
   const trackingNumberIsEmpty = selectedRows.value.some(
-    (row) => !row.trackingNumber,
+    (row) => !row.tracking_number,
   );
   if (carrierNameIsEmpty || trackingNumberIsEmpty) {
     return ElMessage.warning("请填写物流承运商或物流追踪号");
   }
   submitLoading.value = true;
   const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
-    purchaseOrderId: row.purchaseOrderId,
-    customerOrderId: row.customerOrderId,
-    carrierName: row.carrierName,
-    trackingNumber: row.trackingNumber,
+    purchaseOrderId: row.purchase_order_id,
+    customerOrderId: row.customer_order_id,
+    carrierName: row.carrier,
+    trackingNumber: row.tracking_number,
   }));
   try {
     await deliverProducts(deliverList);
@@ -276,8 +296,8 @@ const batchNumber = ref("");
 const batchSetting = () => {
   if (!selectedRows.value.length) return ElMessage.warning("未选择订单");
   selectedRows.value.forEach((row: WalmartOrderProps) => {
-    row.carrierName = batchName.value;
-    row.trackingNumber = batchNumber.value;
+    row.carrier = batchName.value;
+    row.tracking_number = batchNumber.value;
   });
 };
 </script>

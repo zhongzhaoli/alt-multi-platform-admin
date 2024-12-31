@@ -1,5 +1,7 @@
-import { ResponsePageJson } from "@/config/request";
+import { TiktokResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
+import { tiktokURL } from "@/config/request";
+import { CancelToken } from "axios";
 
 export enum TiktokStausEnum {
   "ON_HOLD" = "ON_HOLD",
@@ -15,63 +17,80 @@ export enum TiktokStausEnum {
 
 export interface TiktokOrderProps {
   id: number;
-  shopName: string;
-  orderSn: string;
-  orderStatus: string;
-  productImageUrl: string;
-  productName: string;
-  productSku: string;
-  orderLineQuantity: number;
+  order_id: string;
+  sku_image: string;
+  product_name: string;
+  seller_sku: string;
+  shop_id: string;
+  shop_name: string;
   asin: string;
-  orderTime: string;
-  updateTime: string;
-  phone: string;
-  address1: string;
-  address2: string | null;
-  name: string;
-  city: string;
-  state: string;
-  remark: string;
-  carrierName: string;
-  trackingNumber: string;
-  trackingURL: string;
-  totalAmount: number;
-  productAmount: number;
-  shippingFee: number;
-  taxFee: number;
+  order_status: TiktokStausEnum;
+  total_amount: number;
+  product_sale_price: number;
+  shipping_fee: number;
+  tax: number;
+  order_create_time: string;
+  update_time: string;
+  buyer_name: string;
+  buyer_full_address: string;
+  buyer_phone_number: string;
+  buyer_message: string;
+  tracking_number: string;
+  shipping_provider_id: string;
+  order_line_item_id: string;
 }
 
 export interface TiktokOrderFilterProps {
   shopId: string;
-  orderSn: string;
-  orderStatus: TiktokStausEnum;
+  order_id: string;
+  order_status: TiktokStausEnum;
 }
 
 export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
   page: number;
-  pageSize?: number;
+  page_size?: number;
+  export?: 1 | 0;
 }
 
 // 列表
 export function getTiktokOrderList(
   params: GetOrderDto,
-): Promise<ResponsePageJson<TiktokOrderProps>> {
+): Promise<TiktokResponsePageJson<TiktokOrderProps>> {
   return request({
-    url: "/order/tiktok/list",
+    baseURL: tiktokURL,
+    url: "/tk/get_all_order",
     method: "get",
     params,
   });
 }
 
+// 导出
+export function exportTiktokOrderList(
+  params: GetOrderDto,
+  cancelToken: CancelToken,
+): Promise<any> {
+  return request({
+    baseURL: tiktokURL,
+    url: "/tk/get_all_order",
+    method: "get",
+    params,
+    responseType: "blob",
+    cancelToken,
+  });
+}
+
 // 发货
 export interface DeliverProductsDto {
-  orderSn: string;
-  carrierName: string;
-  trackingNumber: string;
+  order_id: string;
+  shipping_provider_id: string;
+  tracking_number: string;
+  shop_id: string;
+  order_line_item_ids: string[];
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
-    url: "/order/tiktok/deliver",
+    baseURL: tiktokURL,
+    url: "/tk/mark_package_as_shipped",
     method: "post",
     data,
   });

@@ -2,7 +2,7 @@
   <el-upload
     ref="uploadRef"
     drag
-    :action="`${requestAPI}${api}`"
+    :action="`${baseURL}${api}`"
     :headers="{ Authorization: token }"
     :name="fileKey"
     :accept="accept"
@@ -42,7 +42,10 @@
           </div>
         </span>
         <!-- 成功 -->
-        <i v-if="file.status === 'success'" class="ri-checkbox-circle-line success" />
+        <i
+          v-if="file.status === 'success'"
+          class="ri-checkbox-circle-line success"
+        />
         <!-- 失败 -->
         <i
           v-if="file.status === 'fail'"
@@ -60,17 +63,17 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, unref } from 'vue';
-import { requestAPI } from '@/config/request';
-import { useUserStore } from '@/store/modules/user';
-import { request } from '@/utils/request';
+import { computed, ref, unref } from "vue";
+import { baseURL } from "@/config/request";
+import { useUserStore } from "@/store/modules/user";
+import { request } from "@/utils/request";
 import {
   ElMessage,
   UploadFile,
   UploadRawFile,
   UploadRequestOptions,
-  type UploadInstance
-} from 'element-plus';
+  type UploadInstance,
+} from "element-plus";
 
 interface ComponentProps {
   accept?: string;
@@ -80,12 +83,12 @@ interface ComponentProps {
   fileKey?: string;
 }
 const props = withDefaults(defineProps<ComponentProps>(), {
-  accept: 'all',
+  accept: "all",
   api: `/upload/case_img`,
   multiple: true,
-  fileKey: 'files'
+  fileKey: "files",
 });
-const emits = defineEmits(['success', 'error', 'partSuccess']);
+const emits = defineEmits(["success", "error", "partSuccess"]);
 
 const userStore = useUserStore();
 const token = computed(() => userStore.token);
@@ -94,7 +97,7 @@ const disabled = ref(false);
 // 提交所有文件
 const submit = () => {
   if (!fileList.value.length) {
-    return ElMessage.error('请选择文件');
+    return ElMessage.error("请选择文件");
   }
   uploadRef.value!.submit();
 };
@@ -108,8 +111,8 @@ const fileList = ref<UploadFile[]>([]);
 
 const fileTypeValidate = (fileName: string) => {
   let check = false;
-  if (props.accept !== 'all') {
-    const acceptArr = props.accept.split(',').map((item) => item.trim());
+  if (props.accept !== "all") {
+    const acceptArr = props.accept.split(",").map((item) => item.trim());
     acceptArr.forEach((item) => {
       const index = fileName.indexOf(item);
       if (index + item.length === fileName.length) {
@@ -124,7 +127,9 @@ const fileTypeValidate = (fileName: string) => {
 
 // 文件发生变化（状态，添加，删除）
 const onChange = (uploadFile: UploadFile) => {
-  const file = unref(fileList).findIndex((item: UploadFile) => item.uid === uploadFile.uid);
+  const file = unref(fileList).findIndex(
+    (item: UploadFile) => item.uid === uploadFile.uid,
+  );
   if (file >= 0) {
     unref(fileList).map((item: UploadFile) => {
       if (item.uid === uploadFile.uid) {
@@ -145,7 +150,9 @@ const onChange = (uploadFile: UploadFile) => {
 
 // 自定义上传
 const customRequest = (options: UploadRequestOptions) => {
-  const fileListItem = fileList.value.find((item) => item.uid === options.file.uid);
+  const fileListItem = fileList.value.find(
+    (item) => item.uid === options.file.uid,
+  );
   if (fileListItem) {
     upload(formDataHandle(options.file), fileListItem);
   }
@@ -164,35 +171,39 @@ const formDataHandle = (file: File) => {
 };
 
 const upload = async (formData: FormData, fileListItem: UploadFile) => {
-  if (fileListItem.status !== 'ready') return;
-  fileListItem.status = 'uploading';
+  if (fileListItem.status !== "ready") return;
+  fileListItem.status = "uploading";
   try {
     const response = await request({
       url: props.api,
-      method: 'post',
+      method: "post",
       headers: {
-        'Content-Type': 'multipart/form-data'
+        "Content-Type": "multipart/form-data",
       },
-      customServerErrorMessage: props.multiple ? null : '上传失败',
-      data: formData
+      customServerErrorMessage: props.multiple ? null : "上传失败",
+      data: formData,
     });
-    fileListItem.status = 'success';
+    fileListItem.status = "success";
     fileListItem.response = response;
-    uploadResponse(fileListItem, 'success');
+    uploadResponse(fileListItem, "success");
   } catch (_error) {
-    fileListItem.status = 'fail';
+    fileListItem.status = "fail";
     fileListItem.response = _error;
-    uploadResponse(fileListItem, 'fail');
+    uploadResponse(fileListItem, "fail");
   }
 };
-const uploadResponse = (fileListItem: UploadFile, key: 'success' | 'fail') => {
+const uploadResponse = (fileListItem: UploadFile, key: "success" | "fail") => {
   if (!props.multiple) {
-    if (key === 'success') uploadSuccess(fileListItem.response);
-    if (key === 'fail') uploadFail();
+    if (key === "success") uploadSuccess(fileListItem.response);
+    if (key === "fail") uploadFail();
   } else {
-    const allFinally = fileList.value.every((item) => item.status !== 'uploading');
-    const successList = fileList.value.filter((item) => item.status === 'success');
-    const failList = fileList.value.filter((item) => item.status === 'fail');
+    const allFinally = fileList.value.every(
+      (item) => item.status !== "uploading",
+    );
+    const successList = fileList.value.filter(
+      (item) => item.status === "success",
+    );
+    const failList = fileList.value.filter((item) => item.status === "fail");
     if (allFinally) {
       if (successList.length === fileList.value.length) {
         // 全成功
@@ -203,9 +214,9 @@ const uploadResponse = (fileListItem: UploadFile, key: 'success' | 'fail') => {
       } else {
         // 个别失败 个别成功
         disabled.value = false;
-        emits('partSuccess', {
+        emits("partSuccess", {
           success: successList,
-          fail: failList
+          fail: failList,
         });
       }
     }
@@ -213,14 +224,14 @@ const uploadResponse = (fileListItem: UploadFile, key: 'success' | 'fail') => {
 };
 const uploadSuccess = (response: unknown) => {
   setTimeout(() => {
-    emits('success', response);
+    emits("success", response);
     clean();
     disabled.value = false;
   }, 500);
 };
 const uploadFail = () => {
   disabled.value = false;
-  emits('error');
+  emits("error");
 };
 
 // 上传前

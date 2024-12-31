@@ -1,5 +1,5 @@
-import { ResponseJson, ResponsePageJson } from '@/config/request';
-import { request } from '@/utils/request';
+import { ResponseJson, SystemResponsePageJson } from "@/config/request";
+import { request } from "@/utils/request";
 
 export interface RoleProps {
   id: number;
@@ -27,44 +27,48 @@ export interface SetRoleRouterDto {
   router_ids: string[];
 }
 
-export function getRoleList(params: GetRoleDto): Promise<ResponsePageJson<RoleProps>> {
+export function getRoleList(
+  params: GetRoleDto,
+): Promise<SystemResponsePageJson<RoleProps>> {
   return request({
-    url: '/role/list',
-    method: 'get',
-    params
+    url: "/role/list",
+    method: "get",
+    params,
   });
 }
 
 export function createRole(data: CreateRoleDto): Promise<any> {
   return request({
-    url: '/role/add',
-    method: 'post',
-    data
+    url: "/role/add",
+    method: "post",
+    data,
   });
 }
 
 export function editRole(data: EditRoleDto): Promise<any> {
   return request({
     url: `/role/update`,
-    method: 'put',
-    data
+    method: "put",
+    data,
   });
 }
 
-export function getRoleRouter(role_id: string): Promise<ResponseJson<string[]>> {
+export function getRoleRouter(
+  role_id: string,
+): Promise<ResponseJson<string[]>> {
   return request({
-    url: '/router/id/list/role/access',
-    method: 'get',
+    url: "/role/router/ids",
+    method: "get",
     params: {
-      role_id
-    }
+      role_id,
+    },
   });
 }
 
 export function setRoleRouter(data: SetRoleRouterDto) {
   return request({
-    url: '/router/update/role/access',
-    method: 'put',
-    data
+    url: "/role/router/tree/edit",
+    method: "put",
+    data,
   });
 }

@@ -1,26 +1,26 @@
-import { ResponseJson, ResponsePageJson } from "@/config/request";
+import { ResponseJson, SystemResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface GetUserListDto {
   page: number;
   page_size: number;
-  user_name?: string;
-  user_search?: boolean;
+  username?: string;
 }
 
 export interface UserProps {
+  create_time: string;
+  create_user: string;
   id: number;
-  access_code: string;
-  department_id: string;
-  department_name: string;
-  last_login: string;
+  login_ip: string;
+  login_time: string;
   update_time: string;
+  update_user: string;
   user_id: string;
-  user_name: string;
+  username: string;
 }
 
 export interface UserDto {
-  user_name: string;
+  username: string;
   password: string;
   department_id: string;
   workwx_user_id: string;
@@ -31,14 +31,14 @@ export type EditUserDto = UserDto & Pick<UserProps, "id">;
 
 export interface ResetPasswordDto {
   id: number;
-  new_password: string;
+  password: string;
 }
 
 export function getUserList(
   params: GetUserListDto,
-): Promise<ResponsePageJson<UserProps>> {
+): Promise<SystemResponsePageJson<UserProps>> {
   return request({
-    url: "/users/list",
+    url: "/user/list",
     method: "get",
     params,
   });
@@ -46,7 +46,7 @@ export function getUserList(
 
 export function createUser(data: UserDto) {
   return request({
-    url: "/users/add",
+    url: "/user/add",
     method: "post",
     data,
   });
@@ -54,7 +54,7 @@ export function createUser(data: UserDto) {
 
 export function editUser(data: EditUserDto) {
   return request({
-    url: "/users/update",
+    url: "/user/edit",
     method: "put",
     data,
   });
@@ -62,7 +62,7 @@ export function editUser(data: EditUserDto) {
 
 export function deleteUser(id: number) {
   return request({
-    url: "/users/delete",
+    url: "/user/delete",
     method: "delete",
     params: { id },
   });
@@ -70,7 +70,7 @@ export function deleteUser(id: number) {
 
 export function resetPassword(data: ResetPasswordDto) {
   return request({
-    url: "/users/password/reset",
+    url: "/user/edit",
     method: "put",
     data,
   });

@@ -28,7 +28,7 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <div class="frequencyText">更新频率：每天 1 点更新</div>
+          <div class="frequencyText">更新频率：实时</div>
         </template>
       </TsxElementTable>
     </div>
@@ -48,18 +48,7 @@ import {
 
 // 获取列表
 const filterValue = ref<Partial<ListingFilterProps>>({});
-const tableData = ref<ListingProps[]>([
-  {
-    id: 1,
-    platform: "沃尔玛",
-    shopName: "星与-沃尔玛-花仙兽",
-    shopId: "101133243",
-    totalLinkCount: 39123,
-    onSaleLinkCount: 28192,
-    todayOnSaleLinkCount: 1203,
-    todayOffSaleLinkCount: 4912,
-  },
-]);
+const tableData = ref<ListingProps[]>([]);
 const loading = ref(false);
 const total = ref(0);
 const currentPage = ref(PAGE);

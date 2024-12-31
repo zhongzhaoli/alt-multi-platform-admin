@@ -1,19 +1,19 @@
-import { ResponseJson } from '@/config/request';
-import { UserInfo } from '@/store/modules/user';
-import { request } from '@/utils/request';
-import { RouteRecordRaw } from 'vue-router';
+import { ResponseJson } from "@/config/request";
+import { UserInfo } from "@/store/modules/user";
+import { request } from "@/utils/request";
+import { RouteRecordRaw } from "vue-router";
 
 export function getUserInfo() {
   return request<ResponseJson<UserInfo>>({
-    url: '/users/me',
-    method: 'get'
+    url: "/user/me",
+    method: "get",
   });
 }
 
-export function getUserRoutes(): Promise<ResponseJson<{ data: RouteRecordRaw[] }>> {
+export function getUserRoutes(): Promise<ResponseJson<RouteRecordRaw[]>> {
   return request({
-    url: '/router/list/user/access/tree',
-    method: 'get'
+    url: "/role/router/tree",
+    method: "get",
   });
 }
 
@@ -24,8 +24,8 @@ export interface ChangePasswordDto {
 
 export function changePassword(data: ChangePasswordDto): Promise<any> {
   return request({
-    url: '/users/password/update',
-    method: 'put',
-    data
+    url: "/users/password/update",
+    method: "put",
+    data,
   });
 }

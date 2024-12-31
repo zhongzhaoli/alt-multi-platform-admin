@@ -6,21 +6,23 @@ import type {
 } from "tsx-element-table";
 import { h } from "vue";
 
+const platformMap: Array<{ label: string; value: string }> = [
+  {
+    label: "沃尔玛",
+    value: "Walmart",
+  },
+  {
+    label: "Tiktok",
+    value: "Tiktok",
+  },
+];
+
 export const filterColumns: FilterColumnsProp[] = [
   {
     label: "平台",
     type: "select",
     prop: "platform",
-    selectOptions: [
-      {
-        label: "沃尔玛",
-        value: "walmart",
-      },
-      {
-        label: "Tiktok",
-        value: "tiktok",
-      },
-    ],
+    selectOptions: platformMap,
   },
 ];
 
@@ -30,22 +32,26 @@ export const tableColumns: TableColumnProps[] = [
     prop: "platform",
     align: "center",
     width: 180,
+    formatter: (_row, _column, cellValue) => {
+      const platform = platformMap.find((item) => item.value === cellValue);
+      return h("span", null, platform?.label || "-");
+    },
   },
   {
     label: "店铺名称",
-    prop: "shopName",
+    prop: "shop_name",
     width: 180,
     align: "center",
   },
   {
     label: "店铺ID",
-    prop: "shopId",
+    prop: "shop_id",
     width: 180,
     align: "center",
   },
   {
     label: "总链接数量",
-    prop: "totalLinkCount",
+    prop: "all_count",
     minWidth: 160,
     align: "center",
     formatter: (_row, _column, cellValue) => {
@@ -54,7 +60,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: "在售链接数量",
-    prop: "onSaleLinkCount",
+    prop: "for_sale_count",
     minWidth: 160,
     align: "center",
     formatter: (_row, _column, cellValue) => {
@@ -63,7 +69,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: "当天上架链接数量",
-    prop: "todayOnSaleLinkCount",
+    prop: "listing_count",
     minWidth: 160,
     align: "center",
     formatter: (_row, _column, cellValue) => {
@@ -72,7 +78,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: "当天下架链接数量",
-    prop: "todayOffSaleLinkCount",
+    prop: "remove_count",
     minWidth: 160,
     align: "center",
     formatter: (_row, _column, cellValue) => {

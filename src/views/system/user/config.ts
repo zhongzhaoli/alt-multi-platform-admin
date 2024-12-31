@@ -3,13 +3,13 @@ import { FormRules } from "element-plus";
 import { TableColumnProps, HandleColumnProps } from "tsx-element-table";
 
 export interface FilterDto {
-  user_name: string;
+  username: string;
 }
 
 export const filterColumns: FilterColumnsProp[] = [
   {
     label: "用户名",
-    prop: "user_name",
+    prop: "username",
   },
 ];
 
@@ -28,7 +28,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: "用户名",
-    prop: "user_name",
+    prop: "username",
     minWidth: 140,
     align: "center",
   },
@@ -40,7 +40,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: "最后登录时间",
-    prop: "last_login",
+    prop: "login_time",
     minWidth: 140,
     align: "center",
   },
@@ -77,7 +77,7 @@ export const rules: FormRules = {
     trigger: "change",
     message: "所属岗位不能为空",
   },
-  user_name: {
+  username: {
     required: true,
     message: "用户名不能为空",
   },

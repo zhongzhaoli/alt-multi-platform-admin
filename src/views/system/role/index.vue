@@ -15,22 +15,26 @@
         :table-columns="config.tableColumns"
         :table="{
           data: tableData,
-          border: true
+          border: true,
         }"
         :handle="{
           show: true,
-          columns: config.handleLeftButtons
+          columns: config.handleLeftButtons,
         }"
         :pagination="{
-          total
+          total,
         }"
         @table-refresh="getListFun"
         @page-change="getListFun"
         @handle-click="handleClick"
       >
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="editFun(row)"> 编辑 </el-button>
-          <el-button link type="primary" @click="editPermissionFun(row)"> 权限 </el-button>
+          <el-button link type="primary" @click="editFun(row)">
+            编辑
+          </el-button>
+          <el-button link type="primary" @click="editPermissionFun(row)">
+            权限
+          </el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -42,9 +46,17 @@
       @submit="submitValidate"
       @closed="dialogClosed"
     >
-      <el-form ref="formRef" label-position="top" :model="formValue" :rules="config.formRules">
+      <el-form
+        ref="formRef"
+        label-position="top"
+        :model="formValue"
+        :rules="config.formRules"
+      >
         <el-form-item label="岗位名称" prop="role_name">
-          <el-input v-model="formValue.role_name" placeholder="请输入岗位名称" />
+          <el-input
+            v-model="formValue.role_name"
+            placeholder="请输入岗位名称"
+          />
         </el-form-item>
       </el-form>
     </ConfirmDialog>
@@ -68,9 +80,18 @@
           :props="{ label: (data: any) => data.meta.title }"
         >
           <template #default="{ data }">
-            <i v-if="data.meta.type === ROUTE_TYPE_ENUM.BUTTON" class="ri-radio-button-line" />
-            <i v-if="data.meta.type === ROUTE_TYPE_ENUM.MENU" class="ri-article-line" />
-            <i v-else-if="data.meta.type === ROUTE_TYPE_ENUM.CATA" class="ri-folder-line" />
+            <i
+              v-if="data.meta.type === ROUTE_TYPE_ENUM.BUTTON"
+              class="ri-radio-button-line"
+            />
+            <i
+              v-if="data.meta.type === ROUTE_TYPE_ENUM.MENU"
+              class="ri-article-line"
+            />
+            <i
+              v-else-if="data.meta.type === ROUTE_TYPE_ENUM.CATA"
+              class="ri-folder-line"
+            />
             <span style="padding-left: 4px">{{ data.meta.title }}</span>
           </template>
         </el-tree>
@@ -79,16 +100,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
-import TsxElementTable from 'tsx-element-table';
-import FilterContainer from '@/components/FilterContainer/index.vue';
-import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import * as config from './config';
-import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { ROUTE_TYPE_ENUM } from '@/constants/route';
-import * as API_ROLE from '@/api/system/role';
-import { DataProps, getRouterList } from '@/api/system/router';
-import { ElMessage, FormInstance } from 'element-plus';
+import { ref } from "vue";
+import TsxElementTable from "tsx-element-table";
+import FilterContainer from "@/components/FilterContainer/index.vue";
+import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
+import * as config from "./config";
+import { PAGE, PAGE_SIZE } from "@/constants/app";
+import { ROUTE_TYPE_ENUM } from "@/constants/route";
+import * as API_ROLE from "@/api/system/role";
+import { DataProps, getRouterList } from "@/api/system/router";
+import { ElMessage, FormInstance } from "element-plus";
 
 const tableData = ref<API_ROLE.RoleProps[]>([]);
 const currentPage = ref(PAGE);
@@ -99,7 +120,7 @@ const dialogVisible = ref(false);
 const dialogCreate = ref(true);
 const submitLoading = ref(false);
 const formValue = ref<Partial<API_ROLE.EditRoleDto>>({
-  role_name: ''
+  role_name: "",
 });
 
 const formRef = ref<FormInstance | null>();
@@ -108,13 +129,13 @@ const filterValue = ref<Partial<config.FilterDto>>();
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await API_ROLE.getRoleList({
+    const { data } = await API_ROLE.getRoleList({
       page: currentPage.value,
       page_size: pageSize.value,
-      ...filterValue.value
+      ...filterValue.value,
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.error(err);
   } finally {
@@ -124,7 +145,7 @@ const getListFun = async () => {
 getListFun();
 
 const handleClick = (key: string) => {
-  if (key === 'create') {
+  if (key === "create") {
     dialogCreate.value = true;
     dialogVisible.value = true;
   }
@@ -153,7 +174,7 @@ const createRoleFun = async () => {
   submitLoading.value = true;
   try {
     await API_ROLE.createRole(formValue.value as API_ROLE.CreateRoleDto);
-    ElMessage.success('操作成功');
+    ElMessage.success("操作成功");
     getListFun();
     dialogVisible.value = false;
   } catch (err) {
@@ -167,7 +188,7 @@ const editRoleFun = async () => {
   submitLoading.value = true;
   try {
     await API_ROLE.editRole(formValue.value as API_ROLE.EditRoleDto);
-    ElMessage.success('操作成功');
+    ElMessage.success("操作成功");
     getListFun();
     dialogVisible.value = false;
   } catch (err) {
@@ -182,7 +203,7 @@ const selectPermissionVisible = ref(false);
 const permissionLoading = ref(false);
 const menuList = ref<DataProps[]>([]);
 const defaultCheckedKeys = ref<string[]>([]);
-const tempRoleId = ref<string>('');
+const tempRoleId = ref<string>("");
 const perimissionTreeRef = ref<{
   getCheckedNodes: () => string[];
   setCheckedKeys: () => void;
@@ -197,10 +218,10 @@ const getPermissionList = async () => {
   try {
     const [data1, data2] = await Promise.all([
       getRouterList(),
-      API_ROLE.getRoleRouter(tempRoleId.value)
+      API_ROLE.getRoleRouter(tempRoleId.value),
     ]);
-    menuList.value = data1.datas || [];
-    defaultCheckedKeys.value = data2.datas || [];
+    menuList.value = data1.data || [];
+    defaultCheckedKeys.value = data2.data || [];
   } catch (err) {
     console.error(err);
   } finally {
@@ -209,7 +230,7 @@ const getPermissionList = async () => {
 };
 const permissionClosed = () => {
   defaultCheckedKeys.value = [];
-  tempRoleId.value = '';
+  tempRoleId.value = "";
 };
 const setPermissionSubmit = async () => {
   submitLoading.value = true;
@@ -218,9 +239,9 @@ const setPermissionSubmit = async () => {
   try {
     await API_ROLE.setRoleRouter({
       role_id: tempRoleId.value,
-      router_ids: checkedNodes.map((item: any) => item.id)
+      router_ids: checkedNodes.map((item: any) => item.id),
     });
-    ElMessage.success('操作成功');
+    ElMessage.success("操作成功");
   } catch (err) {
     console.log(err);
   } finally {

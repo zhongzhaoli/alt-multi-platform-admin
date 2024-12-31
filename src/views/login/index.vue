@@ -13,14 +13,14 @@
           <el-form>
             <el-form-item>
               <el-input
-                v-model="loginPayload.user_name"
+                v-model="loginPayload.username"
                 placeholder="请输入用户名"
                 @keydown.enter="loginHandle"
               />
             </el-form-item>
             <el-form-item>
               <el-input
-                v-model="loginPayload.user_passwd"
+                v-model="loginPayload.password"
                 show-password
                 type="password"
                 placeholder="请输入密码"
@@ -53,26 +53,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import logo from '@/assets/logo.png';
-import { useUserStore } from '@/store/modules/user';
-import { useRouter } from 'vue-router';
-import { ElNotification } from 'element-plus';
-import { nowTimePeriod, timePeriodZh } from '@/utils/index';
-import { SAVED_USER_KEY } from '@/constants/app';
+import { onMounted, reactive, ref } from "vue";
+import logo from "@/assets/logo.png";
+import { useUserStore } from "@/store/modules/user";
+import { useRouter } from "vue-router";
+import { ElNotification } from "element-plus";
+import { nowTimePeriod, timePeriodZh } from "@/utils/index";
+import { SAVED_USER_KEY } from "@/constants/app";
+import { LoginDto } from "@/api/user/login";
 const userStore = useUserStore();
 const router = useRouter();
-interface LoginDto {
-  user_name: string;
-  user_passwd: string;
-}
 
 // 按钮loading
 const loading = ref<boolean>(false);
 // 登录信息载核
 const loginPayload = reactive<LoginDto>({
-  user_name: '',
-  user_passwd: '',
+  username: "",
+  password: "",
 });
 const remember = ref<boolean>(false);
 
@@ -83,15 +80,15 @@ const loginHandle = async () => {
   try {
     await userStore.login(loginPayload);
     ElNotification({
-      title: '登录成功',
+      title: "登录成功",
       offset: 45,
       message: `${timePeriodZh[nowTimePeriod()]}，欢迎回来`,
-      type: 'success',
+      type: "success",
     });
     if (remember.value) {
       localStorage.setItem(SAVED_USER_KEY, JSON.stringify(loginPayload));
     }
-    router.push('/');
+    router.push("/");
   } catch (err) {
     console.log(err);
   } finally {
@@ -103,8 +100,8 @@ onMounted(() => {
   const savedUser = localStorage.getItem(SAVED_USER_KEY);
   if (savedUser) {
     const user = JSON.parse(savedUser);
-    loginPayload.user_name = user.user_name;
-    loginPayload.user_passwd = user.user_passwd;
+    loginPayload.username = user.username;
+    loginPayload.password = user.password;
     remember.value = true;
   }
 });
@@ -116,7 +113,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('/src/assets/bg.jpg');
+  background-image: url("/src/assets/bg.jpg");
   background-size: cover;
   position: relative;
   & > .opacityBox {

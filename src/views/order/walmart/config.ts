@@ -4,7 +4,7 @@ import type {
 } from "tsx-element-table";
 import { FilterColumnsProp } from "@/components/FilterContainer/types";
 import { h } from "vue";
-import { WalmartStausEnum } from "@/api/order/walmart";
+import { WalmartOrderProps, WalmartStausEnum } from "@/api/order/walmart";
 import { Download } from "@element-plus/icons-vue";
 import { ElText } from "element-plus";
 
@@ -48,22 +48,22 @@ const walmartStatusMap: Array<{
 export const filterColumns: FilterColumnsProp[] = [
   {
     label: "所属店铺",
-    prop: "shopId",
+    prop: "shop_id",
   },
   {
     label: "PO单号",
-    type: "multiple",
-    prop: "poNo",
+    type: "input",
+    prop: "purchase_order_id",
   },
   {
     label: "CO单号",
-    type: "multiple",
-    prop: "coNo",
+    type: "input",
+    prop: "customer_order_id",
   },
   {
     label: "订单状态",
     type: "select",
-    prop: "orderStatus",
+    prop: "status",
     selectOptions: walmartStatusMap,
   },
 ];
@@ -75,6 +75,12 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     type: "selection",
     reserveSelection: true,
+    selectable: (row: WalmartOrderProps) => {
+      return (
+        row.order_line_status === WalmartStausEnum.Created ||
+        row.order_line_status === WalmartStausEnum.Acknowledged
+      );
+    },
     prop: "selection",
   },
   {
@@ -94,16 +100,20 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     width: 180,
     showOverflowTooltip: true,
-    prop: "shopName",
+    prop: "shop_name",
   },
   {
     label: "订单状态",
     align: "center",
     minWidth: 140,
-    prop: "orderStatus",
+    prop: "order_line_status",
     formatter: (_row, _column, cellValue) => {
       const status = walmartStatusMap.find((item) => item.value === cellValue);
-      return h(ElText, { type: status?.type || "info" }, status?.label || "");
+      return h(
+        ElText,
+        { type: status?.type || "info" },
+        () => status?.label || "",
+      );
     },
   },
   {
@@ -117,14 +127,18 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     prop: "totalAmount",
     width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
+    formatter: (row) => {
+      return h(
+        "b",
+        null,
+        `$ ${(parseFloat(row.fee_amount || "0") + parseFloat(row.product_amount || "0") + parseFloat(row.shipping_amount || "0") + parseFloat(row.product_tax_amount || "0") + parseFloat(row.fee_tax_amount || "0") + parseFloat(row.shipping_tax_amount || "0")).toFixed(2)}`,
+      );
     },
   },
   {
     label: "产品金额",
     align: "center",
-    prop: "productAmount",
+    prop: "product_amount",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
@@ -133,7 +147,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "运费",
     align: "center",
-    prop: "shippingFee",
+    prop: "shipping_amount",
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
@@ -144,21 +158,21 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     prop: "taxFee",
     width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
+    formatter: (row) => {
+      return h("b", null, `$ ${parseFloat(row.taxAmount || 0).toFixed(2)}`);
     },
   },
   {
     label: "下单时间",
     align: "center",
-    prop: "orderTime",
-    minWidth: 120,
+    prop: "order_date",
+    minWidth: 180,
   },
   {
     label: "更新时间",
     align: "center",
-    prop: "updateTime",
-    minWidth: 120,
+    prop: "update_time",
+    minWidth: 180,
   },
   {
     label: "收货地址",
@@ -169,7 +183,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "物流信息",
     align: "center",
-    minWidth: 200,
+    minWidth: 220,
     prop: "logisticsInfo",
   },
   {

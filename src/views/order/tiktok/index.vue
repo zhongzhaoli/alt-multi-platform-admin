@@ -32,6 +32,7 @@
         @table-refresh="getListFun"
         @page-change="getListFun"
         @selection-change="selectionChange"
+        @handle-right-click="handleRightClick"
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
@@ -44,26 +45,26 @@
         </template>
         <template #table-orderSn="{ row }">
           <RenderCopyIcon
-            :text="row.orderSn"
+            :text="row.order_id"
             type="primary"
             title="ASIN"
             margin="r"
-          />{{ row.orderSn }}
+          />{{ row.order_id }}
         </template>
         <template #table-productInfo="{ row }">
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              :image-url="row.productImageUrl"
-              :product-name="row.productName"
+              :image-url="row.sku_image"
+              :product-name="row.product_name"
               :desc-list="[
                 {
-                  text: row.productSku,
+                  text: row.seller_sku,
                   prefix: 'MSKU：',
                 },
               ]"
             />
-            <div class="quantityAmount">x{{ row.orderLineQuantity || 0 }}</div>
+            <div class="quantityAmount">x1</div>
           </div>
         </template>
         <template #table-asin="{ row }">
@@ -75,29 +76,34 @@
           />{{ row.asin }}
         </template>
         <template #table-address="{ row }">
-          <div>{{ row.phone }}</div>
-          <TextEllipsis
-            :text="`${row.city} ${row.state} ${row.address1 || ''} ${row.address2 || ''}`"
-          />
+          <div>{{ row.buyer_phone_number }}</div>
+          <TextEllipsis :text="`${row.buyer_full_address}`" />
         </template>
         <template #table-logisticsInfo="{ row }">
-          <div>{{ row.carrierName }}</div>
-          <LinkItem :href="row.trackingURL" :text="row.trackingNumber" />
+          <div>{{ row.shipping_provider_id || "-" }}</div>
+          <template v-if="row.tracking_number">
+            <TextEllipsis :text="row.tracking_number || '-'" />
+          </template>
         </template>
         <template #table-remark="{ row }">
-          <TextEllipsis :text="row.remark || '-'" :line="2" />
+          <TextEllipsis :text="row.buyer_message || '-'" :line="2" />
         </template>
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="singleDeliver(row)">
-            发货
-          </el-button>
+          <template
+            v-if="row.order_status === TiktokStausEnum.AWAITING_SHIPMENT"
+          >
+            <el-button link type="primary" @click="singleDeliver(row)">
+              发货
+            </el-button>
+          </template>
+          <template v-else>-</template>
         </template>
       </TsxElementTable>
     </div>
     <ConfirmDialog
       v-model="dialogVisible"
       top="10vh"
-      width="600px"
+      width="700px"
       title="订单发货"
       @closed="dialogClosed"
       @submit="dialogSubmit"
@@ -125,23 +131,30 @@
         </div>
       </div>
       <el-table :data="selectedRows" :max-height="400" border>
-        <el-table-column label="订单号" align="center" prop="orderSn">
+        <el-table-column label="订单号" align="center" prop="order_id">
           <template #default="{ row }">
-            <el-input v-model="row.orderSn" disabled />
+            <el-input v-model="row.order_id" disabled />
           </template>
         </el-table-column>
-        <el-table-column label="物流承运商" align="center" prop="carrierName">
+        <el-table-column
+          label="物流承运商"
+          align="center"
+          prop="shipping_provider_id"
+        >
           <template #default="{ row }">
-            <el-input v-model="row.carrierName" placholder="物流承运商" />
+            <el-input
+              v-model="row.shipping_provider_id"
+              placeholder="物流承运商"
+            />
           </template>
         </el-table-column>
         <el-table-column
           label="物流追踪号"
           align="center"
-          prop="trackingNumber"
+          prop="tracking_number"
         >
           <template #default="{ row }">
-            <el-input v-model="row.trackingNumber" placholder="物流追踪号" />
+            <el-input v-model="row.tracking_number" placeholder="物流追踪号" />
           </template>
         </el-table-column>
       </el-table>
@@ -153,8 +166,11 @@ import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
 import SelectTiktokStore from "@/components/SelectTiktokStore/index.vue";
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
-import LinkItem from "@/components/LinkItem/index.vue";
-import { RenderCopyIcon } from "@/utils/index";
+import {
+  downloadCore,
+  generateVisualNumber,
+  RenderCopyIcon,
+} from "@/utils/index";
 import TextEllipsis from "@/components/TextEllipsis/index.vue";
 import ProductItem from "@/components/ProductItem/index.vue";
 import * as config from "./config";
@@ -166,9 +182,13 @@ import {
   DeliverProductsDto,
   TiktokOrderProps,
   type TiktokOrderFilterProps,
+  TiktokStausEnum,
+  exportTiktokOrderList,
 } from "@/api/order/tiktok";
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
+import axios, { CancelTokenSource } from "axios";
+import { useFullLoading } from "@/hooks/useFullLoading";
 
 // 获取列表
 const filterValue = ref<Partial<TiktokOrderFilterProps>>({});
@@ -182,11 +202,11 @@ const getListFun = async () => {
   try {
     const { datas } = await getTiktokOrderList({
       page: currentPage.value,
-      pageSize: pageSize.value,
+      page_size: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = datas?.lists || [];
+    total.value = datas?.all_total || 0;
   } catch (err) {
     console.log(err);
   } finally {
@@ -220,18 +240,22 @@ const dialogClosed = () => {
   selectedRows.value = [];
 };
 const dialogSubmit = async () => {
-  const carrierNameIsEmpty = selectedRows.value.some((row) => !row.carrierName);
+  const carrierNameIsEmpty = selectedRows.value.some(
+    (row) => !row.shipping_provider_id,
+  );
   const trackingNumberIsEmpty = selectedRows.value.some(
-    (row) => !row.trackingNumber,
+    (row) => !row.tracking_number,
   );
   if (carrierNameIsEmpty || trackingNumberIsEmpty) {
     return ElMessage.warning("请填写物流承运商或物流追踪号");
   }
   submitLoading.value = true;
   const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
-    orderSn: row.orderSn,
-    carrierName: row.carrierName,
-    trackingNumber: row.trackingNumber,
+    shop_id: row.shop_id,
+    order_id: row.order_id,
+    shipping_provider_id: row.shipping_provider_id,
+    tracking_number: row.tracking_number,
+    order_line_item_ids: [row.order_line_item_id],
   }));
   try {
     await deliverProducts(deliverList);
@@ -245,14 +269,39 @@ const dialogSubmit = async () => {
   }
 };
 
+// 导出
+const cancelToken = axios.CancelToken;
+let source: CancelTokenSource;
+const fullLoading = useFullLoading();
+const handleRightClick = async () => {
+  source = cancelToken.source();
+  fullLoading.open();
+  try {
+    const data = await exportTiktokOrderList(
+      {
+        page: currentPage.value,
+        page_size: pageSize.value,
+        ...filterValue.value,
+        export: 1,
+      },
+      source.token,
+    );
+    downloadCore(data, `Tiktok订单列表 - ${generateVisualNumber()}.xlsx`);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    fullLoading.close();
+  }
+};
+
 // 批量设置
 const batchName = ref("");
 const batchNumber = ref("");
 const batchSetting = () => {
   if (!selectedRows.value.length) return ElMessage.warning("未选择订单");
   selectedRows.value.forEach((row: TiktokOrderProps) => {
-    row.carrierName = batchName.value;
-    row.trackingNumber = batchNumber.value;
+    row.shipping_provider_id = batchName.value;
+    row.tracking_number = batchNumber.value;
   });
 };
 </script>

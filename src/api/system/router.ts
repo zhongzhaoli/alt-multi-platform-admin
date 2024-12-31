@@ -1,7 +1,7 @@
-import { ResponseJson } from '@/config/request';
-import { ROUTE_TYPE } from '@/constants/route';
-import { request } from '@/utils/request';
-import { _RouteRecordBase } from 'vue-router';
+import { ResponseJson } from "@/config/request";
+import { ROUTE_TYPE } from "@/constants/route";
+import { request } from "@/utils/request";
+import { _RouteRecordBase } from "vue-router";
 
 export interface DataProps extends _RouteRecordBase {
   id: number;
@@ -12,11 +12,13 @@ export interface GetRouterDto {
   title?: string;
   path?: string;
 }
-export function getRouterList(params?: GetRouterDto): Promise<ResponseJson<DataProps[]>> {
+export function getRouterList(
+  params?: GetRouterDto,
+): Promise<ResponseJson<DataProps[]>> {
   return request({
-    url: '/router/list/tree',
-    method: 'get',
-    params
+    url: "/router/tree",
+    method: "get",
+    params,
   });
 }
 
@@ -37,9 +39,9 @@ export interface CreateRouterDto {
 }
 export function createRouter(data: CreateRouterDto): Promise<any> {
   return request({
-    url: '/router/create',
-    method: 'post',
-    data
+    url: "/router/create",
+    method: "post",
+    data,
   });
 }
 
@@ -48,8 +50,8 @@ export interface UpdateRouterDto extends CreateRouterDto {
 }
 export function updateRouter(data: UpdateRouterDto): Promise<any> {
   return request({
-    url: '/router/update',
-    method: 'put',
-    data
+    url: "/router/update",
+    method: "put",
+    data,
   });
 }
