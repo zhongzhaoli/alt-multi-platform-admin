@@ -65,10 +65,12 @@ export interface ComponentProps {
   multiple: boolean;
   loading: boolean | undefined;
   extraParams?: Record<string, any>;
+  selectAll?: boolean;
 }
 
 const props = withDefaults(defineProps<ComponentProps>(), {
   list: [],
+  selectAll: false,
 });
 const emits = defineEmits(["change"]);
 
@@ -115,6 +117,22 @@ watch(
   },
   {
     immediate: true,
+  },
+);
+watch(
+  () => props.selectAll,
+  () => {
+    const isAllChecked = list.value.every((item) => item.checked);
+    if (!isAllChecked) {
+      list.value.forEach((item) => {
+        item.checked = true;
+      });
+    } else {
+      list.value.forEach((item) => {
+        item.checked = false;
+      });
+    }
+    checkBoxChange();
   },
 );
 </script>

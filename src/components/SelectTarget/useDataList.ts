@@ -5,7 +5,7 @@ import { ResponsePageJson } from "@/config/request";
 
 export function useDataList(emits: any, props: ComponentProps) {
   const currentPage = ref<number>(PAGE);
-  const pageSize = ref<number>(15);
+  const pageSize = ref<number>(999);
   const total = ref(0);
   const loading = ref<boolean>(true);
   const list = ref<any[]>([]);
@@ -104,6 +104,7 @@ export function useDataList(emits: any, props: ComponentProps) {
         newList.add(item);
       }
     });
+    console.log(unref(list));
     unref(list).forEach((item) => {
       if (item.checked) {
         newList.add(item[unref(uValueKey)]);

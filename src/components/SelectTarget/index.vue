@@ -5,12 +5,29 @@
         v-model="cVisible"
         width="400px"
         align-center
-        :submit-loading="submitLoading"
         class="bodyNoPadding hideHeader"
         @closed="closed"
         @close="close"
-        @submit="submitFun"
       >
+        <template #footer>
+          <div class="d-flex justify-space-between">
+            <div>
+              <el-button type="warning" @click="multipleAll">
+                全选 / 取消
+              </el-button>
+            </div>
+            <div>
+              <el-button @click="cVisible = false">取消</el-button>
+              <el-button
+                type="primary"
+                :loading="submitLoading"
+                @click="submitFun"
+              >
+                确认
+              </el-button>
+            </div>
+          </div>
+        </template>
         <div v-loading="loading" class="Dialogbody">
           <div v-if="!closedVisible">
             <DataList
@@ -22,6 +39,7 @@
               :list="selectList"
               :loading="loading"
               :extra-params="extraParams"
+              :select-all="selectAll"
               @change="selectChange"
             >
               <template #title="{ row }">
@@ -35,11 +53,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { watch } from 'vue';
-import ConfirmDialog from '../ConfirmDialog/index.vue';
-import DataList from './dataList.vue';
-import { DEFAULT_AVATAR_SHAPE, AVATAR_SHAPE } from '@/constants/app';
-import { useSelectTarget } from './useSelectTarget';
+import { watch } from "vue";
+import ConfirmDialog from "../ConfirmDialog/index.vue";
+import DataList from "./dataList.vue";
+import { DEFAULT_AVATAR_SHAPE, AVATAR_SHAPE } from "@/constants/app";
+import { useSelectTarget } from "./useSelectTarget";
 
 export interface ComponentProps {
   nameKey?: string;
@@ -55,12 +73,12 @@ export interface ComponentProps {
 const props = withDefaults(defineProps<ComponentProps>(), {
   avatarShape: DEFAULT_AVATAR_SHAPE,
   defaultSelectList: [],
-  nameKey: 'name',
-  valueKey: 'id',
+  nameKey: "name",
+  valueKey: "id",
   multiple: true,
-  submitLoading: false
+  submitLoading: false,
 });
-const emits = defineEmits(['submit', 'close', 'closed']);
+const emits = defineEmits(["submit", "close", "closed"]);
 
 const {
   openDialog,
@@ -71,7 +89,9 @@ const {
   selectChange,
   cVisible,
   closedVisible,
-  selectList
+  selectList,
+  multipleAll,
+  selectAll,
 } = useSelectTarget(emits);
 
 watch(
@@ -81,13 +101,13 @@ watch(
   },
   {
     immediate: true,
-    deep: true
-  }
+    deep: true,
+  },
 );
 
 defineExpose({
   openDialog,
-  closeDialog
+  closeDialog,
 });
 </script>
 <style lang="scss" scoped></style>
