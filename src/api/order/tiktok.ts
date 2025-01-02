@@ -50,6 +50,7 @@ export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
   page: number;
   page_size?: number;
   export?: 1 | 0;
+  order?: string;
 }
 
 // 列表

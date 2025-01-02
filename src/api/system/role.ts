@@ -47,7 +47,7 @@ export function createRole(data: CreateRoleDto): Promise<any> {
 
 export function editRole(data: EditRoleDto): Promise<any> {
   return request({
-    url: `/role/update`,
+    url: `/role/edit`,
     method: "put",
     data,
   });

@@ -95,20 +95,37 @@ const total = ref(0);
 const tableData = ref<any[]>([]);
 const loading = ref(false);
 const getListFun = async () => {
-  loading.value = true;
-  try {
-    const { data } = await API_LOG.getLogList({
-      page: unref(currentPage),
-      page_size: unref(pageSize),
-      ...unref(filterValue),
-    });
-    tableData.value = data?.list || [];
-    total.value = data?.total || 0;
-  } catch (err) {
-    console.log(err);
-  } finally {
-    loading.value = false;
-  }
+  tableData.value = [
+    {
+      create_time: "2025-01-02 17:23:21",
+      id: 130543,
+      is_delete: 0,
+      position: "未知",
+      req_content: "查询已授权的用户店铺",
+      req_method: "GET",
+      req_path: "/v1/walmart/user/shop/list",
+      resp_code: 200,
+      resp_time: 16,
+      router_tags: "walmart",
+      user_id: "1",
+      user_ip: "113.89.5.234",
+      user_name: "ALT-025-郑书源",
+    },
+  ];
+  // loading.value = true;
+  // try {
+  //   const { data } = await API_LOG.getLogList({
+  //     page: unref(currentPage),
+  //     page_size: unref(pageSize),
+  //     ...unref(filterValue),
+  //   });
+  //   tableData.value = data?.list || [];
+  //   total.value = data?.total || 0;
+  // } catch (err) {
+  //   console.log(err);
+  // } finally {
+  //   loading.value = false;
+  // }
 };
 getListFun();
 

@@ -33,6 +33,7 @@
         @page-change="getListFun"
         @selection-change="selectionChange"
         @handle-right-click="handleRightClick"
+        @sort-change="sortChange"
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
@@ -184,11 +185,25 @@ import {
   type TiktokOrderFilterProps,
   TiktokStausEnum,
   exportTiktokOrderList,
+  GetOrderDto,
 } from "@/api/order/tiktok";
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
 import axios, { CancelTokenSource } from "axios";
 import { useFullLoading } from "@/hooks/useFullLoading";
+
+// 排序条件变化
+const sortOrder = ref<{ [key: string]: "DESC" | "ASC" } | null>(null);
+const sortChange = (data: { column: any; prop: string; order: any }) => {
+  if (!data.order) {
+    sortOrder.value = null;
+  } else {
+    sortOrder.value = {
+      [data.prop]: data.order === "ascending" ? "ASC" : "DESC",
+    };
+  }
+  getListFun();
+};
 
 // 获取列表
 const filterValue = ref<Partial<TiktokOrderFilterProps>>({});
@@ -200,11 +215,15 @@ const total = ref(0);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getTiktokOrderList({
+    const searchParams: GetOrderDto = {
       page: currentPage.value,
       page_size: pageSize.value,
       ...filterValue.value,
-    });
+    };
+    if (sortOrder.value) {
+      searchParams.order = JSON.stringify(sortOrder.value);
+    }
+    const { data } = await getTiktokOrderList(searchParams);
     tableData.value = data?.list || [];
     total.value = data?.total || 0;
   } catch (err) {

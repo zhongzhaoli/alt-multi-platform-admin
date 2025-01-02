@@ -62,9 +62,9 @@ export function editUser(data: EditUserDto) {
 
 export function deleteUser(id: number) {
   return request({
-    url: "/user/delete",
-    method: "delete",
-    params: { id },
+    url: "/user/edit",
+    method: "put",
+    data: { id, status: 0 },
   });
 }
 

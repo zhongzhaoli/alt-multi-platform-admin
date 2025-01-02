@@ -1,4 +1,4 @@
-import { ResponseJson, ResponsePageJson } from "@/config/request";
+import { ResponseJson, ResponsePageJson, walmartURL } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface GetStoreDto {
@@ -30,7 +30,8 @@ export function getStoreList(
   params?: GetStoreDto,
 ): Promise<ResponsePageJson<StoreProps>> {
   return request({
-    url: "/walmart/shop/list",
+    baseURL: walmartURL,
+    url: "/walmart/shop",
     method: "get",
     params,
   });
