@@ -83,7 +83,7 @@ import TsxElementTable from "tsx-element-table";
 import { filterColumns, tableColumns } from "./config";
 // import SearchUser from '@/components/SelectUser/index.vue';
 import * as API_LOG from "@/api/handleLogs/index";
-import { ref, unref } from "vue";
+import { ref } from "vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import { ResponseCode } from "@/config/request";
 
