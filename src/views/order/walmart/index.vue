@@ -6,9 +6,9 @@
         :columns="config.filterColumns"
         @submit="getListFun"
       >
-        <template #shopId="{ form, row }">
+        <!-- <template #shopId="{ form, row }">
           <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" />
-        </template>
+        </template> -->
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -185,7 +185,7 @@
 <script setup lang="ts">
 import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
-import SelectWalmartStore from "@/components/SelectWalmartStore/index.vue";
+// import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
 import { RenderCopyIcon } from "@/utils/index";
 import TextEllipsis from "@/components/TextEllipsis/index.vue";
@@ -215,12 +215,12 @@ const total = ref(0);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await getWalmartOrderList({
+    const { data } = await getWalmartOrderList({
       page: currentPage.value,
       page_size: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = (datas?.data || []).map((row) => {
+    tableData.value = (data?.list || []).map((row) => {
       const taxAmount =
         parseFloat(row.product_tax_amount || "0") +
         row.fee_tax_amount +
@@ -230,7 +230,7 @@ const getListFun = async () => {
         taxAmount,
       };
     });
-    total.value = datas?.total || 0;
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {

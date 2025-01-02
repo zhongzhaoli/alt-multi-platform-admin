@@ -1,4 +1,4 @@
-import { WalmartResponsePageJson } from "@/config/request";
+import { ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 import { walmartURL } from "@/config/request";
 export enum WalmartStausEnum {
@@ -54,7 +54,7 @@ export interface GetOrderDto extends Partial<WalmartOrderFilterProps> {
 // 列表
 export function getWalmartOrderList(
   params: GetOrderDto,
-): Promise<WalmartResponsePageJson<WalmartOrderProps>> {
+): Promise<ResponsePageJson<WalmartOrderProps>> {
   return request({
     baseURL: walmartURL,
     url: "/order",

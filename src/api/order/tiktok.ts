@@ -1,4 +1,4 @@
-import { TiktokResponsePageJson } from "@/config/request";
+import { ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 import { tiktokURL } from "@/config/request";
 import { CancelToken } from "axios";
@@ -55,7 +55,7 @@ export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
 // 列表
 export function getTiktokOrderList(
   params: GetOrderDto,
-): Promise<TiktokResponsePageJson<TiktokOrderProps>> {
+): Promise<ResponsePageJson<TiktokOrderProps>> {
   return request({
     baseURL: tiktokURL,
     url: "/tk/get_all_order",

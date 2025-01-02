@@ -56,13 +56,13 @@ const pageSize = ref(PAGE_SIZE);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await getListingList({
+    const { data } = await getListingList({
       page: currentPage.value,
       pageSize: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {

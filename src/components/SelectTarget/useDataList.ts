@@ -1,7 +1,7 @@
 import { PAGE } from "@/constants/app";
 import { ref, unref } from "vue";
 import { type ComponentProps } from "./dataList.vue";
-import { SystemResponsePageJson } from "@/config/request";
+import { ResponsePageJson } from "@/config/request";
 
 export function useDataList(emits: any, props: ComponentProps) {
   const currentPage = ref<number>(PAGE);
@@ -10,9 +10,9 @@ export function useDataList(emits: any, props: ComponentProps) {
   const loading = ref<boolean>(true);
   const list = ref<any[]>([]);
   const loadingMore = ref<boolean>(false);
-  const uApi = ref<
-    ((params: any) => Promise<SystemResponsePageJson<any>>) | null
-  >(null);
+  const uApi = ref<((params: any) => Promise<ResponsePageJson<any>>) | null>(
+    null,
+  );
   const uNameKey = ref<string>("");
   const uValueKey = ref<string>("");
   const searchKey = ref<string>("");

@@ -1,4 +1,4 @@
-import { SystemResponsePageJson } from "@/config/request";
+import { ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum OrderStatusEnum {
@@ -44,7 +44,7 @@ export interface GetOrderDto extends Partial<WalmartRefunFilterProps> {
 
 export function getWalmartRefundList(
   params: GetOrderDto,
-): Promise<SystemResponsePageJson<RefundWalmartProps>> {
+): Promise<ResponsePageJson<RefundWalmartProps>> {
   return request({
     url: "/refund/walmart/list",
     method: "get",

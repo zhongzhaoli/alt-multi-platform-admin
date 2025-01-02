@@ -35,35 +35,10 @@ export interface ResponseJson<T = string> {
 }
 
 // 返回分页信息格式
-export interface SystemResponsePageJson<T = any> {
+export interface ResponsePageJson<T = any> {
   code: ResponseCode;
   msg: string;
   data: PageListJson<T> | null;
-}
-
-// TikTok 返回分页信息格式
-export interface TiktokResponsePageJson<T = any> {
-  code: ResponseCode;
-  msg: string;
-  datas: TiktokPageListJson<T> | null;
-}
-
-export interface TiktokPageListJson<T = any> {
-  all_total: number;
-  lists: T[];
-  total: number;
-}
-
-// Walmart 返回分页信息格式
-export interface WalmartResponsePageJson<T = any> {
-  code: ResponseCode;
-  msg: string;
-  datas: WalmartResponsePageJson<T> | null;
-}
-
-export interface WalmartResponsePageJson<T = any> {
-  total: number;
-  data: T[];
 }
 
 // 分页数据格式

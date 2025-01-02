@@ -26,13 +26,13 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "Client",
     prop: "client_id",
-    minWidth: 160,
+    width: 160,
     align: "center",
   },
   {
     label: "Client Secret",
     prop: "client_secret",
-    minWidth: 160,
+    width: 160,
     align: "center",
   },
   {

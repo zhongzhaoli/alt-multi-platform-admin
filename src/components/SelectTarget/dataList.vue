@@ -54,12 +54,12 @@ import { useDataList } from "./useDataList";
 import { watchEffect, watch, nextTick } from "vue";
 import { cloneDeep } from "lodash-es";
 import { AVATAR_SHAPE } from "@/constants/app";
-import { SystemResponsePageJson } from "@/config/request";
+import { ResponsePageJson } from "@/config/request";
 
 export interface ComponentProps {
   nameKey: string;
   valueKey: string;
-  api: (params: any) => Promise<SystemResponsePageJson<any>>;
+  api: (params: any) => Promise<ResponsePageJson<any>>;
   list?: any;
   avatarShape: AVATAR_SHAPE;
   multiple: boolean;

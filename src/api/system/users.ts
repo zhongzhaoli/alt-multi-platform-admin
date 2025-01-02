@@ -1,4 +1,4 @@
-import { SystemResponsePageJson } from "@/config/request";
+import { ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface GetUserListDto {
@@ -36,7 +36,7 @@ export interface ResetPasswordDto {
 
 export function getUserList(
   params: GetUserListDto,
-): Promise<SystemResponsePageJson<UserProps>> {
+): Promise<ResponsePageJson<UserProps>> {
   return request({
     url: "/user/list",
     method: "get",

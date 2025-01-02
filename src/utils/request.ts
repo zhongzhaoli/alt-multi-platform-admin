@@ -4,7 +4,7 @@ import {
   contentType,
   ResponseCode,
   ResponseJson,
-  SystemResponsePageJson,
+  ResponsePageJson,
 } from "@/config/request";
 import { useUserStore } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
@@ -18,7 +18,7 @@ import axios, {
 } from "axios";
 import { router } from "@/router";
 
-export type ApiDataType = ResponseJson<any> | SystemResponsePageJson<any>;
+export type ApiDataType = ResponseJson<any> | ResponsePageJson<any>;
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   customServerErrorMessage?: string | null;
 }

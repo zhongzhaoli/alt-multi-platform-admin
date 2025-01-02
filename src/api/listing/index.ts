@@ -1,4 +1,4 @@
-import { WalmartResponsePageJson, walmartURL } from "@/config/request";
+import { ResponsePageJson, walmartURL } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface ListingProps {
@@ -21,7 +21,7 @@ export interface GetListingDto extends Partial<ListingFilterProps> {
 }
 export function getListingList(
   params: GetListingDto,
-): Promise<WalmartResponsePageJson<ListingProps>> {
+): Promise<ResponsePageJson<ListingProps>> {
   return request({
     baseURL: walmartURL,
     url: "/get_all_listing_board",

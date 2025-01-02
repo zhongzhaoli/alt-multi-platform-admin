@@ -1,4 +1,4 @@
-import { ResponseJson, SystemResponsePageJson } from "@/config/request";
+import { ResponseJson, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface RoleProps {
@@ -29,7 +29,7 @@ export interface SetRoleRouterDto {
 
 export function getRoleList(
   params: GetRoleDto,
-): Promise<SystemResponsePageJson<RoleProps>> {
+): Promise<ResponsePageJson<RoleProps>> {
   return request({
     url: "/role/list",
     method: "get",

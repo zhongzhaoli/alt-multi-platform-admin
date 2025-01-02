@@ -1,4 +1,4 @@
-import { ResponseJson, SystemResponsePageJson } from "@/config/request";
+import { ResponseJson, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface GetStoreDto {
@@ -28,7 +28,7 @@ export interface HandleStoreProps {
 // 获取店铺列表 - 系统管理
 export function getStoreList(
   params?: GetStoreDto,
-): Promise<SystemResponsePageJson<StoreProps>> {
+): Promise<ResponsePageJson<StoreProps>> {
   return request({
     url: "/walmart/shop/list",
     method: "get",
@@ -98,7 +98,7 @@ export function userBindStore(data: WalmartBindDto): Promise<any> {
 // 获取店铺列表 - 权限限制
 export function getStoreListAuth(
   params?: GetStoreDto,
-): Promise<SystemResponsePageJson<StoreProps>> {
+): Promise<ResponsePageJson<StoreProps>> {
   return request({
     url: "/walmart/shop/user/list",
     method: "get",

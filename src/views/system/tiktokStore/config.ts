@@ -29,15 +29,13 @@ export const tableColumns: TableColumnProps[] = [
     label: "App Key",
     prop: "app_key",
     align: "center",
-    minWidth: 160,
-    showOverflowTooltip: true,
+    width: 160,
   },
   {
     label: "App Secret",
     prop: "app_secret",
     align: "center",
-    minWidth: 160,
-    showOverflowTooltip: true,
+    width: 160,
   },
   {
     label: "创建时间",

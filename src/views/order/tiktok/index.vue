@@ -6,9 +6,9 @@
         :columns="config.filterColumns"
         @submit="getListFun"
       >
-        <template #shopId="{ form, row }">
+        <!-- <template #shopId="{ form, row }">
           <SelectTiktokStore v-model="form[row.prop]" @change="getListFun" />
-        </template>
+        </template> -->
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -164,7 +164,7 @@
 <script setup lang="ts">
 import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
-import SelectTiktokStore from "@/components/SelectTiktokStore/index.vue";
+// import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
 import {
   downloadCore,
@@ -200,13 +200,13 @@ const total = ref(0);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await getTiktokOrderList({
+    const { data } = await getTiktokOrderList({
       page: currentPage.value,
       page_size: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = datas?.lists || [];
-    total.value = datas?.all_total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {

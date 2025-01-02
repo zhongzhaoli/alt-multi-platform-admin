@@ -1,4 +1,4 @@
-import { ResponseJson, SystemResponsePageJson } from "@/config/request";
+import { ResponseJson, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface StoreProps {
@@ -18,7 +18,7 @@ export interface GetStoreDto {
 // 获取店铺列表
 export function getStoreList(
   params?: GetStoreDto,
-): Promise<SystemResponsePageJson<StoreProps>> {
+): Promise<ResponsePageJson<StoreProps>> {
   return request({
     url: "/tiktok/shop/list",
     method: "get",
@@ -51,7 +51,7 @@ export function userBindStore(data: TiktokBindDto): Promise<any> {
 // 获取店铺列表 - 权限限制
 export function getStoreListAuth(
   params?: GetStoreDto,
-): Promise<SystemResponsePageJson<StoreProps>> {
+): Promise<ResponsePageJson<StoreProps>> {
   return request({
     url: "/tiktok/shop/user/list",
     method: "get",
