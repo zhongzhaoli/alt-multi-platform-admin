@@ -49,12 +49,12 @@ export function userBindStore(data: TiktokBindDto): Promise<any> {
 }
 
 // 获取店铺列表 - 权限限制
-// export function getStoreListAuth(
-//   params?: GetStoreDto
-// ): Promise<ResponsePageJson<StoreProps>> {
-//   return request({
-//     url: '/tiktok/shop/user/list',
-//     method: 'get',
-//     params,
-//   });
-// }
+export function getStoreListAuth(
+  params?: GetStoreDto,
+): Promise<SystemResponsePageJson<StoreProps>> {
+  return request({
+    url: "/tiktok/shop/user/list",
+    method: "get",
+    params,
+  });
+}

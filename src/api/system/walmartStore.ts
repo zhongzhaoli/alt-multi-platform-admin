@@ -18,7 +18,7 @@ export interface StoreProps {
 
 export interface HandleStoreProps {
   id: number;
-  shopId: string;
+  shop_id: string;
   balance: number;
   shopName: string;
   client: string;
@@ -96,12 +96,12 @@ export function userBindStore(data: WalmartBindDto): Promise<any> {
 }
 
 // 获取店铺列表 - 权限限制
-// export function getStoreListAuth(
-//   params?: GetStoreDto
-// ): Promise<ResponsePageJson<StoreProps>> {
-//   return request({
-//     url: '/walmart/shop/user/list',
-//     method: 'get',
-//     params,
-//   });
-// }
+export function getStoreListAuth(
+  params?: GetStoreDto,
+): Promise<SystemResponsePageJson<StoreProps>> {
+  return request({
+    url: "/walmart/shop/user/list",
+    method: "get",
+    params,
+  });
+}

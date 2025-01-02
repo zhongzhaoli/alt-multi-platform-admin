@@ -13,8 +13,8 @@
     :clearable="clearable"
     :list="
       list.map((item) => ({
-        label: item.shopName,
-        value: item.shopId,
+        label: item.shop_name,
+        value: item.shop_id,
       }))
     "
     @change="selectChange"
@@ -46,7 +46,7 @@ interface ComponentProps {
   componentKey?: string;
 }
 
-export type idType = StoreProps["shopId"];
+export type idType = StoreProps["shop_id"];
 
 const props = withDefaults(defineProps<ComponentProps>(), {
   clearable: true,
@@ -91,20 +91,20 @@ const getListFun = async (first = false, loadMore = false) => {
   try {
     const params: GetStoreDto = {
       page: unref(page),
-      pageSize: unref(pageSize),
+      page_size: unref(pageSize),
     };
     if (shopName.value) {
-      params.shopName = shopName.value;
+      params.shop_name = shopName.value;
     }
-    const { datas } = await getStoreListAuth(params);
+    const { data } = await getStoreListAuth(params);
     if (loadMore) {
-      list.value = [...unref(list), ...(datas?.data || [])];
+      list.value = [...unref(list), ...(data?.list || [])];
     } else {
-      list.value = datas?.data || [];
+      list.value = data?.list || [];
     }
-    total.value = datas?.total || 0;
+    total.value = data?.total || 0;
     if (first && props.defaultFirst && unref(list).length) {
-      const firstId = unref(list)[0].shopId;
+      const firstId = unref(list)[0].shop_id;
       selectValue.value = props.multiple ? [firstId] : firstId;
       selectChange();
     }

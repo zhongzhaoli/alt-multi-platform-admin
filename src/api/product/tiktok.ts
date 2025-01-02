@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { SystemResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {
@@ -34,7 +34,7 @@ export interface GetProductDto extends Partial<TiktokProductFilterProps> {
 
 export function getTiktokProductList(
   params: GetProductDto,
-): Promise<ResponsePageJson<TiktokProductProps>> {
+): Promise<SystemResponsePageJson<TiktokProductProps>> {
   return request({
     url: "/product/tiktok/list",
     method: "get",

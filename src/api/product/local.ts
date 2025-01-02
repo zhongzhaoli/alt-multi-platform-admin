@@ -1,4 +1,4 @@
-import { SystemResponsePageJson, TiktokPageListJson } from "@/config/request";
+import { SystemResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {

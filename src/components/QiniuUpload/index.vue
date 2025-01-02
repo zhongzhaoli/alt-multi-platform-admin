@@ -95,20 +95,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import FileImage from '@/assets/file.png';
-import ZipImage from '@/assets/zip.png';
-import TextEllipsis from '@/components/TextEllipsis/index.vue';
-import { getQiniuToken } from '@/api/qiniu';
-import { ElMessage } from 'element-plus';
-import * as qiniu from 'qiniu-js';
-import { QINIU_IMG_SERVER } from '@/config/request';
-import { downloadFile, generateVisualNumber } from '@/utils';
-import { api as viewerApi } from 'v-viewer';
-import { uniqueId } from 'lodash-es';
-import draggable from 'vuedraggable';
+import { ref, watch } from "vue";
+import FileImage from "@/assets/file.png";
+import ZipImage from "@/assets/zip.png";
+import TextEllipsis from "@/components/TextEllipsis/index.vue";
+import { getQiniuToken } from "@/api/qiniu";
+import { ElMessage } from "element-plus";
+import * as qiniu from "qiniu-js";
+import { QINIU_IMG_SERVER } from "@/config/request";
+import { downloadFile, generateVisualNumber } from "@/utils";
+import { api as viewerApi } from "v-viewer";
+import { uniqueId } from "lodash-es";
+import draggable from "vuedraggable";
 
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(["update:modelValue"]);
 const props = withDefaults(
   defineProps<{
     modelValue: FileItem[];
@@ -121,23 +121,23 @@ const props = withDefaults(
   {
     create: false,
     fileName: true,
-    accept: 'all',
-    dirName: 'multi-platform-localProduct',
+    accept: "all",
+    dirName: "multi-platform-localProduct",
     limit: 5,
-  }
+  },
 );
 
 const fileRef = ref<HTMLInputElement | undefined>(undefined);
-const imageTypes = ['image/png', 'image/jpeg', 'image/gif'];
-const zipTypes = ['application/zip'];
+const imageTypes = ["image/png", "image/jpeg", "image/gif"];
+const zipTypes = ["application/zip"];
 
-export type FileType = 'image' | 'zip' | 'other';
+export type FileType = "image" | "zip" | "other";
 export type FileStatus =
-  | 'pending'
-  | 'success'
-  | 'error'
-  | 'loading'
-  | 'loadError';
+  | "pending"
+  | "success"
+  | "error"
+  | "loading"
+  | "loadError";
 export interface SimpleFileItem {
   url: string;
   fileName: string;
@@ -172,9 +172,9 @@ const qiniuCore = (file: File, token: string, id: string) => {
     token,
     {
       fname: newFileName,
-    }
+    },
   );
-  item.status = 'pending';
+  item.status = "pending";
   observable.subscribe({
     next(res: {
       total: {
@@ -185,14 +185,14 @@ const qiniuCore = (file: File, token: string, id: string) => {
     },
     error(err) {
       console.log(err);
-      item.status = 'error';
+      item.status = "error";
     },
     complete(res: { key: string }) {
       item.url = `${QINIU_IMG_SERVER}${res.key}`;
-      if (item.type === 'image') {
-        item.status = 'loading';
+      if (item.type === "image") {
+        item.status = "loading";
       } else {
-        item.status = 'success';
+        item.status = "success";
       }
     },
   });
@@ -203,11 +203,11 @@ const fileChange = async (v: Event) => {
   tokenLoading.value = true;
   let token: string | null = null;
   try {
-    const { datas } = await getQiniuToken();
-    token = datas;
+    const { data } = await getQiniuToken();
+    token = data;
     const fileList: File[] = Array.prototype.slice.call(input.files || []);
     const realFileList: File[] = [];
-    if (props.accept !== 'all') {
+    if (props.accept !== "all") {
       fileList.forEach((file) => {
         if (!fileTypeValidate(file.name)) {
           ElMessage.error(`文件 ${file.name} 类型不符合`);
@@ -219,18 +219,18 @@ const fileChange = async (v: Event) => {
     for (const file of realFileList) {
       let type: FileType;
       if (imageTypes.includes(file.type)) {
-        type = 'image';
+        type = "image";
       } else if (zipTypes.includes(file.type)) {
-        type = 'zip';
+        type = "zip";
       } else {
-        type = 'other';
+        type = "other";
       }
       const id = uniqueId();
       list.value.push({
         id,
         file,
         fileName: file.name,
-        status: 'pending',
+        status: "pending",
         type,
         size: file.size,
         percent: 0,
@@ -240,7 +240,7 @@ const fileChange = async (v: Event) => {
     }
   } catch (err) {
     console.log(err);
-    ElMessage.error('七牛云Token获取失败');
+    ElMessage.error("七牛云Token获取失败");
   } finally {
     tokenLoading.value = false;
   }
@@ -257,8 +257,8 @@ const handleDownload = (item: FileItem) => {
 
 const fileTypeValidate = (fileName: string) => {
   let check = false;
-  if (props.accept !== 'all') {
-    const acceptArr = props.accept.split(',').map((item) => item.trim());
+  if (props.accept !== "all") {
+    const acceptArr = props.accept.split(",").map((item) => item.trim());
     acceptArr.forEach((item) => {
       const index = fileName.indexOf(item);
       if (index + item.length === fileName.length) {
@@ -273,7 +273,7 @@ const fileTypeValidate = (fileName: string) => {
 
 const handlePreview = (item: FileItem) => {
   const index = list.value
-    .filter((v) => v.type === 'image')
+    .filter((v) => v.type === "image")
     .findIndex((v) => v.id === item.id);
   viewerApi({
     options: {
@@ -281,7 +281,7 @@ const handlePreview = (item: FileItem) => {
       initialViewIndex: index || 0,
     },
     images: list.value.reduce((prev, next) => {
-      if (next.type === 'image' && next.url) {
+      if (next.type === "image" && next.url) {
         prev.push(next.url);
       }
       return prev;
@@ -297,24 +297,24 @@ watch(
   {
     immediate: true,
     deep: true,
-  }
+  },
 );
 watch(
   list,
   (nV) => {
-    emits('update:modelValue', nV);
+    emits("update:modelValue", nV);
   },
   {
     immediate: true,
     deep: true,
-  }
+  },
 );
 </script>
 <style lang="scss" scoped>
 .qiniuContainer {
   width: 100%;
   height: 100%;
-  input[type='file'] {
+  input[type="file"] {
     display: none;
   }
   & > .listBox {

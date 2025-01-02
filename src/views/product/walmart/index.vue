@@ -98,13 +98,13 @@ const total = ref(0);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await getWalmartProductList({
+    const { data } = await getWalmartProductList({
       page: currentPage.value,
       pageSize: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {

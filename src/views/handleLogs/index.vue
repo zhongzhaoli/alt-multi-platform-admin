@@ -7,14 +7,14 @@
         @submit="getListFun"
         @reset="getListFun"
       >
-        <template #user_id="{ row, form }">
+        <!-- <template #user_id="{ row, form }">
           <SearchUser
             v-model="form[row.prop]"
             filterable
             clearable
             @change="getListFun"
           />
-        </template>
+        </template> -->
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -53,39 +53,39 @@
     <el-drawer v-model="detailVisible" title="日志详情">
       <el-form v-if="tempDetail" label-position="top">
         <el-form-item label="请求路径：">
-          {{ tempDetail.req_path || '-' }}
+          {{ tempDetail.req_path || "-" }}
         </el-form-item>
         <el-form-item label="请求方式：">
-          {{ tempDetail.req_method || '-' }}
+          {{ tempDetail.req_method || "-" }}
         </el-form-item>
         <el-form-item label="请求描述：">
-          {{ tempDetail.req_content || '-' }}
+          {{ tempDetail.req_content || "-" }}
         </el-form-item>
         <el-form-item label="请求分类：">
-          {{ tempDetail.router_tags || '-' }}
+          {{ tempDetail.router_tags || "-" }}
         </el-form-item>
         <el-form-item label="请求用户：">
-          {{ tempDetail.user_name || '-' }}
+          {{ tempDetail.user_name || "-" }}
         </el-form-item>
         <el-form-item label="请求IP：">
-          {{ tempDetail.user_ip || '-' }}
+          {{ tempDetail.user_ip || "-" }}
         </el-form-item>
         <el-form-item label="响应code：">
-          {{ tempDetail.resp_code || '-' }}
+          {{ tempDetail.resp_code || "-" }}
         </el-form-item>
       </el-form>
     </el-drawer>
   </div>
 </template>
 <script setup lang="ts">
-import FilterContainer from '@/components/FilterContainer/index.vue';
-import TsxElementTable from 'tsx-element-table';
-import { filterColumns, tableColumns } from './config';
-import SearchUser from '@/components/SelectUser/index.vue';
-import * as API_LOG from '@/api/handleLogs/index';
-import { ref, unref } from 'vue';
-import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { ResponseCode } from '@/config/request';
+import FilterContainer from "@/components/FilterContainer/index.vue";
+import TsxElementTable from "tsx-element-table";
+import { filterColumns, tableColumns } from "./config";
+// import SearchUser from '@/components/SelectUser/index.vue';
+import * as API_LOG from "@/api/handleLogs/index";
+import { ref, unref } from "vue";
+import { PAGE, PAGE_SIZE } from "@/constants/app";
+import { ResponseCode } from "@/config/request";
 
 // 日志列表
 const filterValue = ref<object>({});
@@ -97,13 +97,13 @@ const loading = ref(false);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await API_LOG.getLogList({
+    const { data } = await API_LOG.getLogList({
       page: unref(currentPage),
       page_size: unref(pageSize),
       ...unref(filterValue),
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {

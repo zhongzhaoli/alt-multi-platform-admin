@@ -113,13 +113,13 @@ const loading = ref(false);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await getTiktokRefundList({
+    const { data } = await getTiktokRefundList({
       page: currentPage.value,
       pageSize: pageSize.value,
       ...filterValue.value,
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
     loading.value = false;
   } catch (err) {
     console.log(err);

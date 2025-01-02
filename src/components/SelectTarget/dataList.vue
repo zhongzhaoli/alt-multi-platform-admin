@@ -1,13 +1,23 @@
 <template>
   <div class="SelectTargetDataComponent">
     <div class="searchBox">
-      <el-input v-model="searchKey" clearable placeholder="请输入名字" @change="searchFun">
+      <el-input
+        v-model="searchKey"
+        clearable
+        placeholder="请输入名字"
+        @change="searchFun"
+      >
         <template #prefix>
           <i class="ri-search-line" />
         </template>
       </el-input>
     </div>
-    <Scroll v-loading="loading" :loading-more="loadingMore" :disabled="false" @load="loadMore">
+    <Scroll
+      v-loading="loading"
+      :loading-more="loadingMore"
+      :disabled="false"
+      @load="loadMore"
+    >
       <div class="dataList">
         <template v-if="list.length > 0 && !loading">
           <div
@@ -31,23 +41,25 @@
             </div>
           </div>
         </template>
-        <div v-if="!loading && list.length <= 0" class="noData flex-center">暂无数据</div>
+        <div v-if="!loading && list.length <= 0" class="noData flex-center">
+          暂无数据
+        </div>
       </div>
     </Scroll>
   </div>
 </template>
 <script setup lang="ts">
-import Scroll from './scroll.vue';
-import { useDataList } from './useDataList';
-import { watchEffect, watch, nextTick } from 'vue';
-import { cloneDeep } from 'lodash-es';
-import { AVATAR_SHAPE } from '@/constants/app';
-import { ResponsePageJson } from '@/config/request';
+import Scroll from "./scroll.vue";
+import { useDataList } from "./useDataList";
+import { watchEffect, watch, nextTick } from "vue";
+import { cloneDeep } from "lodash-es";
+import { AVATAR_SHAPE } from "@/constants/app";
+import { SystemResponsePageJson } from "@/config/request";
 
 export interface ComponentProps {
   nameKey: string;
   valueKey: string;
-  api: (params: any) => Promise<ResponsePageJson<any>>;
+  api: (params: any) => Promise<SystemResponsePageJson<any>>;
   list?: any;
   avatarShape: AVATAR_SHAPE;
   multiple: boolean;
@@ -56,9 +68,9 @@ export interface ComponentProps {
 }
 
 const props = withDefaults(defineProps<ComponentProps>(), {
-  list: []
+  list: [],
 });
-const emits = defineEmits(['change']);
+const emits = defineEmits(["change"]);
 
 const {
   uNameKey,
@@ -74,7 +86,7 @@ const {
   getListFun,
   checkBoxChange,
   clickItem,
-  handleDefaultSelect
+  handleDefaultSelect,
 } = useDataList(emits, props);
 
 watchEffect(() => {
@@ -93,8 +105,8 @@ watch(
   },
   {
     immediate: true,
-    deep: true
-  }
+    deep: true,
+  },
 );
 watch(
   () => props.loading,
@@ -102,12 +114,12 @@ watch(
     if (nV === false || nV === undefined) getListFun();
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 );
 </script>
 <style lang="scss" scoped>
-@use '@/styles/mixins.scss' as *;
+@use "@/styles/mixins.scss" as *;
 .SelectTargetDataComponent {
   & > .searchBox {
     padding: 20px;

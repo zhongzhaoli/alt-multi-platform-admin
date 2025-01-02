@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { SystemResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum OrderStatusEnum {
@@ -37,7 +37,7 @@ export interface GetOrderDto extends Partial<TiktokRefunFilterProps> {
 
 export function getTiktokRefundList(
   params: GetOrderDto,
-): Promise<ResponsePageJson<RefundTiktokProps>> {
+): Promise<SystemResponsePageJson<RefundTiktokProps>> {
   return request({
     url: "/refund/tiktok/list",
     method: "get",
