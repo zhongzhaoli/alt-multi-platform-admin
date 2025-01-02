@@ -1,7 +1,7 @@
-import { PAGE } from '@/constants/app';
-import { ref, unref } from 'vue';
-import { type ComponentProps } from './dataList.vue';
-import { ResponsePageJson } from '@/config/request';
+import { PAGE } from "@/constants/app";
+import { ref, unref } from "vue";
+import { type ComponentProps } from "./dataList.vue";
+import { SystemResponsePageJson } from "@/config/request";
 
 export function useDataList(emits: any, props: ComponentProps) {
   const currentPage = ref<number>(PAGE);
@@ -10,10 +10,12 @@ export function useDataList(emits: any, props: ComponentProps) {
   const loading = ref<boolean>(true);
   const list = ref<any[]>([]);
   const loadingMore = ref<boolean>(false);
-  const uApi = ref<((params: any) => Promise<ResponsePageJson<any>>) | null>(null);
-  const uNameKey = ref<string>('');
-  const uValueKey = ref<string>('');
-  const searchKey = ref<string>('');
+  const uApi = ref<
+    ((params: any) => Promise<SystemResponsePageJson<any>>) | null
+  >(null);
+  const uNameKey = ref<string>("");
+  const uValueKey = ref<string>("");
+  const searchKey = ref<string>("");
   const defaultList = ref<any[]>([]);
 
   // 获取列表
@@ -28,18 +30,18 @@ export function useDataList(emits: any, props: ComponentProps) {
         const params: { [name: string]: any } = {
           page: unref(currentPage),
           page_size: unref(pageSize),
-          ...(props.extraParams ? props.extraParams : {})
+          ...(props.extraParams ? props.extraParams : {}),
         };
         if (unref(searchKey)) params[unref(uNameKey)] = unref(searchKey);
-        const { datas } = await uApi.value(params);
-        const newList = (datas?.data || []).map((item: any) => {
+        const { data } = await uApi.value(params);
+        const newList = (data?.list || []).map((item: any) => {
           return {
             ...item,
-            checked: false
+            checked: false,
           };
         });
         list.value = [...list.value, ...handleDefaultSelect(newList)];
-        total.value = datas?.total || 0;
+        total.value = data?.total || 0;
       }
       if (unref(list).length < unref(total)) {
         loadingMore.value = true;
@@ -65,7 +67,7 @@ export function useDataList(emits: any, props: ComponentProps) {
         }
         return {
           ...item,
-          checked
+          checked,
         };
       });
     } else {
@@ -108,9 +110,9 @@ export function useDataList(emits: any, props: ComponentProps) {
       }
     });
     if (props.multiple) {
-      emits('change', Array.from(newList));
+      emits("change", Array.from(newList));
     } else {
-      emits('change', Array.from(newList)[0]);
+      emits("change", Array.from(newList)[0]);
     }
   };
 
@@ -134,6 +136,6 @@ export function useDataList(emits: any, props: ComponentProps) {
     loading,
     uApi,
     searchKey,
-    defaultList
+    defaultList,
   };
 }

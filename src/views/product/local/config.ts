@@ -84,7 +84,11 @@ export const tableColumns: TableColumnProps[] = [
       const status = localProductStatusMap.find(
         (item) => item.value === cellValue,
       );
-      return h(ElText, { type: status?.type || "info" }, status?.label || "");
+      return h(
+        ElText,
+        { type: status?.type || "info" },
+        () => status?.label || "",
+      );
     },
   },
   {

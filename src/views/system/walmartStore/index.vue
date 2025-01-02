@@ -20,20 +20,20 @@
         @page-change="getListFun"
         @table-refresh="getListFun"
       >
-        <template #table-client="{ row }">
+        <template #table-client_id="{ row }">
           <div class="textBox">
-            <RenderCopyIcon title="Client" :text="row.client" margin="r" />
-            <TextEllipsis :text="row.client" />
+            <RenderCopyIcon title="Client" :text="row.client_id" margin="r" />
+            <TextEllipsis :text="row.client_id" />
           </div>
         </template>
-        <template #table-clientSecret="{ row }">
+        <template #table-client_secret="{ row }">
           <div class="textBox">
             <RenderCopyIcon
               title="Client Secret"
-              :text="row.clientSecret"
+              :text="row.client_secret"
               margin="r"
             />
-            <TextEllipsis :text="row.clientSecret" />
+            <TextEllipsis :text="row.client_secret" />
           </div>
         </template>
         <template #table-handle="{ row }">
@@ -60,33 +60,27 @@
         :model="editFormValues"
         label-position="top"
       >
-        <el-form-item prop="shopId" label="店铺前台ID：">
+        <el-form-item prop="shop_id" label="店铺前台ID：">
           <el-input
-            v-model="editFormValues.shopId"
+            v-model="editFormValues.shop_id"
             placeholder="请输入店铺ID"
           />
         </el-form-item>
-        <el-form-item prop="shopPartnerId" label="Partner ID">
+        <el-form-item prop="shop_name" label="店铺名称：">
           <el-input
-            v-model="editFormValues.shopPartnerId"
-            placeholder="请输入Partner ID"
-          />
-        </el-form-item>
-        <el-form-item prop="shopName" label="店铺名称：">
-          <el-input
-            v-model="editFormValues.shopName"
+            v-model="editFormValues.shop_name"
             placeholder="请输入店铺名称"
           />
         </el-form-item>
-        <el-form-item prop="client" label="Client：">
+        <el-form-item prop="client_id" label="Client：">
           <el-input
-            v-model="editFormValues.client"
+            v-model="editFormValues.client_id"
             placeholder="请输入 Client"
           />
         </el-form-item>
         <el-form-item prop="clientSecret" label="Client Secret：">
           <el-input
-            v-model="editFormValues.clientSecret"
+            v-model="editFormValues.client_secret"
             class="clientSecretInput"
             type="textarea"
             :rows="3"
@@ -127,12 +121,12 @@ const tableData = ref<StoreProps[]>([]);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { datas } = await getStoreList({
+    const { data } = await getStoreList({
       page: currentPage.value,
-      pageSize: pageSize.value,
+      page_size: pageSize.value,
     });
-    tableData.value = datas?.data || [];
-    total.value = datas?.total || 0;
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
   } finally {
@@ -171,11 +165,10 @@ const submitFun = () => {
     }
     try {
       const params: any = {
-        shopId: editFormValues.value.shopId,
-        shopName: editFormValues.value.shopName,
-        client: editFormValues.value.client,
-        clientSecret: editFormValues.value.clientSecret,
-        shopPartnerId: editFormValues.value.shopPartnerId,
+        shop_id: editFormValues.value.shop_id,
+        shop_name: editFormValues.value.shop_name,
+        client_id: editFormValues.value.client_id,
+        client_secret: editFormValues.value.client_secret,
       };
       if (editFormValues.value.hasOwnProperty("id")) {
         // 编辑

@@ -45,10 +45,10 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
   },
   {
-    label: "更新时间",
-    prop: "update_time",
-    minWidth: 140,
+    label: "店铺权限",
+    prop: "shopAction",
     align: "center",
+    width: 160,
   },
   {
     label: "操作",

@@ -1,4 +1,4 @@
-import { ResponseJson, SystemResponsePageJson } from "@/config/request";
+import { SystemResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export interface GetUserListDto {
@@ -72,49 +72,6 @@ export function resetPassword(data: ResetPasswordDto) {
   return request({
     url: "/user/edit",
     method: "put",
-    data,
-  });
-}
-
-export interface UpdateStoreDto {
-  user_id: string;
-  shopIds: string[];
-}
-
-export function updateStore(data: UpdateStoreDto) {
-  return request({
-    url: "/users/shop/update",
-    method: "put",
-    data,
-  });
-}
-
-// 获取用户已绑定的店铺
-export function getUserStore(user_id: string): Promise<ResponseJson<string[]>> {
-  return request({
-    url: "/walmart/user/shop/ids",
-    method: "get",
-    params: { user_id },
-  });
-}
-
-// 获取用户已绑定的下级
-export function getUserLevel(user_id: string): Promise<ResponseJson<string[]>> {
-  return request({
-    url: `/users/level/list`,
-    method: "get",
-    params: { p_user_id: user_id },
-  });
-}
-
-interface UpdateUserLevelDto {
-  user_id: string[];
-  p_user_id: string;
-}
-export function updateLevel(data: UpdateUserLevelDto): Promise<any> {
-  return request({
-    url: "/users/level/add",
-    method: "post",
     data,
   });
 }

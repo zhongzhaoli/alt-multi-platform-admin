@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { SystemResponsePageJson, TiktokPageListJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {
@@ -33,7 +33,7 @@ export interface GetProductDto extends Partial<LocalProductFilterProps> {
 
 export function getLocalProductList(
   params: GetProductDto,
-): Promise<ResponsePageJson<LocalProductProps>> {
+): Promise<SystemResponsePageJson<LocalProductProps>> {
   return request({
     url: "/product/local/list",
     method: "get",

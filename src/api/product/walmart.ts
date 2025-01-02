@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { SystemResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {
@@ -34,7 +34,7 @@ export interface GetProductDto extends Partial<WalmartProductFilterProps> {
 
 export function getWalmartProductList(
   params: GetProductDto,
-): Promise<ResponsePageJson<WalmartProductProps>> {
+): Promise<SystemResponsePageJson<WalmartProductProps>> {
   return request({
     url: "/product/walmart/list",
     method: "get",

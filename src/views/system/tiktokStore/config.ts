@@ -1,29 +1,80 @@
-import { type TableColumnProps } from "tsx-element-table/src/types";
+import { FormRules } from "element-plus";
+import {
+  HandleColumnProps,
+  type TableColumnProps,
+} from "tsx-element-table/src/types";
 
 export const tableColumns: TableColumnProps[] = [
   {
-    label: "#",
+    label: "ID",
     align: "center",
-    type: "index",
+    width: 140,
+    prop: "id",
+  },
+  {
+    label: "店铺ID",
+    prop: "shop_id",
+    align: "center",
+    width: 140,
+    showOverflowTooltip: true,
   },
   {
     label: "店铺名称",
-    prop: "shopName",
-    minWidth: "300",
+    prop: "shop_name",
+    minWidth: 200,
     align: "center",
     showOverflowTooltip: true,
   },
   {
-    label: "店铺ID",
-    prop: "shopId",
+    label: "App Key",
+    prop: "app_key",
     align: "center",
-    minWidth: "300",
+    minWidth: 160,
+    showOverflowTooltip: true,
+  },
+  {
+    label: "App Secret",
+    prop: "app_secret",
+    align: "center",
+    minWidth: 160,
     showOverflowTooltip: true,
   },
   {
     label: "创建时间",
     align: "center",
-    prop: "createTime",
+    prop: "created_at",
     width: "200",
   },
+  {
+    label: "操作",
+    width: "120",
+    align: "center",
+    fixed: "right",
+    prop: "handle",
+  },
 ];
+
+export const handleColumns: HandleColumnProps[] = [
+  {
+    label: "新增店铺",
+    type: "primary",
+    key: "create",
+  },
+];
+
+export const editFormRules: FormRules = {
+  shop_id: [
+    {
+      required: true,
+      message: "店铺ID 不能为空",
+      trigger: "blur",
+    },
+  ],
+  shop_name: [{ required: true, message: "请输入店铺名称", trigger: "change" }],
+  app_key: [
+    { required: true, message: "请输入店铺 App Key", trigger: "change" },
+  ],
+  app_secret: [
+    { required: true, message: "请输入店铺 App Secret", trigger: "change" },
+  ],
+};

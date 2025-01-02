@@ -27,6 +27,14 @@
         @table-refresh="getListFun"
         @handle-click="handleClick"
       >
+        <template #table-shopAction="{ row }">
+          <el-button link type="primary" @click="editWalmartStore(row)">
+            沃尔玛
+          </el-button>
+          <el-button link type="primary" @click="editTiktokStore(row)">
+            Tiktok
+          </el-button>
+        </template>
         <template #table-action="{ row }">
           <el-button link type="primary" @click="editFun(row)">
             编辑
@@ -158,6 +166,30 @@
         </el-form-item>
       </el-form>
     </ConfirmDialog>
+    <SelectTarget
+      ref="selectWStoreRef"
+      name-key="shop_name"
+      value-key="shop_id"
+      :submit-loading="submitLoading"
+      :loading="selectLoading"
+      :api="getWalmartStoreList"
+      :default-select-list="defaultSelectStoreList"
+      :multiple="true"
+      @closed="selectStoreClosed"
+      @submit="submitWalmartStoreFun"
+    />
+    <SelectTarget
+      ref="selectTStoreRef"
+      name-key="shop_name"
+      value-key="shop_id"
+      :submit-loading="submitLoading"
+      :loading="selectLoading"
+      :api="getTiktokStoreList"
+      :default-select-list="defaultSelectStoreList"
+      :multiple="true"
+      @closed="selectStoreClosed"
+      @submit="submitTiktokStoreFun"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -165,6 +197,17 @@ import { ref, unref } from "vue";
 import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
+import SelectTarget from "@/components/SelectTarget/index.vue";
+import {
+  getStoreList as getWalmartStoreList,
+  userStoreIds as getWStoreIds,
+  userBindStore as bindWStore,
+} from "@/api/system/walmartStore";
+import {
+  getStoreList as getTiktokStoreList,
+  userStoreIds as getTStoreIds,
+  userBindStore as bindTStore,
+} from "@/api/system/tiktokStore";
 import {
   filterColumns,
   tableColumns,
@@ -178,6 +221,7 @@ import { ElMessage, FormInstance, type FormRules } from "element-plus";
 import SearchRole from "../components/SearchRole/index.vue";
 import { cloneDeep } from "lodash-es";
 import { useMessageBox } from "@/hooks/useMessageBox";
+import { SelectTargetInstance } from "@/components/SelectTarget/useSelectTarget";
 
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
@@ -282,7 +326,7 @@ const editFun = (row: API_USERS.UserProps) => {
   editDialogVisible.value = true;
   const cloneRow = cloneDeep(row);
   if ("password" in cloneRow) delete cloneRow.password;
-  tempUser.value = cloneRow;
+  tempUser.value = cloneDeep(row);
   editFormValue.value = cloneRow;
   editUserFormRef.value?.resetFields();
 };
@@ -349,6 +393,81 @@ const deleteUser = (row: API_USERS.UserProps) => {
       ElMessage.error("删除失败");
     }
   });
+};
+
+// 绑定店铺
+const selectWStoreRef = ref<SelectTargetInstance | null>(null);
+const selectTStoreRef = ref<SelectTargetInstance | null>(null);
+const selectLoading = ref(false);
+const defaultSelectStoreList = ref<string[]>([]);
+const selectStoreClosed = () => {
+  defaultSelectStoreList.value = [];
+};
+
+// 打开walmart绑定店铺
+const editWalmartStore = async (row: API_USERS.UserProps) => {
+  tempUser.value = cloneDeep(row);
+  selectLoading.value = true;
+  selectWStoreRef.value?.openDialog();
+  try {
+    const { data } = await getWStoreIds(row.user_id);
+    defaultSelectStoreList.value = data || [];
+  } catch (err) {
+    console.log(err);
+  } finally {
+    selectLoading.value = false;
+  }
+};
+// 绑定walmart店铺
+const submitWalmartStoreFun = async (list: string[]) => {
+  if (tempUser.value && !submitLoading.value) {
+    submitLoading.value = true;
+    try {
+      await bindWStore({
+        user_id: tempUser.value.user_id,
+        walmart_shop_ids: list,
+      });
+      ElMessage.success("操作成功");
+      selectWStoreRef.value?.closeDialog();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      submitLoading.value = false;
+    }
+  }
+};
+
+// 打开tikok绑定店铺
+const editTiktokStore = async (row: API_USERS.UserProps) => {
+  tempUser.value = cloneDeep(row);
+  selectLoading.value = true;
+  selectTStoreRef.value?.openDialog();
+  try {
+    const { data } = await getTStoreIds(row.user_id);
+    defaultSelectStoreList.value = data || [];
+  } catch (err) {
+    console.log(err);
+  } finally {
+    selectLoading.value = false;
+  }
+};
+// 绑定tiktok店铺
+const submitTiktokStoreFun = async (list: string[]) => {
+  if (tempUser.value && !submitLoading.value) {
+    submitLoading.value = true;
+    try {
+      await bindTStore({
+        user_id: tempUser.value.user_id,
+        tiktok_shop_ids: list,
+      });
+      ElMessage.success("操作成功");
+      selectTStoreRef.value?.closeDialog();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      submitLoading.value = false;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
