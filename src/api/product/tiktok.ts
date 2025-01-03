@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { mockURL, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {
