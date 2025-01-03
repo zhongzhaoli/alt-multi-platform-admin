@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { mockURL, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {
@@ -35,6 +35,7 @@ export function getLocalProductList(
   params: GetProductDto,
 ): Promise<ResponsePageJson<LocalProductProps>> {
   return request({
+    baseURL: mockURL,
     url: "/product/local/list",
     method: "get",
     params,

@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { mockURL, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum ProductStatusEnum {
@@ -36,6 +36,7 @@ export function getWalmartProductList(
   params: GetProductDto,
 ): Promise<ResponsePageJson<WalmartProductProps>> {
   return request({
+    baseURL: mockURL,
     url: "/product/walmart/list",
     method: "get",
     params,
