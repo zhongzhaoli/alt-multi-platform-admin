@@ -6,9 +6,9 @@
         :columns="config.filterColumns"
         @submit="getListFun"
       >
-        <template #shopId="{ form, row }">
-          <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" />
-        </template>
+        <!-- <template #shopId="{ form, row }"> -->
+        <!-- <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" /> -->
+        <!-- </template> -->
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import FilterContainer from "@/components/FilterContainer/index.vue";
 import TsxElementTable from "tsx-element-table";
-import SelectWalmartStore from "@/components/SelectWalmartStore/index.vue";
+// import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import * as config from "./config";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import { ref } from "vue";
