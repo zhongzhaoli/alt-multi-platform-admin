@@ -1,5 +1,6 @@
-import { ResponsePageJson } from "@/config/request";
+import { ResponsePageJson, tiktokURL } from "@/config/request";
 import { request } from "@/utils/request";
+import { CancelToken } from "axios";
 
 export enum OrderStatusEnum {
   "INITIATED" = "INITIATED",
@@ -9,37 +10,38 @@ export enum OrderStatusEnum {
 
 export interface RefundTiktokProps {
   id: number;
-  orderSn: string;
-  shopName: string;
-  orderStatus: OrderStatusEnum;
-  productImageUrl: string;
-  productName: string;
-  orderLineQuantity: number;
-  productSku: string;
-  reason: string;
-  orderAmount: number;
+  order_id: string;
+  shop_name: string;
+  shop_id: string;
+  order_status: OrderStatusEnum;
+  sku_image: string;
+  product_name: string;
+  sku_id: string;
+  total_amount: number;
   name: string;
-  requestDate: string;
+  order_create_time: string;
+  update_time: string;
+  seller_sku: string;
 }
 
 export interface TiktokRefunFilterProps {
-  shopId: string;
-  orderSn: string;
-  orderStatus: OrderStatusEnum;
-  startDate: string;
-  endDate: string;
+  shop_id: string;
+  order_id: string;
+  order_status: string;
 }
 
 export interface GetOrderDto extends Partial<TiktokRefunFilterProps> {
   page: number;
-  pageSize?: number;
+  page_size?: number;
+  export?: 1 | 0;
 }
 
 export function getTiktokRefundList(
   params: GetOrderDto,
 ): Promise<ResponsePageJson<RefundTiktokProps>> {
   return request({
-    url: "/refund/tiktok/list",
+    baseURL: tiktokURL,
+    url: "/tk/get_return_order",
     method: "get",
     params,
   });
@@ -51,6 +53,21 @@ export function cancelOrder(orderSn: string): Promise<any> {
     url: "/refund/tiktok/cancelOrder",
     method: "post",
     data: { orderSn },
+  });
+}
+
+// 导出
+export function exportTiktokRefundOrderList(
+  params: GetOrderDto,
+  cancelToken: CancelToken,
+): Promise<any> {
+  return request({
+    baseURL: tiktokURL,
+    url: "/tk/get_return_order",
+    method: "get",
+    params,
+    responseType: "blob",
+    cancelToken,
   });
 }
 

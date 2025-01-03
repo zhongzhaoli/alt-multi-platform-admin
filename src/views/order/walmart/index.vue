@@ -125,7 +125,7 @@
     </div>
     <ConfirmDialog
       v-model="dialogVisible"
-      width="600px"
+      width="800px"
       top="10vh"
       title="订单发货"
       :submit-loading="submitLoading"
@@ -147,6 +147,9 @@
       </div>
       <div class="d-flex batchSettingBox">
         <div>
+          <el-input v-model="batchOrderId" placeholder="卖家订单号" />
+        </div>
+        <div>
           <el-input v-model="batchName" placeholder="物流承运商" />
         </div>
         <div><el-input v-model="batchNumber" placeholder="物流追踪号" /></div>
@@ -162,6 +165,15 @@
         >
           <template #default="{ row }">
             <el-input v-model="row.customer_order_id" disabled />
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="卖家订单号"
+          align="center"
+          prop="seller_order_id"
+        >
+          <template #default="{ row }">
+            <el-input v-model="row.seller_order_id" placeholder="卖家订单号" />
           </template>
         </el-table-column>
         <el-table-column label="物流承运商" align="center" prop="carrier">
@@ -248,14 +260,27 @@ const selectionChange = (rows: WalmartOrderProps[]) => {
 // 发货
 const dialogVisible = ref(false);
 const submitLoading = ref(false);
-const selectedRows = ref<WalmartOrderProps[]>([]);
+interface SelectedRowsProps extends WalmartOrderProps {
+  seller_order_id: string;
+}
+const selectedRows = ref<SelectedRowsProps[]>([]);
 const singleDeliver = (row: WalmartOrderProps) => {
-  selectedRows.value = [cloneDeep(row)];
+  selectedRows.value = [cloneDeep(row)].map((v) => {
+    return {
+      ...v,
+      seller_order_id: "",
+    };
+  });
   dialogVisible.value = true;
 };
 const multipleDeliver = () => {
   if (!selectionList.value.length) return ElMessage.warning("请选择订单");
-  selectedRows.value = cloneDeep(selectionList.value);
+  selectedRows.value = cloneDeep(selectionList.value).map((v) => {
+    return {
+      ...v,
+      seller_order_id: "",
+    };
+  });
   dialogVisible.value = true;
 };
 const dialogClosed = () => {
@@ -273,10 +298,12 @@ const dialogSubmit = async () => {
   }
   submitLoading.value = true;
   const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
-    purchaseOrderId: row.purchase_order_id,
-    customerOrderId: row.customer_order_id,
-    carrierName: row.carrier,
-    trackingNumber: row.tracking_number,
+    carrier: row.carrier,
+    tracking_number: row.tracking_number,
+    purchase_order_id: row.purchase_order_id,
+    shop_id: row.shop_id,
+    seller_order_id: "",
+    order_line_number: row.order_line_number,
   }));
   try {
     await deliverProducts(deliverList);
@@ -293,11 +320,13 @@ const dialogSubmit = async () => {
 // 批量设置
 const batchName = ref("");
 const batchNumber = ref("");
+const batchOrderId = ref("");
 const batchSetting = () => {
   if (!selectedRows.value.length) return ElMessage.warning("未选择订单");
-  selectedRows.value.forEach((row: WalmartOrderProps) => {
+  selectedRows.value.forEach((row: SelectedRowsProps) => {
     row.carrier = batchName.value;
     row.tracking_number = batchNumber.value;
+    row.seller_order_id = batchOrderId.value;
   });
 };
 </script>

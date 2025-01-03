@@ -35,6 +35,7 @@ export interface TiktokOrderProps {
   buyer_full_address: string;
   buyer_phone_number: string;
   buyer_message: string;
+  sku_id: string;
   tracking_number: string;
   shipping_provider_id: string;
   order_line_item_id: string;
@@ -50,7 +51,7 @@ export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
   page: number;
   page_size?: number;
   export?: 1 | 0;
-  order?: string;
+  sort?: string;
 }
 
 // 列表
@@ -92,6 +93,23 @@ export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
     baseURL: tiktokURL,
     url: "/tk/mark_package_as_shipped",
+    method: "post",
+    data,
+  });
+}
+
+// 取消订单
+export interface CancelOrderDto {
+  order_id: string;
+  skus: { sku_id: string; quantity: number }[];
+  order_line_item_ids: string[];
+  cancel_reason: string;
+  shop_id: string;
+}
+export function cancelOrder(data: CancelOrderDto[]): Promise<any> {
+  return request({
+    baseURL: tiktokURL,
+    url: "/tk/cancel_order",
     method: "post",
     data,
   });

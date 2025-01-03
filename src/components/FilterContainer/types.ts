@@ -1,4 +1,10 @@
-type FormType = 'input' | 'select' | 'date' | 'multiple' | 'dateRange';
+type FormType =
+  | "input"
+  | "select"
+  | "selectMultiple"
+  | "date"
+  | "multiple"
+  | "dateRange";
 
 export interface FilterColumnsProp {
   label: string;

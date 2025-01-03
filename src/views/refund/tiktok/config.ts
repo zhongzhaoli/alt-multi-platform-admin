@@ -33,25 +33,18 @@ export const orderStatusMap: Array<{
 export const filterColumns: FilterColumnsProp[] = [
   {
     label: "店铺名称",
-    prop: "shopId",
+    prop: "shop_id",
   },
   {
     label: "订单号",
-    type: "multiple",
-    prop: "orderSn",
+    type: "input",
+    prop: "order_id",
   },
   {
     label: "订单状态",
     type: "select",
-    prop: "orderStatus",
+    prop: "order_status",
     selectOptions: orderStatusMap,
-  },
-  {
-    label: "请求日期",
-    type: "dateRange",
-    startKey: "startDate",
-    endKey: "endDate",
-    prop: "requestDate",
   },
 ];
 
@@ -59,14 +52,14 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "订单号",
     align: "center",
-    width: 220,
-    prop: "orderNo",
+    width: 200,
+    prop: "order_id",
   },
   {
     label: "店铺名称",
     align: "center",
-    width: 200,
-    prop: "shopName",
+    width: 160,
+    prop: "shop_name",
   },
   {
     label: "商品信息",
@@ -77,8 +70,8 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "订单总金额",
     align: "center",
-    prop: "orderAmount",
-    minWidth: 140,
+    prop: "total_amount",
+    minWidth: 130,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
@@ -87,7 +80,7 @@ export const tableColumns: TableColumnProps[] = [
     label: "订单状态",
     align: "center",
     minWidth: 120,
-    prop: "orderStatus",
+    prop: "order_status",
     formatter: (_row, _column, cellValue) => {
       const status = orderStatusMap.find((item) => item.value === cellValue);
       return h(ElText, { type: status?.type || "info" }, status?.label || "");
@@ -96,7 +89,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "客户姓名",
     align: "center",
-    prop: "name",
+    prop: "buyer_name",
     minWidth: 140,
   },
   {
@@ -108,13 +101,14 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "请求日期",
     align: "center",
-    prop: "requestDate",
-    minWidth: 150,
+    prop: "update_time",
+    minWidth: 160,
   },
   {
     label: "操作",
     align: "center",
     prop: "action",
+    show: false,
     width: 160,
   },
 ];

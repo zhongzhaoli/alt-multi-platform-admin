@@ -96,6 +96,9 @@
             <el-button link type="primary" @click="singleDeliver(row)">
               发货
             </el-button>
+            <el-button link type="primary" @click="cancelOrder(row)">
+              取消
+            </el-button>
           </template>
           <template v-else>-</template>
         </template>
@@ -160,6 +163,22 @@
         </el-table-column>
       </el-table>
     </ConfirmDialog>
+    <ConfirmDialog
+      v-model="cancelVisible"
+      width="400px"
+      title="取消订单"
+      @submit="cancelSubmit"
+    >
+      <template v-if="tempRow">
+        <el-input
+          v-model="tempRow.cancel_reason"
+          type="textarea"
+          placeholder="请输入取消原因"
+          :rows="4"
+        />
+      </template>
+      <template v-else>请选择订单</template>
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -186,6 +205,8 @@ import {
   TiktokStausEnum,
   exportTiktokOrderList,
   GetOrderDto,
+  CancelOrderDto,
+  cancelOrder as cancelOrderApi,
 } from "@/api/order/tiktok";
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
@@ -221,7 +242,7 @@ const getListFun = async () => {
       ...filterValue.value,
     };
     if (sortOrder.value) {
-      searchParams.order = JSON.stringify(sortOrder.value);
+      searchParams.sort = JSON.stringify(sortOrder.value);
     }
     const { data } = await getTiktokOrderList(searchParams);
     tableData.value = data?.list || [];
@@ -238,6 +259,42 @@ getListFun();
 const selectionList = ref<TiktokOrderProps[]>([]);
 const selectionChange = (rows: TiktokOrderProps[]) => {
   selectionList.value = cloneDeep(rows);
+};
+
+// 取消订单
+const cancelVisible = ref(false);
+interface CancelOrderProps extends TiktokOrderProps {
+  cancel_reason: string;
+}
+const tempRow = ref<CancelOrderProps | null>(null);
+const cancelOrder = (row: TiktokOrderProps) => {
+  tempRow.value = {
+    ...row,
+    cancel_reason: "",
+  };
+  cancelVisible.value = true;
+};
+const cancelSubmit = async () => {
+  if (!tempRow.value) return ElMessage.warning("请选择订单");
+  const requestData: CancelOrderDto = {
+    order_id: tempRow.value.order_id,
+    cancel_reason: tempRow.value.cancel_reason || "",
+    order_line_item_ids: [tempRow.value.order_line_item_id],
+    shop_id: tempRow.value.shop_id,
+    skus: [{ sku_id: tempRow.value.sku_id, quantity: 1 }],
+  };
+  submitLoading.value = true;
+  try {
+    await cancelOrderApi([requestData]);
+    ElMessage.success("取消成功");
+    cancelVisible.value = false;
+    tempRow.value = null;
+    getListFun();
+  } catch (err) {
+    console.log(err);
+  } finally {
+    submitLoading.value = false;
+  }
 };
 
 // 发货

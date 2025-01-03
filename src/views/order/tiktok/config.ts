@@ -72,7 +72,7 @@ export const filterColumns: FilterColumnsProp[] = [
   },
   {
     label: "订单状态",
-    type: "select",
+    type: "selectMultiple",
     prop: "order_status",
     selectOptions: tiktokStatusMap,
   },
@@ -209,7 +209,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "操作",
     align: "center",
-    width: 100,
+    width: 130,
     fixed: "right",
     prop: "action",
   },

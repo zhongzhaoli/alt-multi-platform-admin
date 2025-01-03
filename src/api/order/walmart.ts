@@ -37,6 +37,7 @@ export interface WalmartOrderProps {
   carrier: string;
   tracking_url: string;
   tracking_number: string;
+  order_line_number: number;
 }
 
 export interface WalmartOrderFilterProps {
@@ -65,14 +66,17 @@ export function getWalmartOrderList(
 
 // 发货
 export interface DeliverProductsDto {
-  customerOrderId: string;
-  purchaseOrderId: string;
-  carrierName: string;
-  trackingNumber: string;
+  seller_order_id: string;
+  purchase_order_id: string;
+  carrier: string;
+  tracking_number: string;
+  shop_id: string;
+  order_line_number: number;
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
-    url: "/order/walmart/deliver",
+    baseURL: walmartURL,
+    url: "/order/shipping",
     method: "post",
     data,
   });

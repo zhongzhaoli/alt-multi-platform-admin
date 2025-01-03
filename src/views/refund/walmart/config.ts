@@ -86,7 +86,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "店铺名称",
     align: "center",
-    width: 200,
+    width: 180,
     prop: "shopName",
   },
   {
@@ -99,7 +99,7 @@ export const tableColumns: TableColumnProps[] = [
     label: "订单总金额",
     align: "center",
     prop: "orderAmount",
-    minWidth: 140,
+    minWidth: 130,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
     },
@@ -134,7 +134,7 @@ export const tableColumns: TableColumnProps[] = [
     label: "请求日期",
     align: "center",
     prop: "requestDate",
-    minWidth: 140,
+    minWidth: 180,
   },
 ];
 

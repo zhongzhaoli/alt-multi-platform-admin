@@ -1,4 +1,4 @@
-import { ResponsePageJson } from "@/config/request";
+import { mockURL, ResponsePageJson } from "@/config/request";
 import { request } from "@/utils/request";
 
 export enum OrderStatusEnum {
@@ -46,6 +46,7 @@ export function getWalmartRefundList(
   params: GetOrderDto,
 ): Promise<ResponsePageJson<RefundWalmartProps>> {
   return request({
+    baseURL: mockURL,
     url: "/refund/walmart/list",
     method: "get",
     params,

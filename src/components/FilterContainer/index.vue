@@ -19,10 +19,16 @@
             <slot :name="item.prop" v-bind="{ row: item, form: formValue }">
               <div class="d-inline-flex">
                 <template v-if="item.prefixKey && item.prefixSelectOptions">
-                  <div :class="{ prefixLeft: item.prefixKey && item.prefixSelectOptions }">
+                  <div
+                    :class="{
+                      prefixLeft: item.prefixKey && item.prefixSelectOptions,
+                    }"
+                  >
                     <PrepareSelect
                       v-model="formValue[item.prefixKey]"
-                      :style="{ width: `${item.prefixWidth || PREFIX_WIDTH}px` }"
+                      :style="{
+                        width: `${item.prefixWidth || PREFIX_WIDTH}px`,
+                      }"
                       :list="item.prefixSelectOptions"
                     />
                   </div>
@@ -30,13 +36,16 @@
                 <div
                   :class="{
                     'w-100 d-flex': true,
-                    prefixRight: item.prefixKey && item.prefixSelectOptions
+                    prefixRight: item.prefixKey && item.prefixSelectOptions,
                   }"
                 >
                   <template v-if="!item.type || item.type === 'input'">
                     <el-input
                       v-model="formValue[item.prop]"
-                      :class="{ prefixPadding: item.prefixKey && item.prefixSelectOptions }"
+                      :class="{
+                        prefixPadding:
+                          item.prefixKey && item.prefixSelectOptions,
+                      }"
                       :placeholder="item.placeholder || `${item.label}`"
                       clearable
                       @keyup.enter="submit"
@@ -45,10 +54,17 @@
                   <template v-if="item.type === 'multiple'">
                     <MultipleInput
                       v-model="formValue[`${item.prop}${MULTIPLE_TEXT_SUFFIX}`]"
-                      v-model:values="formValue[`${item.prop}${MULTIPLE_LIST_SUFFIX}`]"
-                      :is-active="formValue[`${item.prop}${MULTIPLE_ACTIVE_SUFFIX}`]"
+                      v-model:values="
+                        formValue[`${item.prop}${MULTIPLE_LIST_SUFFIX}`]
+                      "
+                      :is-active="
+                        formValue[`${item.prop}${MULTIPLE_ACTIVE_SUFFIX}`]
+                      "
                       :placeholder="item.placeholder || `${item.label}`"
-                      :class="{ prefixPadding: item.prefixKey && item.prefixSelectOptions }"
+                      :class="{
+                        prefixPadding:
+                          item.prefixKey && item.prefixSelectOptions,
+                      }"
                       @multiple-submit="multipSubmit(item.prop)"
                       @multiple-clear="multipClear(item.prop)"
                       @submit="submit"
@@ -57,12 +73,42 @@
                   <template v-else-if="item.type === 'select'">
                     <el-select
                       v-model="formValue[item.prop]"
-                      :class="{ prefixPadding: item.prefixKey && item.prefixSelectOptions }"
+                      :class="{
+                        prefixPadding:
+                          item.prefixKey && item.prefixSelectOptions,
+                      }"
                       :placeholder="item.placeholder || `${item.label}`"
                       clearable
                       @change="submit"
                     >
-                      <template v-if="item.selectOptions && item.selectOptions.length">
+                      <template
+                        v-if="item.selectOptions && item.selectOptions.length"
+                      >
+                        <el-option
+                          v-for="option in item.selectOptions"
+                          :key="option.value"
+                          :label="option.label"
+                          :value="option.value"
+                        />
+                      </template>
+                    </el-select>
+                  </template>
+                  <template v-else-if="item.type === 'selectMultiple'">
+                    <el-select
+                      v-model="formValue[`${item.prop}${SELECT_MULTIPLE_KEY}`]"
+                      :class="{
+                        prefixPadding:
+                          item.prefixKey && item.prefixSelectOptions,
+                      }"
+                      :multiple="true"
+                      :collapse-tags="true"
+                      :placeholder="item.placeholder || `${item.label}`"
+                      clearable
+                      @change="submit"
+                    >
+                      <template
+                        v-if="item.selectOptions && item.selectOptions.length"
+                      >
                         <el-option
                           v-for="option in item.selectOptions"
                           :key="option.value"
@@ -111,14 +157,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { nextTick, reactive, ref, watch } from 'vue';
-import { ELEMENT_UI_SIZE } from '@/constants/app';
-import { FilterColumnsProp } from './types';
-import MultipleInput from '../MultipleInput/index.vue';
-import PrepareSelect from './prepareSelect.vue';
-import { shortcuts } from '@/config/dateRange';
-import { useDebounceFn } from '@vueuse/core';
-import { pickBy } from 'lodash-es';
+import { nextTick, reactive, ref, watch } from "vue";
+import { ELEMENT_UI_SIZE } from "@/constants/app";
+import { FilterColumnsProp } from "./types";
+import MultipleInput from "../MultipleInput/index.vue";
+import PrepareSelect from "./prepareSelect.vue";
+import { shortcuts } from "@/config/dateRange";
+import { useDebounceFn } from "@vueuse/core";
+import { pickBy } from "lodash-es";
 import {
   COL,
   GUTTER,
@@ -128,14 +174,15 @@ import {
   MULTIPLE_TEXT_SUFFIX,
   DATERANGE_START_KEY,
   DATERANGE_END_KEY,
-  PREFIX_WIDTH
-} from './constants';
+  PREFIX_WIDTH,
+  SELECT_MULTIPLE_KEY,
+} from "./constants";
 
 interface ComponentProps {
   col?: number;
   btnCol?: number;
   labelWidth?: string;
-  labelPosition?: 'left' | 'right';
+  labelPosition?: "left" | "right";
   size?: ELEMENT_UI_SIZE;
   gutter?: number;
   columns: FilterColumnsProp[];
@@ -143,7 +190,7 @@ interface ComponentProps {
   modelValue?: { [key: string]: any };
 }
 const props = defineProps<ComponentProps>();
-const emits = defineEmits(['submit', 'update:modelValue', 'reset']);
+const emits = defineEmits(["submit", "update:modelValue", "reset"]);
 
 // 搜索取值绑定
 let formValue = reactive<any>({});
@@ -151,11 +198,13 @@ let formValue = reactive<any>({});
 // 多选key存储起来
 const multipleKeys = ref<Set<string>>(new Set());
 // 日期联合选择key存储起来
-const dateKeys = ref<Map<string, { startKey: string; endKey: string; optionsKeys: string[] }>>(
-  new Map()
-);
+const dateKeys = ref<
+  Map<string, { startKey: string; endKey: string; optionsKeys: string[] }>
+>(new Map());
 // 联合选择key存储起来
-const jointKeys = ref<Map<string, { key: string; optionsKeys: string[] }>>(new Map());
+const jointKeys = ref<Map<string, { key: string; optionsKeys: string[] }>>(
+  new Map(),
+);
 // 创建对象
 watch(
   () => props.columns,
@@ -163,65 +212,82 @@ watch(
     multipleKeys.value.clear();
     dateKeys.value.clear();
     (props.columns || []).forEach((item) => {
-      if (item.prefixKey && item.prefixSelectOptions && item.prefixSelectOptions.length)
+      if (
+        item.prefixKey &&
+        item.prefixSelectOptions &&
+        item.prefixSelectOptions.length
+      )
         formValue[item.prefixKey] = item.prefixSelectOptions[0].value;
-      formValue[item.prop] = (props.modelValue && props.modelValue[item.prop]) || undefined;
-      if (item.type === 'select' && item.selectOptionsFun) {
+      formValue[item.prop] =
+        (props.modelValue && props.modelValue[item.prop]) || undefined;
+      if (
+        (item.type === "select" || item.type === "selectMultiple") &&
+        item.selectOptionsFun
+      ) {
         item.selectOptions = item.selectOptionsFun();
+        if (item.type === "selectMultiple") {
+          formValue[`${item.prop}${SELECT_MULTIPLE_KEY}`] = [];
+        }
       }
-      if (item.type === 'multiple') {
+      if (item.type === "multiple") {
         multipleKeys.value.add(item.prop);
         // 多选情况下，要多几个key，存储不同的数据
         formValue[`${item.prop}${MULTIPLE_ACTIVE_SUFFIX}`] = false;
         formValue[`${item.prop}${MULTIPLE_LIST_SUFFIX}`] = [];
-        formValue[`${item.prop}${MULTIPLE_TEXT_SUFFIX}`] = '';
+        formValue[`${item.prop}${MULTIPLE_TEXT_SUFFIX}`] = "";
       }
       if (item.prefixKey && item.prefixSelectOptions) {
-        if (item.type === 'dateRange') {
+        if (item.type === "dateRange") {
           dateKeys.value.set(item.prefixKey, {
             startKey: item.startKey || DATERANGE_START_KEY,
             endKey: item.endKey || DATERANGE_END_KEY,
-            optionsKeys: item.prefixSelectOptions.map((i) => i.value)
+            optionsKeys: item.prefixSelectOptions.map((i) => i.value),
           });
         } else {
           jointKeys.value.set(item.prefixKey, {
             key: item.prop,
-            optionsKeys: item.prefixSelectOptions.map((i) => i.value)
+            optionsKeys: item.prefixSelectOptions.map((i) => i.value),
           });
         }
       }
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // 日期范围
 const dateRangeValue = ref<string[] | null>(null);
 // element的问题，清空，有时候会调用两次
-const dateRangeChange = useDebounceFn((val: string[] | null, item: FilterColumnsProp) => {
-  const { startKey, endKey } = item;
-  let startDate = null;
-  let endDate = null;
-  if (val !== null && val.length === 2) {
-    startDate = val[0];
-    endDate = val[1];
-  }
-  if (!item.prefixKey) {
-    formValue[startKey || DATERANGE_START_KEY] = startDate;
-    formValue[endKey || DATERANGE_END_KEY] = endDate;
-  } else {
-    jointValueJudge();
-  }
-  submitFun();
-}, 10);
+const dateRangeChange = useDebounceFn(
+  (val: string[] | null, item: FilterColumnsProp) => {
+    const { startKey, endKey } = item;
+    let startDate = null;
+    let endDate = null;
+    if (val !== null && val.length === 2) {
+      startDate = val[0];
+      endDate = val[1];
+    }
+    if (!item.prefixKey) {
+      formValue[startKey || DATERANGE_START_KEY] = startDate;
+      formValue[endKey || DATERANGE_END_KEY] = endDate;
+    } else {
+      jointValueJudge();
+    }
+    submitFun();
+  },
+  10,
+);
 
 // 过滤空值
 const filterNull = (val: any) => {
   return pickBy(
     val,
     (value) =>
-      (typeof value === 'string' && value !== undefined && value !== null && value !== '') ||
-      (Array.isArray(value) && value.length)
+      (typeof value === "string" &&
+        value !== undefined &&
+        value !== null &&
+        value !== "") ||
+      (Array.isArray(value) && value.length),
   );
 };
 
@@ -233,9 +299,9 @@ watch(
     multipleValueJudge();
     // 日期处理
     jointValueJudge();
-    emits('update:modelValue', filterHandle(nV));
+    emits("update:modelValue", filterHandle(nV));
   },
-  { deep: true }
+  { deep: true },
 );
 
 const filterHandle = (obj: any) => {
@@ -277,7 +343,10 @@ const filterJointActive = (obj: any) => {
   for (const key of dKeys) {
     const dateItem = dateKeys.value.get(key);
     if (dateItem) {
-      const retainKey = [obj[key] + dateItem.startKey, obj[key] + dateItem.endKey];
+      const retainKey = [
+        obj[key] + dateItem.startKey,
+        obj[key] + dateItem.endKey,
+      ];
       delete obj[key];
       delete obj[dateItem.startKey];
       delete obj[dateItem.endKey];
@@ -304,8 +373,10 @@ const jointValueJudge = () => {
     if (dateMapItem) {
       const dateValue = formValue[key];
       if (dateValue) {
-        formValue[`${dateValue}${dateMapItem.startKey}`] = dateRangeValue.value?.[0] || undefined;
-        formValue[`${dateValue}${dateMapItem.endKey}`] = dateRangeValue.value?.[1] || undefined;
+        formValue[`${dateValue}${dateMapItem.startKey}`] =
+          dateRangeValue.value?.[0] || undefined;
+        formValue[`${dateValue}${dateMapItem.endKey}`] =
+          dateRangeValue.value?.[1] || undefined;
       }
     }
     if (jointSetItem) {
@@ -327,7 +398,7 @@ const multipleValueJudge = () => {
         if (listValue && listValue.length) {
           formValue[key] = JSON.stringify(listValue);
         } else {
-          formValue[key] = '';
+          formValue[key] = "";
         }
       } else {
         const textValue = formValue[`${key}${MULTIPLE_TEXT_SUFFIX}`];
@@ -342,10 +413,21 @@ const multipleValueJudge = () => {
   });
 };
 
+// select多选处理
+const selectMultipleJudge = () => {
+  Object.keys(formValue).forEach((key) => {
+    if (key.endsWith(SELECT_MULTIPLE_KEY)) {
+      const prop = key.replace(SELECT_MULTIPLE_KEY, "");
+      formValue[prop] = JSON.stringify(formValue[key]);
+    }
+  });
+};
+
 // 搜索按钮点击 多选情况下 只读取单个
 const submit = () => {
   multipleValueJudge();
   jointValueJudge();
+  selectMultipleJudge();
   submitFun();
 };
 
@@ -353,7 +435,7 @@ const submitFun = () => {
   nextTick(() => {
     const returnData = filterHandle(formValue);
     props.submitFn && props.submitFn(returnData);
-    emits('submit', returnData);
+    emits("submit", returnData);
   });
 };
 
@@ -361,12 +443,12 @@ const submitFun = () => {
 const reset = () => {
   dateRangeValue.value = null;
   props.columns.forEach((item) => {
-    if (item.type === 'multiple') {
+    if (item.type === "multiple") {
       formValue[`${item.prop}${MULTIPLE_ACTIVE_SUFFIX}`] = false;
       formValue[`${item.prop}${MULTIPLE_LIST_SUFFIX}`] = [];
-      formValue[`${item.prop}${MULTIPLE_TEXT_SUFFIX}`] = '';
+      formValue[`${item.prop}${MULTIPLE_TEXT_SUFFIX}`] = "";
     }
-    if (item.type === 'dateRange') {
+    if (item.type === "dateRange") {
       formValue[item.startKey || DATERANGE_START_KEY] = undefined;
       formValue[item.endKey || DATERANGE_END_KEY] = undefined;
       dateRangeValue.value = [];
@@ -377,7 +459,7 @@ const reset = () => {
     formValue[item.prop] = undefined;
   });
   nextTick(() => {
-    emits('reset');
+    emits("reset");
   });
 };
 
@@ -408,10 +490,12 @@ const multipClear = (key: string) => {
     display: inline-flex;
     align-items: flex-end;
     &:deep(.el-date-editor) {
-      border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
+      border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base)
+        0;
     }
     &:deep(.el-input__wrapper) {
-      border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
+      border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base)
+        0;
     }
   }
 
