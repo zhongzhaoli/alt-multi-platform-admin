@@ -139,25 +139,19 @@ export const tableColumns: TableColumnProps[] = [
     },
   },
   {
-    label: "产品金额",
+    label: "产品金额 / 原价",
     align: "center",
     prop: "product_sale_price",
-    width: 100,
+    width: 180,
     formatter: (_row, _column, _cellValue) => {
-      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
-    },
-  },
-  {
-    label: "产品原价",
-    align: "center",
-    prop: "product_original_price",
-    width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h(
-        "b",
-        { color: "#999" },
-        `$ ${parseFloat(_cellValue || "0").toFixed(2)}`,
-      );
+      return h("b", null, [
+        h("span", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)} / `),
+        h(
+          "span",
+          { style: { color: "#999" } },
+          `$ ${parseFloat(_row.product_original_price || "0").toFixed(2)}`,
+        ),
+      ]);
     },
   },
   {
