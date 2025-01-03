@@ -105,7 +105,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "店铺名称",
     align: "center",
-    width: 180,
+    width: 160,
     showOverflowTooltip: true,
     prop: "shop_name",
   },
@@ -145,6 +145,19 @@ export const tableColumns: TableColumnProps[] = [
     width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
+    },
+  },
+  {
+    label: "产品原价",
+    align: "center",
+    prop: "product_original_price",
+    width: 100,
+    formatter: (_row, _column, _cellValue) => {
+      return h(
+        "b",
+        { color: "#999" },
+        `$ ${parseFloat(_cellValue || "0").toFixed(2)}`,
+      );
     },
   },
   {

@@ -29,6 +29,7 @@ export interface TiktokOrderProps {
   product_sale_price: number;
   shipping_fee: number;
   tax: number;
+  product_original_price: number;
   order_create_time: string;
   update_time: string;
   buyer_name: string;
