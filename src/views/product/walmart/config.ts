@@ -63,6 +63,12 @@ export const tableColumns: TableColumnProps[] = [
     prop: "platform",
   },
   {
+    label: "ASIN",
+    align: "center",
+    width: 160,
+    prop: "asin",
+  },
+  {
     label: "商品信息",
     align: "center",
     minWidth: 300,

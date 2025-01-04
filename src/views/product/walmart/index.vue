@@ -70,6 +70,9 @@
             {{ row.stockWarning ? "库存正常" : "库存低于 5 个" }}
           </el-tag>
         </template>
+        <template #table-asin="{ row }">
+          <TextEllipsis :text="row.asin" :line="2" />
+        </template>
       </TsxElementTable>
     </div>
   </div>
@@ -79,6 +82,7 @@ import FilterContainer from "@/components/FilterContainer/index.vue";
 import TsxElementTable from "tsx-element-table";
 // import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import * as config from "./config";
+import TextEllipsis from "@/components/TextEllipsis/index.vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import { ref } from "vue";
 import {

@@ -38,6 +38,7 @@ export interface WalmartOrderProps {
   tracking_url: string;
   tracking_number: string;
   order_line_number: number;
+  item_id: string;
 }
 
 export interface WalmartOrderFilterProps {

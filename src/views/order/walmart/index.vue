@@ -78,10 +78,15 @@
               class="productItem"
               :image-url="row.image_url"
               :product-name="row.product_name"
+              :size="60"
               :desc-list="[
                 {
                   text: row.product_sku,
                   prefix: 'SKU：',
+                },
+                {
+                  text: row.item_id,
+                  prefix: 'Item ID：',
                 },
               ]"
             />

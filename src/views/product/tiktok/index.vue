@@ -61,6 +61,9 @@
             ]"
           />
         </template>
+        <template #table-asin="{ row }">
+          <TextEllipsis :text="row.asin" :line="2" />
+        </template>
         <template #table-stockWarning="{ row }">
           <el-tag
             disable-transitions
@@ -78,6 +81,7 @@
 import FilterContainer from "@/components/FilterContainer/index.vue";
 import TsxElementTable from "tsx-element-table";
 // import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
+import TextEllipsis from "@/components/TextEllipsis/index.vue";
 import * as config from "./config";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import { ref } from "vue";
