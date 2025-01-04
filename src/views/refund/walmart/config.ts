@@ -87,7 +87,7 @@ export const tableColumns: TableColumnProps[] = [
     label: "店铺名称",
     align: "center",
     width: 180,
-    prop: "shopName",
+    prop: "shop_name",
   },
   {
     label: "商品信息",
@@ -100,20 +100,15 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     prop: "orderAmount",
     minWidth: 130,
-    formatter: (_row, _column, _cellValue) => {
-      return h("b", null, `$ ${parseFloat(_cellValue || "0").toFixed(2)}`);
+    formatter: (row) => {
+      return h(
+        "b",
+        null,
+        `$ ${(parseFloat(row.fee_amount || "0") + parseFloat(row.product_amount || "0") + parseFloat(row.shipping_amount || "0") + parseFloat(row.product_tax_amount || "0") + parseFloat(row.fee_tax_amount || "0") + parseFloat(row.shipping_tax_amount || "0")).toFixed(2)}`,
+      );
     },
   },
-  {
-    label: "订单状态",
-    align: "center",
-    minWidth: 120,
-    prop: "orderStatus",
-    formatter: (_row, _column, cellValue) => {
-      const status = orderStatusMap.find((item) => item.value === cellValue);
-      return h(ElText, { type: status?.type || "info" }, status?.label || "");
-    },
-  },
+
   {
     label: "追踪状态",
     align: "center",
@@ -127,13 +122,13 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "客户姓名",
     align: "center",
-    prop: "name",
+    prop: "postal_address_name",
     minWidth: 140,
   },
   {
     label: "请求日期",
     align: "center",
-    prop: "requestDate",
+    prop: "update_time",
     minWidth: 180,
   },
 ];

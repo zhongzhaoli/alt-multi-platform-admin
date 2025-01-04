@@ -6,16 +6,7 @@
         :columns="filterColumns"
         @submit="getListFun"
         @reset="getListFun"
-      >
-        <!-- <template #user_id="{ row, form }">
-          <SearchUser
-            v-model="form[row.prop]"
-            filterable
-            clearable
-            @change="getListFun"
-          />
-        </template> -->
-      </FilterContainer>
+      />
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -33,15 +24,15 @@
         @table-refresh="getListFun"
         @page-change="getListFun"
       >
-        <template #table-response_code="{ row }">
+        <template #table-operation_status="{ row }">
           <el-tag
-            v-if="row.resp_code === ResponseCode.SUCCESS"
+            v-if="row.operation_status === 1"
             type="success"
             disable-transitions
           >
             成功
           </el-tag>
-          <el-tag v-else type="danger">失败</el-tag>
+          <el-tag v-else type="danger" disable-transitions>失败</el-tag>
         </template>
         <template #table-action="{ row }">
           <el-button link type="primary" @click="viewDetailFun(row)">
@@ -53,25 +44,22 @@
     <el-drawer v-model="detailVisible" title="日志详情">
       <el-form v-if="tempDetail" label-position="top">
         <el-form-item label="请求路径：">
-          {{ tempDetail.req_path || "-" }}
+          {{ tempDetail.request_path || "-" }}
         </el-form-item>
         <el-form-item label="请求方式：">
-          {{ tempDetail.req_method || "-" }}
+          {{ tempDetail.request_method || "-" }}
         </el-form-item>
         <el-form-item label="请求描述：">
-          {{ tempDetail.req_content || "-" }}
-        </el-form-item>
-        <el-form-item label="请求分类：">
-          {{ tempDetail.router_tags || "-" }}
+          {{ tempDetail.operation_name || "-" }}
         </el-form-item>
         <el-form-item label="请求用户：">
           {{ tempDetail.user_name || "-" }}
         </el-form-item>
         <el-form-item label="请求IP：">
-          {{ tempDetail.user_ip || "-" }}
+          {{ tempDetail.ip || "-" }}
         </el-form-item>
         <el-form-item label="响应code：">
-          {{ tempDetail.resp_code || "-" }}
+          {{ tempDetail.response_code || "-" }}
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -81,11 +69,9 @@
 import FilterContainer from "@/components/FilterContainer/index.vue";
 import TsxElementTable from "tsx-element-table";
 import { filterColumns, tableColumns } from "./config";
-// import SearchUser from '@/components/SelectUser/index.vue';
 import * as API_LOG from "@/api/handleLogs/index";
-import { ref } from "vue";
+import { ref, unref } from "vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
-import { ResponseCode } from "@/config/request";
 
 // 日志列表
 const filterValue = ref<object>({});
@@ -95,37 +81,20 @@ const total = ref(0);
 const tableData = ref<any[]>([]);
 const loading = ref(false);
 const getListFun = async () => {
-  tableData.value = [
-    {
-      create_time: "2025-01-02 17:23:21",
-      id: 130543,
-      is_delete: 0,
-      position: "未知",
-      req_content: "查询已授权的用户店铺",
-      req_method: "GET",
-      req_path: "/v1/walmart/user/shop/list",
-      resp_code: 200,
-      resp_time: 16,
-      router_tags: "walmart",
-      user_id: "1",
-      user_ip: "113.89.5.234",
-      user_name: "ALT-025-郑书源",
-    },
-  ];
-  // loading.value = true;
-  // try {
-  //   const { data } = await API_LOG.getLogList({
-  //     page: unref(currentPage),
-  //     page_size: unref(pageSize),
-  //     ...unref(filterValue),
-  //   });
-  //   tableData.value = data?.list || [];
-  //   total.value = data?.total || 0;
-  // } catch (err) {
-  //   console.log(err);
-  // } finally {
-  //   loading.value = false;
-  // }
+  loading.value = true;
+  try {
+    const { data } = await API_LOG.getLogList({
+      page: unref(currentPage),
+      page_size: unref(pageSize),
+      ...unref(filterValue),
+    });
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
 };
 getListFun();
 

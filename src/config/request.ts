@@ -4,6 +4,7 @@ const {
   VITE_GLOB_API_URL_TIKTOK,
   VITE_GLOB_API_URL_WALMART,
   VITE_GLOG_API_URL_MOCK,
+  VITE_GLOB_API_URL_LOG,
 } = getAppEnvConfig();
 
 // 请求路径
@@ -14,6 +15,8 @@ export const tiktokURL = VITE_GLOB_API_URL_TIKTOK;
 export const walmartURL = VITE_GLOB_API_URL_WALMART;
 // Mock数据
 export const mockURL = VITE_GLOG_API_URL_MOCK;
+// Log请求路径
+export const logURL = VITE_GLOB_API_URL_LOG;
 // 超时事件
 export const requestTimeout = 20000;
 // 请求格式

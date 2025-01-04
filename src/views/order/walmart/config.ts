@@ -62,7 +62,7 @@ export const filterColumns: FilterColumnsProp[] = [
   },
   {
     label: "订单状态",
-    type: "select",
+    type: "selectMultiple",
     prop: "status",
     selectOptions: walmartStatusMap,
   },

@@ -7,6 +7,7 @@ declare interface ImportMetaEnv {
   readonly VITE_GLOB_API_URL_TIKTOK: string;
   readonly VITE_GLOB_API_URL_WALMART: string;
   readonly VITE_GLOG_API_URL_MOCK: string;
+  readonly VITE_GLOB_API_URL_LOG: string;
 }
 
 interface ImportMeta {

@@ -39,28 +39,28 @@
             PO：
             <RenderCopyIcon
               type="primary"
-              :text="row.purchaseOrderId"
+              :text="row.purchase_order_id"
               title="采购订单号"
               margin="r"
             />
             <TextEllipsis
               :line="1"
               placement="right"
-              :text="`${row.purchaseOrderId || '-'}`"
+              :text="`${row.purchase_order_id || '-'}`"
             />
           </div>
           <div class="d-inline-flex">
             CO：
             <RenderCopyIcon
               type="primary"
-              :text="row.customerOrderId"
+              :text="row.customer_order_id"
               title="客户订单号"
               margin="r"
             />
             <TextEllipsis
               :line="1"
               placement="right"
-              :text="`${row.customerOrderId || '-'}`"
+              :text="`${row.customer_order_id || '-'}`"
             />
           </div>
         </template>
@@ -68,16 +68,18 @@
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              :image-url="row.productImageUrl"
-              :product-name="row.productName"
+              :image-url="row.image_url"
+              :product-name="row.product_name"
               :desc-list="[
                 {
-                  text: row.productSku,
+                  text: row.product_sku,
                   prefix: 'SKU：',
                 },
               ]"
             />
-            <div class="quantityAmount">x{{ row.orderLineQuantity || 0 }}</div>
+            <div class="quantityAmount">
+              x{{ row.status_quantity_amount || 0 }}
+            </div>
           </div>
         </template>
       </TsxElementTable>
@@ -110,7 +112,7 @@ const getListFun = async () => {
   try {
     const { data } = await getWalmartRefundList({
       page: currentPage.value,
-      pageSize: pageSize.value,
+      page_size: pageSize.value,
       ...filterValue.value,
     });
     tableData.value = data?.list || [];
