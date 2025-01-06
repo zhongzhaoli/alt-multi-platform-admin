@@ -127,7 +127,16 @@
       </div>
       <div class="d-flex batchSettingBox">
         <div>
-          <el-input v-model="batchName" placeholder="请输入物流承运商" />
+          <el-select v-model="batchName" placeholder="物流承运商">
+            <el-option
+              v-for="item in carrierList"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            >
+              {{ item.label }}
+            </el-option>
+          </el-select>
         </div>
         <div><el-input v-model="batchNumber" placeholder="物流追踪号" /></div>
         <div class="buttonBox">
@@ -146,10 +155,19 @@
           prop="shipping_provider_id"
         >
           <template #default="{ row }">
-            <el-input
+            <el-select
               v-model="row.shipping_provider_id"
               placeholder="物流承运商"
-            />
+            >
+              <el-option
+                v-for="item in carrierList"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
+              >
+                {{ item.label }}
+              </el-option>
+            </el-select>
           </template>
         </el-table-column>
         <el-table-column
@@ -186,6 +204,7 @@ import TsxElementTable from "tsx-element-table";
 import FilterContainer from "@/components/FilterContainer/index.vue";
 // import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
+import { carrierList } from "../carrier";
 import {
   downloadCore,
   generateVisualNumber,

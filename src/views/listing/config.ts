@@ -69,7 +69,7 @@ export const tableColumns: TableColumnProps[] = [
     },
   },
   {
-    label: "当天上架链接数量",
+    label: "昨日上架链接数量",
     prop: "listing_count",
     minWidth: 160,
     align: "center",
@@ -87,7 +87,7 @@ export const tableColumns: TableColumnProps[] = [
     },
   },
   {
-    label: "当天下架链接数量",
+    label: "昨日下架链接数量",
     prop: "remove_count",
     minWidth: 160,
     align: "center",

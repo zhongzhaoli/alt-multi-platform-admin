@@ -155,7 +155,16 @@
           <el-input v-model="batchOrderId" placeholder="卖家订单号" />
         </div>
         <div>
-          <el-input v-model="batchName" placeholder="物流承运商" />
+          <el-select v-model="batchName" placeholder="物流承运商">
+            <el-option
+              v-for="item in carrierList"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            >
+              {{ item.label }}
+            </el-option>
+          </el-select>
         </div>
         <div><el-input v-model="batchNumber" placeholder="物流追踪号" /></div>
         <div class="buttonBox">
@@ -183,7 +192,16 @@
         </el-table-column>
         <el-table-column label="物流承运商" align="center" prop="carrier">
           <template #default="{ row }">
-            <el-input v-model="row.carrier" placeholder="物流承运商" />
+            <el-select v-model="row.carrier" placeholder="物流承运商">
+              <el-option
+                v-for="item in carrierList"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
+              >
+                {{ item.label }}
+              </el-option>
+            </el-select>
           </template>
         </el-table-column>
         <el-table-column
@@ -206,6 +224,7 @@ import FilterContainer from "@/components/FilterContainer/index.vue";
 import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
 import { RenderCopyIcon } from "@/utils/index";
 import TextEllipsis from "@/components/TextEllipsis/index.vue";
+import { carrierList } from "../carrier";
 import LinkItem from "@/components/LinkItem/index.vue";
 import ProductItem from "@/components/ProductItem/index.vue";
 import * as config from "./config";

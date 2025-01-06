@@ -174,6 +174,7 @@ const getSalesData = async () => {
     cloneOptions = config.generateOptions(
       data?.date_range || [],
       data?.list || [],
+      data?.history || [],
     );
   } catch (err) {
     console.log(err);

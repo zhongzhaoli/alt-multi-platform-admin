@@ -52,6 +52,7 @@ export const levelThreeGranularity: GranularityProps[] = [
 export const generateOptions = (
   xAxisData: string[],
   series: number[],
+  history: number[],
 ): EChartsOption => {
   return {
     xAxis: {
@@ -91,10 +92,29 @@ export const generateOptions = (
     },
     series: [
       {
+        name: "当前",
         lineStyle: {
           color: "#267afa",
         },
+        itemStyle: {
+          borderWidth: 0,
+          color: "#267afa",
+        },
         data: series,
+        type: "line",
+        smooth: true,
+      },
+      {
+        name: "环比",
+        lineStyle: {
+          color: "#a8cafd",
+          type: "dashed",
+        },
+        itemStyle: {
+          borderWidth: 0,
+          color: "#a8cafd",
+        },
+        data: history,
         type: "line",
         smooth: true,
       },

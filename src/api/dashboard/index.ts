@@ -8,6 +8,7 @@ interface getDashboardDataDto {
 }
 interface DashboardProps {
   list: number[];
+  history: number[];
   date_range: string[];
 }
 export function getDashboardData(
