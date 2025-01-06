@@ -26,7 +26,7 @@
           />
           <TextEllipsis
             placement="right"
-            :prefix="`${desc.prefix || ''}`"
+            :prefix="`${desc.prefix || ''}：`"
             :text="`${desc.text || '-'}`"
           />
         </div>

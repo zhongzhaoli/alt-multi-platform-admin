@@ -40,7 +40,8 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "店铺名称",
     prop: "shop_name",
-    width: 180,
+    width: 200,
+    showOverflowTooltip: true,
     align: "center",
   },
   {
@@ -74,6 +75,15 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
     formatter: (_row, _column, cellValue) => {
       return h("b", null, cellValue);
+    },
+  },
+  {
+    label: "上架率",
+    prop: "listing_rating",
+    minWidth: 160,
+    align: "center",
+    formatter: (_row, _column, cellValue: number) => {
+      return h("b", null, `${(cellValue * 100).toFixed(2)}%`);
     },
   },
   {

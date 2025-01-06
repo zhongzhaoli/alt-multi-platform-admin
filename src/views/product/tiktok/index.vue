@@ -52,11 +52,11 @@
             :desc-list="[
               {
                 text: row.productId,
-                prefix: 'ID：',
+                prefix: 'ID',
               },
               {
                 text: row.productSku,
-                prefix: 'SKU：',
+                prefix: 'SKU',
               },
             ]"
           />

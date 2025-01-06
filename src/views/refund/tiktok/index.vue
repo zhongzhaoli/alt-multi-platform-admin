@@ -52,7 +52,7 @@
               :desc-list="[
                 {
                   text: row.seller_sku,
-                  prefix: 'MSKU：',
+                  prefix: 'MSKU',
                 },
               ]"
             />
