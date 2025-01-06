@@ -87,9 +87,11 @@ const getListFun = async () => {
   const searchParams: GetListingDto = {
     page: currentPage.value,
     page_size: pageSize.value,
-    start_date: `${moment(startDate).format("yyyy-MM-DD")} 00:00:00`,
-    end_date: `${moment(endDate).format("yyyy-MM-DD")} 23:59:59`,
+    start_date: `${moment(startDate).format("yyyy-MM-DD 00:00:00")}`,
+    end_date: `${moment(endDate).format("yyyy-MM-DD 23:59:59")}`,
+    a: "x d a",
   };
+  console.log(searchParams);
   if (platform.value === "walmart") {
     getWalmartList(searchParams, diff);
   } else {
