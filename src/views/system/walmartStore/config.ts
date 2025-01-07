@@ -24,6 +24,12 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
   },
   {
+    label: "店铺存活状态",
+    align: "center",
+    width: 160,
+    prop: "shop_survival",
+  },
+  {
     label: "Client",
     prop: "client_id",
     width: 160,

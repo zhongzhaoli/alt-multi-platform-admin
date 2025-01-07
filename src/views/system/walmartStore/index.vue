@@ -36,6 +36,16 @@
             <TextEllipsis :text="row.client_secret" />
           </div>
         </template>
+        <template #table-shop_survival="{ row }">
+          <el-tag
+            v-if="row.shop_survival === 1"
+            disable-transitions
+            type="success"
+          >
+            存活
+          </el-tag>
+          <el-tag v-else disable-transitions type="danger">死亡</el-tag>
+        </template>
         <template #table-handle="{ row }">
           <el-button type="primary" link @click="editDialog(row)">
             编辑

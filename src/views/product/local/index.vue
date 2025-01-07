@@ -131,7 +131,7 @@ getListFun();
 
 // 上架店铺
 const shopsVisible = ref(false);
-const shopsTableData = ref(false);
+const shopsTableData = ref([]);
 const shopsLoading = ref(false);
 const shopsPage = ref(PAGE);
 const shopsPageSize = ref(PAGE_SIZE);

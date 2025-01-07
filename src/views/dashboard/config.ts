@@ -89,6 +89,18 @@ export const generateOptions = (
           color: "#eaeaea",
         },
       },
+      formatter: (params: any) => {
+        let rowsText: string = "";
+        for (let index = 0; index < params.length; index++) {
+          const row = params[index];
+          const { date, value } = row.data;
+          rowsText += `${row.marker}${date}：${value}`;
+          if (index < params.length - 1) {
+            rowsText += `</br>`;
+          }
+        }
+        return rowsText;
+      },
     },
     series: [
       {
