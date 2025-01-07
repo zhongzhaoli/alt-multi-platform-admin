@@ -178,6 +178,7 @@ const getSummaries = () => {
     "汇总",
     "-",
     "-",
+    "-",
     (summaryData.value?.all_count || 0).toFixed(0),
     (summaryData.value?.for_sale_count || 0).toFixed(0),
     (summaryData.value?.listing_count || 0).toFixed(0),

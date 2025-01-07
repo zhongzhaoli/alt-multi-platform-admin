@@ -65,8 +65,30 @@
             {{ row.deliveryTime ? "是" : "否" }}
           </el-tag>
         </template>
+        <template #table-shops="{ row }">
+          <el-button link type="primary" @click="openShops(row)">
+            查看详情
+          </el-button>
+        </template>
       </TsxElementTable>
     </div>
+    <el-drawer v-model="shopsVisible" size="40%" title="上架店铺">
+      <TsxElementTable
+        v-model:current-page="shopsPage"
+        v-model:page-size="shopsPageSize"
+        :table-columns="config.shopsTableColumns"
+        :table="{
+          data: shopsTableData,
+          loading: shopsLoading,
+          border: true,
+          size: 'small',
+        }"
+        :handle="{ show: false }"
+        :pagination="{
+          total: shopsTotal,
+        }"
+      />
+    </el-drawer>
   </div>
 </template>
 <script setup lang="ts">
@@ -82,6 +104,7 @@ import {
 } from "@/api/product/local";
 import ProductItem from "@/components/ProductItem/index.vue";
 
+// 获取列表
 const filterValue = ref<Partial<LocalProductFilterProps>>({});
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
@@ -105,5 +128,17 @@ const getListFun = async () => {
   }
 };
 getListFun();
+
+// 上架店铺
+const shopsVisible = ref(false);
+const shopsTableData = ref(false);
+const shopsLoading = ref(false);
+const shopsPage = ref(PAGE);
+const shopsPageSize = ref(PAGE_SIZE);
+const shopsTotal = ref(0);
+const openShops = (row: LocalProductProps) => {
+  console.log(row);
+  shopsVisible.value = true;
+};
 </script>
 <style lang="scss" scoped></style>

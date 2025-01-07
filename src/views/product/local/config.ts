@@ -112,6 +112,39 @@ export const tableColumns: TableColumnProps[] = [
     prop: "deliveryTime",
     minWidth: 150,
   },
+  {
+    label: "上架店铺",
+    align: "center",
+    prop: "shops",
+    minWidth: 150,
+  },
+];
+
+export const shopsTableColumns: TableColumnProps[] = [
+  {
+    label: "店铺名称",
+    align: "center",
+    minWidth: 140,
+    showOverflowTooltip: true,
+  },
+  {
+    label: "Item ID",
+    align: "center",
+    minWidth: 140,
+    showOverflowTooltip: true,
+  },
+  {
+    label: "SKU",
+    align: "center",
+    minWidth: 140,
+    showOverflowTooltip: true,
+  },
+  {
+    label: "上架时间",
+    align: "center",
+    minWidth: 140,
+    showOverflowTooltip: true,
+  },
 ];
 
 // 右侧导出按钮

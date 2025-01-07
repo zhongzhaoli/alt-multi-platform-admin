@@ -157,7 +157,12 @@ const openDatePicker = () => {
 };
 
 const datePickerChange = () => {
-  granularity.value = granularityRange.value[0].value;
+  const index = granularityRange.value.findIndex(
+    (item) => item.value === granularity.value,
+  );
+  if (index < 0) {
+    granularity.value = granularityRange.value[0].value;
+  }
   getSalesData();
 };
 
