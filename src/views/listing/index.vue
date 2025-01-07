@@ -48,9 +48,9 @@
             </div>
           </div>
         </template>
-        <template #table-listing_survival="{ row }">
+        <template #table-shop_survival="{ row }">
           <el-tag
-            v-if="row.listing_survival === 1"
+            v-if="row.shop_survival === 1"
             disable-transitions
             type="success"
           >

@@ -51,10 +51,10 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
   },
   {
-    label: "链接存活状态",
+    label: "店铺存活状态",
     align: "center",
     width: 160,
-    prop: "listing_survival",
+    prop: "shop_survival",
   },
   {
     label: "总链接数量",
