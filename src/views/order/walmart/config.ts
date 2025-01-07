@@ -165,12 +165,16 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: "下单时间",
     align: "center",
+    sortable: "custom",
+    sortOrders: ["descending", "ascending", null],
     prop: "order_date",
     minWidth: 180,
   },
   {
     label: "更新时间",
     align: "center",
+    sortable: "custom",
+    sortOrders: ["descending", "ascending", null],
     prop: "update_time",
     minWidth: 180,
   },

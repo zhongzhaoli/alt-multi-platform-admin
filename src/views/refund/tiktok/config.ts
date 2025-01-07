@@ -104,13 +104,6 @@ export const tableColumns: TableColumnProps[] = [
     prop: "update_time",
     minWidth: 160,
   },
-  {
-    label: "操作",
-    align: "center",
-    prop: "action",
-    show: false,
-    width: 160,
-  },
 ];
 
 // 右侧导出按钮

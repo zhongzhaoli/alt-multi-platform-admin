@@ -62,25 +62,6 @@
         <template #table-reason="{ row }">
           <TextEllipsis :text="row.reason" :line="2" />
         </template>
-        <template #table-action="{ row }">
-          <el-button link type="primary" @click="cancelOrderFun(row.orderSn)">
-            取消
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="reviewRefundFun(row.orderSn, true)"
-          >
-            同意
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="reviewRefundFun(row.orderSn, false)"
-          >
-            拒绝
-          </el-button>
-        </template>
       </TsxElementTable>
     </div>
   </div>
@@ -95,8 +76,6 @@ import { ref } from "vue";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import {
   getTiktokRefundList,
-  cancelOrder,
-  reviewRefund,
   RefundTiktokProps,
   TiktokRefunFilterProps,
   exportTiktokRefundOrderList,
@@ -106,8 +85,6 @@ import {
   generateVisualNumber,
   RenderCopyIcon,
 } from "@/utils/index";
-import { useMessageBox } from "@/hooks/useMessageBox";
-import { ElMessage } from "element-plus";
 import axios, { CancelTokenSource } from "axios";
 import { useFullLoading } from "@/hooks/useFullLoading";
 
@@ -135,35 +112,6 @@ const getListFun = async () => {
   }
 };
 getListFun();
-
-// 取消订单
-const cancelOrderFun = (orderSn: string) => {
-  useMessageBox("确定取消订单吗？", async () => {
-    try {
-      await cancelOrder(orderSn);
-      ElMessage.success("取消成功");
-      getListFun();
-    } catch (err) {
-      console.log(err);
-    }
-  });
-};
-
-// 审核退款
-const reviewRefundFun = (orderSn: string, review: boolean) => {
-  useMessageBox(
-    `确定 ${review ? "同意" : "拒绝"} 此订单的退款吗？`,
-    async () => {
-      try {
-        await reviewRefund(orderSn, review);
-        ElMessage.success("操作成功");
-        getListFun();
-      } catch (err) {
-        console.log(err);
-      }
-    },
-  );
-};
 
 // 导出
 const cancelToken = axios.CancelToken;

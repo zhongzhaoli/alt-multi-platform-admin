@@ -21,6 +21,7 @@
         }"
         @page-change="getListFun"
         @table-refresh="getListFun"
+        @sort-change="sortChange"
       >
         <template #handle-left>
           <div class="d-flex align-center">
@@ -38,7 +39,6 @@
               <el-date-picker
                 v-model="dateRange"
                 type="daterange"
-                :clearable="false"
                 range-separator="-"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
@@ -47,6 +47,16 @@
               />
             </div>
           </div>
+        </template>
+        <template #table-listing_survival="{ row }">
+          <el-tag
+            v-if="row.listing_survival === 1"
+            disable-transitions
+            type="success"
+          >
+            存活
+          </el-tag>
+          <el-tag v-else disable-transitions type="danger">死亡</el-tag>
         </template>
       </TsxElementTable>
     </div>
@@ -71,9 +81,22 @@ import moment from "moment-timezone";
 const WALMART_RATING_NUMBER = 2000;
 const TIKTOK_RATING_NUMBER = 100;
 
+// 排序条件变化
+const sortOrder = ref<{ [key: string]: "DESC" | "ASC" } | null>(null);
+const sortChange = (data: { column: any; prop: string; order: any }) => {
+  if (!data.order) {
+    sortOrder.value = null;
+  } else {
+    sortOrder.value = {
+      [data.prop]: data.order === "ascending" ? "ASC" : "DESC",
+    };
+  }
+  getListFun();
+};
+
 // 获取列表
 const tableData = ref<ListingProps[]>([]);
-const dateRange = ref<[Date, Date]>([new Date(), new Date()]);
+const dateRange = ref<[Date, Date]>();
 const loading = ref(false);
 const total = ref(0);
 const currentPage = ref(PAGE);
@@ -90,7 +113,9 @@ const getListFun = async () => {
     start_date: `${moment(startDate).format("yyyy-MM-DD 00:00:00")}`,
     end_date: `${moment(endDate).format("yyyy-MM-DD 23:59:59")}`,
   };
-  console.log(searchParams);
+  if (sortOrder.value) {
+    searchParams.order = JSON.stringify([sortOrder.value]);
+  }
   if (platform.value === "walmart") {
     getWalmartList(searchParams, diff);
   } else {

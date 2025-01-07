@@ -130,11 +130,11 @@
           <el-select v-model="batchName" placeholder="物流承运商">
             <el-option
               v-for="item in carrierList"
-              :key="item.value"
-              :value="item.value"
-              :label="item.label"
+              :key="item.id"
+              :value="item.id"
+              :label="item.name"
             >
-              {{ item.label }}
+              {{ item.name }}
             </el-option>
           </el-select>
         </div>
@@ -161,11 +161,11 @@
             >
               <el-option
                 v-for="item in carrierList"
-                :key="item.value"
-                :value="item.value"
-                :label="item.label"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
               >
-                {{ item.label }}
+                {{ item.name }}
               </el-option>
             </el-select>
           </template>

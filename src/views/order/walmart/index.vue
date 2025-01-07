@@ -32,6 +32,7 @@
         @selection-change="selectionChange"
         @table-refresh="getListFun"
         @page-change="getListFun"
+        @sort-change="sortChange"
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
@@ -158,11 +159,11 @@
           <el-select v-model="batchName" placeholder="物流承运商">
             <el-option
               v-for="item in carrierList"
-              :key="item.value"
-              :value="item.value"
-              :label="item.label"
+              :key="item.id"
+              :value="item.id"
+              :label="item.name"
             >
-              {{ item.label }}
+              {{ item.name }}
             </el-option>
           </el-select>
         </div>
@@ -195,11 +196,11 @@
             <el-select v-model="row.carrier" placeholder="物流承运商">
               <el-option
                 v-for="item in carrierList"
-                :key="item.value"
-                :value="item.value"
-                :label="item.label"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
               >
-                {{ item.label }}
+                {{ item.name }}
               </el-option>
             </el-select>
           </template>
@@ -236,10 +237,24 @@ import {
   deliverProducts,
   type DeliverProductsDto,
   type WalmartOrderFilterProps,
+  type GetOrderDto,
   WalmartStausEnum,
 } from "@/api/order/walmart";
 import { cloneDeep } from "lodash-es";
 import { ElMessage } from "element-plus";
+
+// 排序条件变化
+const sortOrder = ref<{ [key: string]: "DESC" | "ASC" } | null>(null);
+const sortChange = (data: { column: any; prop: string; order: any }) => {
+  if (!data.order) {
+    sortOrder.value = null;
+  } else {
+    sortOrder.value = {
+      [data.prop]: data.order === "ascending" ? "ASC" : "DESC",
+    };
+  }
+  getListFun();
+};
 
 // 获取列表
 const filterValue = ref<Partial<WalmartOrderFilterProps>>({});
@@ -251,11 +266,15 @@ const total = ref(0);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getWalmartOrderList({
+    const searchParams: GetOrderDto = {
       page: currentPage.value,
       page_size: pageSize.value,
       ...filterValue.value,
-    });
+    };
+    if (sortOrder.value) {
+      searchParams.order = JSON.stringify([sortOrder.value]);
+    }
+    const { data } = await getWalmartOrderList(searchParams);
     tableData.value = (data?.list || []).map((row) => {
       const taxAmount =
         parseFloat(row.product_tax_amount || "0") +

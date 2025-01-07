@@ -51,6 +51,7 @@ export interface WalmartOrderFilterProps {
 export interface GetOrderDto extends Partial<WalmartOrderFilterProps> {
   page: number;
   page_size?: number;
+  order?: string;
 }
 
 // 列表

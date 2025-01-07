@@ -11,6 +11,7 @@ export interface ListingProps {
   shop_name: string;
   listing_rate: string;
   listing_rating: number;
+  listing_survival: 1 | 0;
 }
 
 export interface ListingFilterProps {
@@ -21,6 +22,7 @@ export interface ListingFilterProps {
 export interface GetListingDto extends Partial<ListingFilterProps> {
   page: number;
   page_size?: number;
+  order?: string;
 }
 export function getWalmartListingList(
   params: GetListingDto,

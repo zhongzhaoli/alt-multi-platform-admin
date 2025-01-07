@@ -51,10 +51,18 @@ export const tableColumns: TableColumnProps[] = [
     align: "center",
   },
   {
+    label: "链接存活状态",
+    align: "center",
+    width: 160,
+    prop: "listing_survival",
+  },
+  {
     label: "总链接数量",
     prop: "all_count",
     minWidth: 160,
     align: "center",
+    sortable: "custom",
+    sortOrders: ["descending", "ascending", null],
     formatter: (_row, _column, cellValue) => {
       return h("b", null, cellValue);
     },
@@ -64,6 +72,8 @@ export const tableColumns: TableColumnProps[] = [
     prop: "for_sale_count",
     minWidth: 160,
     align: "center",
+    sortable: "custom",
+    sortOrders: ["descending", "ascending", null],
     formatter: (_row, _column, cellValue) => {
       return h("b", null, cellValue);
     },
@@ -73,6 +83,8 @@ export const tableColumns: TableColumnProps[] = [
     prop: "listing_count",
     minWidth: 160,
     align: "center",
+    sortable: "custom",
+    sortOrders: ["descending", "ascending", null],
     formatter: (_row, _column, cellValue) => {
       return h("b", null, cellValue);
     },
