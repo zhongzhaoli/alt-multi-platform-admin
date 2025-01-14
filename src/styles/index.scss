@@ -1,11 +1,11 @@
 // 样式变量
-@use './variables.css' as *;
+@use "./variables.css" as *;
 // Element Plus 样式覆盖
-@use './element-plus.scss' as *;
+@use "./element-plus.scss" as *;
 // 混合样式
-@use './mixins.scss' as *;
+@use "./mixins.scss" as *;
 // 动画样式
-@use './transition.scss' as *;
+@use "./transition.scss" as *;
 
 body,
 html {
@@ -63,7 +63,6 @@ img {
   box-sizing: border-box;
   & > .filterBox {
     @include containerBox();
-    padding-bottom: 0;
   }
   &.tabsBox {
     & > .el-tabs {
@@ -99,7 +98,7 @@ img {
   &:hover {
     background-color: rgba(0, 0, 0, 0.06);
   }
-  & > i[class^='ri-'] {
+  & > i[class^="ri-"] {
     font-size: 18px;
     color: var(--navbar-widget-icon-color);
   }
@@ -251,7 +250,7 @@ img {
       }
     }
     &::before {
-      content: ' ';
+      content: " ";
       width: 8px;
       height: 8px;
       border-radius: 50%;
