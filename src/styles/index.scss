@@ -63,6 +63,7 @@ img {
   box-sizing: border-box;
   & > .filterBox {
     @include containerBox();
+    padding-bottom: 0;
   }
   &.tabsBox {
     & > .el-tabs {
