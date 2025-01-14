@@ -10,10 +10,12 @@
         <slot :name="column.prop" v-bind="{ row: column, form: filterValue, change: preSubmit }">
           <template v-if="column.type === 'input'">
             <Input v-model="filterValue" :column="column" @submit="preSubmit">
-              <slot
-                :name="`${column.prop}-main`"
-                v-bind="{ row: column, form: filterValue, change: preSubmit }"
-              />
+              <template v-if="column.prefixSelect">
+                <slot
+                  :name="`${column.prop}-main`"
+                  v-bind="{ row: column, form: filterValue, change: preSubmit }"
+                />
+              </template>
             </Input>
           </template>
           <template v-else-if="column.type === 'select'">
