@@ -131,7 +131,7 @@ const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
               multipleLineHandle(originValue[`${prop}_${MULTIPLE_INPUT_VALUE}`]),
               column.arrayHandle
             )
-          : arrayHandle([propValue], column.arrayHandle);
+          : arrayHandle(propValue ? [propValue] : null, column.arrayHandle);
     }
     if (type === 'select') {
       formValue[prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop] = arrayHandle(
