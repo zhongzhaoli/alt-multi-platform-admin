@@ -15,6 +15,7 @@
         :multiple="column.multiple"
         :multiple-limit="multipleLimit"
         :collapse-tags="multipleCollapseTags"
+        @change="change"
       >
         <template
           v-for="item in typeof column.selectOptions === 'function'
@@ -39,7 +40,7 @@ import {
 } from "../constants";
 import prefixSelect from "./prefixSelect.vue";
 import { useVModel } from "@vueuse/core";
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 
 interface ComponentProps {
   modelValue: Record<string, any>;
@@ -47,7 +48,7 @@ interface ComponentProps {
 }
 
 const props = defineProps<ComponentProps>();
-const emits = defineEmits(["update:modelValue", "submit"]);
+const emits = defineEmits(["update:modelValue", "change"]);
 
 const multipleLimit = computed(() => {
   return props.column.multiple && typeof props.column.multiple !== "boolean"
@@ -64,6 +65,12 @@ const multipleCollapseTags = computed(() => {
 const fValue = useVModel(props, "modelValue", emits, {
   deep: true,
 });
+
+const change = () => {
+  nextTick(() => {
+    emits("change");
+  });
+};
 </script>
 <style lang="scss" scoped>
 .selectComponent {

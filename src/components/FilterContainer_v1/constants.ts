@@ -1,4 +1,4 @@
-export const DEFAULT_COLUMN_WIDTH = 100;
+export const DEFAULT_COLUMN_WIDTH = 160;
 
 export const DEFAULT_PREFIX_SELECT_WIDTH = 120;
 

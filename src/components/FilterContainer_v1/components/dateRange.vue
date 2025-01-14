@@ -17,6 +17,7 @@
         :end-placeholder="column.endPlaceholder || '结束日期'"
         :range-separator="column.rangeSeparator || '至'"
         type="daterange"
+        @change="change"
       />
     </div>
   </div>
@@ -26,6 +27,7 @@ import { useVModel } from "@vueuse/core";
 import { DateRangeColumnProps } from "../types";
 import { PREFIX_SELECT_VALUE } from "../constants";
 import prefixSelect from "./prefixSelect.vue";
+import { nextTick } from "vue";
 
 interface ComponentProps {
   modelValue: Record<string, any>;
@@ -33,10 +35,16 @@ interface ComponentProps {
 }
 
 const props = defineProps<ComponentProps>();
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(["update:modelValue", "change"]);
 const fValue = useVModel(props, "modelValue", emits, {
   deep: true,
 });
+
+const change = () => {
+  nextTick(() => {
+    emits("change");
+  });
+};
 </script>
 <style lang="scss" scoped>
 .dateRangeComponent {

@@ -11,17 +11,25 @@
           <Input v-model="filterValue" :column="column" @submit="preSubmit" />
         </template>
         <template v-else-if="column.type === 'select'">
-          <Select v-model="filterValue" :column="column" />
+          <Select v-model="filterValue" :column="column" @change="preSubmit" />
         </template>
         <template v-else-if="column.type === 'date'">
-          <Date v-model="filterValue" :column="column" />
+          <Date v-model="filterValue" :column="column" @change="preSubmit" />
         </template>
         <template v-else-if="column.type === 'dateRange'">
-          <DateRange v-model="filterValue" :column="column" />
+          <DateRange
+            v-model="filterValue"
+            :column="column"
+            @change="preSubmit"
+          />
         </template>
         <template v-else>No Target Component!</template>
       </div>
     </template>
+    <div class="filterItem">
+      <el-button type="primary" @click="submit">搜索</el-button>
+      <el-button @click="reset">重置</el-button>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -43,7 +51,7 @@ import DateRange from "./components/dateRange.vue";
 import { reactive, watch } from "vue";
 
 const props = defineProps<FilterContainerComponentProps>();
-const emits = defineEmits(["update:modelValue", "submit"]);
+const emits = defineEmits(["update:modelValue", "submit", "reset"]);
 
 let filterValue = reactive(cloneDeep(props.modelValue));
 // 单向获取
@@ -93,7 +101,7 @@ watch(
   (newFilterValue) => {
     emits(
       "update:modelValue",
-      nullHandle(dataHandle(cloneDeep(newFilterValue))),
+      dataHandle(nullHandle(cloneDeep(newFilterValue))),
     );
   },
   {
@@ -179,6 +187,20 @@ const nullHandle = (formValue: Record<string, any>): Record<string, any> => {
     }
   });
   return newValue;
+};
+
+// 搜索按钮点击
+const submit = () => {
+  preSubmit();
+};
+
+// 重置按钮点击
+const reset = () => {
+  Object.keys(filterValue).forEach((key) => {
+    filterValue[key] = null;
+  });
+  props.resetFun && props.resetFun();
+  emits("reset");
 };
 
 const preSubmit = () => {

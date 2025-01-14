@@ -14,6 +14,7 @@
         v-model="fValue[column.prop]"
         :placeholder="column.placeholder || column.label || '请输入'"
         type="date"
+        @change="change"
       />
     </div>
   </div>
@@ -23,6 +24,7 @@ import { useVModel } from "@vueuse/core";
 import { DateColumnProps } from "../types";
 import prefixSelect from "./prefixSelect.vue";
 import { PREFIX_SELECT_VALUE } from "../constants";
+import { nextTick } from "vue";
 
 interface ComponentProps {
   modelValue: Record<string, any>;
@@ -30,11 +32,17 @@ interface ComponentProps {
 }
 
 const props = defineProps<ComponentProps>();
-const emits = defineEmits(["update:modelValue", "submit"]);
+const emits = defineEmits(["update:modelValue", "change"]);
 
 const fValue = useVModel(props, "modelValue", emits, {
   deep: true,
 });
+
+const change = () => {
+  nextTick(() => {
+    emits("change");
+  });
+};
 </script>
 <style lang="scss" scoped>
 .dateComponent {
