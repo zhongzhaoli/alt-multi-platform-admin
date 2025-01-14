@@ -136,6 +136,7 @@ const testColumnsValue = ref<FilterColumnProps[]>([
     multiple: true,
     width: 300,
     type: "input",
+    arrayHandle: (val: any[]) => JSON.stringify(val),
     prefixSelect: {
       width: 110,
       options: [
@@ -155,6 +156,8 @@ const testColumnsValue = ref<FilterColumnProps[]>([
     prop: "select",
     width: 300,
     type: "select",
+    multiple: true,
+    arrayHandle: (val: any[]) => JSON.stringify(val),
     selectOptions: [
       {
         label: "值1",

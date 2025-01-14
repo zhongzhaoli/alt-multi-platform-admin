@@ -106,29 +106,39 @@ const multipleLineHandle = (text: string): Array<string> => {
   return text.split("\n").filter((item) => item);
 };
 
+// 数组数据处理
+const arrayHandle = (value: any, handleFun?: (oValue: any[]) => string) => {
+  if (Array.isArray(value)) {
+    return handleFun ? handleFun(value) : value;
+  } else {
+    return value;
+  }
+};
+
 // 做数据处理
 const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
   const formValue: Record<string, any> = {};
   columnsValue.value.forEach((column) => {
     const { prop, type, multiple, prefixSelect } = column;
     const propValue = originValue[prop];
-    const multiplePropValue =
-      multiple && type === "input"
-        ? multipleLineHandle(originValue[`${prop}_${MULTIPLE_INPUT_VALUE}`])
-        : null;
     // 输入框数据处理
     if (type === "input") {
       formValue[
         prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop
       ] =
         multiple && originValue[`${prop}_${MULTIPLE_INPUT_ACTIVE}`]
-          ? multiplePropValue
+          ? arrayHandle(
+              multipleLineHandle(
+                originValue[`${prop}_${MULTIPLE_INPUT_VALUE}`],
+              ),
+              column.arrayHandle,
+            )
           : propValue;
     }
     if (type === "select") {
       formValue[
         prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop
-      ] = propValue;
+      ] = arrayHandle(propValue, column.arrayHandle);
     }
     if (type === "date") {
       formValue[

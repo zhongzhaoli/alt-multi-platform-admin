@@ -16,6 +16,7 @@ interface BaseFilterColumnProps {
 export interface InputColumnProps extends BaseFilterColumnProps {
   type: "input";
   multiple?: boolean;
+  arrayHandle?: (arr: any[]) => any;
 }
 
 // DateRange的额外类型
@@ -40,6 +41,7 @@ interface FilterSelectOptionsProp<T = string, P = any> {
 export interface SelectColumnProps extends BaseFilterColumnProps {
   type: "select";
   selectOptions: FilterSelectOptionsProp[] | (() => FilterSelectOptionsProp[]);
+  arrayHandle?: (arr: any[]) => any;
 }
 
 // Select Multiple的额外类型
