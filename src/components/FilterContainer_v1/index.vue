@@ -7,23 +7,29 @@
           width: `${column.width || DEFAULT_COLUMN_WIDTH}px`,
         }"
       >
-        <template v-if="column.type === 'input'">
-          <Input v-model="filterValue" :column="column" @submit="preSubmit" />
-        </template>
-        <template v-else-if="column.type === 'select'">
-          <Select v-model="filterValue" :column="column" @change="preSubmit" />
-        </template>
-        <template v-else-if="column.type === 'date'">
-          <Date v-model="filterValue" :column="column" @change="preSubmit" />
-        </template>
-        <template v-else-if="column.type === 'dateRange'">
-          <DateRange
-            v-model="filterValue"
-            :column="column"
-            @change="preSubmit"
-          />
-        </template>
-        <template v-else>No Target Component!</template>
+        <slot :name="column.prop" v-bind="{ row: column, form: filterValue }">
+          <template v-if="column.type === 'input'">
+            <Input v-model="filterValue" :column="column" @submit="preSubmit" />
+          </template>
+          <template v-else-if="column.type === 'select'">
+            <Select
+              v-model="filterValue"
+              :column="column"
+              @change="preSubmit"
+            />
+          </template>
+          <template v-else-if="column.type === 'date'">
+            <Date v-model="filterValue" :column="column" @change="preSubmit" />
+          </template>
+          <template v-else-if="column.type === 'dateRange'">
+            <DateRange
+              v-model="filterValue"
+              :column="column"
+              @change="preSubmit"
+            />
+          </template>
+          <template v-else>No Target Component!</template>
+        </slot>
       </div>
     </template>
     <div class="filterItem">
