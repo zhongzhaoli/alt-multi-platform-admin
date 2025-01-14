@@ -86,7 +86,9 @@
           </div>
         </template>
         <template #table-asin="{ row }">
-          <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" />{{ row.asin }}
+          <template v-if="row.asin">
+            <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" /> </template
+          >{{ row.asin || '-' }}
         </template>
         <template #table-address="{ row }">
           <div>{{ row.phone }}</div>

@@ -184,7 +184,7 @@ getListFun();
     margin-top: 0;
     & .selectBox {
       width: 140px;
-      margin-right: var(--normal-padding);
+      margin-right: 16px;
       font-size: 13px;
       * {
         font-size: 13px;
