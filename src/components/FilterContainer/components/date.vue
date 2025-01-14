@@ -12,6 +12,7 @@
         :placeholder="column.placeholder || column.label || '请输入'"
         type="date"
         clearable
+        :shortcuts="shortcuts"
         @change="change"
       />
     </div>
@@ -23,6 +24,7 @@ import { DateColumnProps } from '../types';
 import prefixSelect from './prefixSelect.vue';
 import { PREFIX_SELECT_VALUE } from '../constants';
 import { nextTick } from 'vue';
+import { shortcuts } from '../shortcuts';
 
 interface ComponentProps {
   modelValue: Record<string, any>;

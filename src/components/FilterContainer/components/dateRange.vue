@@ -13,6 +13,7 @@
         :start-placeholder="column.startPlaceholder || '开始日期'"
         :end-placeholder="column.endPlaceholder || '结束日期'"
         :range-separator="column.rangeSeparator || '至'"
+        :shortcuts="rangeShortcuts"
         type="daterange"
         clearable
         @change="change"
@@ -26,6 +27,7 @@ import { DateRangeColumnProps } from '../types';
 import { PREFIX_SELECT_VALUE } from '../constants';
 import prefixSelect from './prefixSelect.vue';
 import { nextTick } from 'vue';
+import { rangeShortcuts } from '../shortcuts';
 
 interface ComponentProps {
   modelValue: Record<string, any>;
