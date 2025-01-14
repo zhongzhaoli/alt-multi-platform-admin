@@ -7,7 +7,7 @@
           width: `${column.width || DEFAULT_COLUMN_WIDTH}px`
         }"
       >
-        <slot :name="column.prop" v-bind="{ row: column, form: filterValue }">
+        <slot :name="column.prop" v-bind="{ row: column, form: filterValue, change: preSubmit }">
           <template v-if="column.type === 'input'">
             <Input v-model="filterValue" :column="column" @submit="preSubmit" />
           </template>
@@ -111,10 +111,15 @@ const multipleLineHandle = (text: string): Array<string> => {
 // 数组数据处理
 const arrayHandle = (value: any, handleFun?: (oValue: any[]) => string) => {
   if (Array.isArray(value)) {
-    return handleFun ? handleFun(value) : value;
+    return handleFun ? handleFun(value) : JSON.stringify(value);
   } else {
     return value;
   }
+};
+
+// 日期格式化
+const dateFormat = (date: Date): string => {
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 };
 
 // 做数据处理
@@ -131,7 +136,9 @@ const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
               multipleLineHandle(originValue[`${prop}_${MULTIPLE_INPUT_VALUE}`]),
               column.arrayHandle
             )
-          : arrayHandle(propValue ? [propValue] : null, column.arrayHandle);
+          : multiple
+            ? arrayHandle(propValue ? [propValue] : null, column.arrayHandle)
+            : propValue;
     }
     if (type === 'select') {
       formValue[prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop] = arrayHandle(
@@ -140,17 +147,18 @@ const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
       );
     }
     if (type === 'date') {
-      formValue[prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop] = propValue;
+      formValue[prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop] =
+        dateFormat(propValue);
     }
     if (type === 'dateRange') {
       const startKey = column.startKey || DEFAULT_DATERANGE_START_KEY;
       const endKey = column.endKey || DEFAULT_DATERANGE_END_KEY;
       formValue[
         prefixSelect ? `${originValue[`${prop}_${PREFIX_SELECT_VALUE}`]}_${startKey}` : startKey
-      ] = propValue && propValue.length ? propValue[0] : null;
+      ] = propValue && propValue.length ? dateFormat(propValue[0]) : null;
       formValue[
         prefixSelect ? `${originValue[`${prop}_${PREFIX_SELECT_VALUE}`]}_${endKey}` : endKey
-      ] = propValue && propValue.length ? propValue[1] : null;
+      ] = propValue && propValue.length ? dateFormat(propValue[1]) : null;
     }
   });
   return formValue;
@@ -182,7 +190,9 @@ const submit = () => {
 // 重置按钮点击
 const reset = () => {
   Object.keys(filterValue).forEach((key) => {
-    filterValue[key] = null;
+    if (!key.endsWith(PREFIX_SELECT_VALUE)) {
+      filterValue[key] = null;
+    }
   });
   nextTick(() => {
     props.resetFun && props.resetFun();
@@ -203,12 +213,18 @@ const preSubmit = () => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin: 0 -8px;
-  * {
+  margin: 0 calc(-1 * (var(--normal-padding) / 2));
+  &:deep(input) {
+    font-size: 13px;
+  }
+  &:deep(.el-range-separator) {
+    font-size: 13px;
+  }
+  &:deep(.el-select__placeholder) {
     font-size: 13px;
   }
   & > .filterItem {
-    margin: 0 8px;
+    margin: 0 calc(var(--normal-padding) / 2) var(--normal-padding) calc(var(--normal-padding) / 2);
     &:deep(.prefixSelect) {
       padding: 1px;
       box-sizing: border-box;

@@ -74,7 +74,6 @@ export const filterColumns: FilterColumnProps[] = [
     type: 'select',
     multiple: true,
     prop: 'order_status',
-    arrayHandle: (val: any[]) => JSON.stringify(val),
     selectOptions: tiktokStatusMap
   }
 ];

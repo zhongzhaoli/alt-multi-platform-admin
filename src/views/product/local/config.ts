@@ -32,14 +32,12 @@ export const filterColumns: FilterColumnProps[] = [
     label: '产品名称',
     prop: 'product_name',
     type: 'input',
-    arrayHandle: (val: any[]) => JSON.stringify(val),
     multiple: true
   },
   {
     label: '状态',
     prop: 'status',
     type: 'select',
-    arrayHandle: (val: any[]) => JSON.stringify(val),
     multiple: true,
     selectOptions: localProductStatusMap
   }

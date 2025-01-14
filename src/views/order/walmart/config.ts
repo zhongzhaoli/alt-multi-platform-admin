@@ -65,8 +65,7 @@ export const filterColumns: FilterColumnProps[] = [
     type: 'select',
     prop: 'status',
     multiple: true,
-    selectOptions: walmartStatusMap,
-    arrayHandle: (val: any[]) => JSON.stringify(val)
+    selectOptions: walmartStatusMap
   }
 ];
 
