@@ -179,6 +179,44 @@ const testColumnsValue = ref<FilterColumnProps[]>([
       ],
     },
   },
+  {
+    label: "测试3",
+    prop: "testDtte",
+    type: "date",
+    width: 240,
+    prefixSelect: {
+      width: 100,
+      options: [
+        {
+          label: "创建时间",
+          value: "create_time_date",
+        },
+        {
+          label: "更新时间",
+          value: "update_time_date",
+        },
+      ],
+    },
+  },
+  {
+    label: "测试4",
+    prop: "testDtteRange",
+    type: "dateRange",
+    width: 290,
+    prefixSelect: {
+      width: 100,
+      options: [
+        {
+          label: "创建时间",
+          value: "create_time_dateRange",
+        },
+        {
+          label: "更新时间",
+          value: "update_time_dateRange",
+        },
+      ],
+    },
+  },
 ]);
 
 let normalPadding: string | number = getCssVariableValue("--normal-padding");

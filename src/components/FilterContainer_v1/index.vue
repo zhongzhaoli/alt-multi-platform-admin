@@ -3,7 +3,9 @@
     <template v-for="column in columnsValue" :key="column.prop">
       <div
         class="filterItem"
-        :style="{ width: `${column.width || DEFAULT_COLUMN_WIDTH}px` }"
+        :style="{
+          width: `${column.width || DEFAULT_COLUMN_WIDTH}px`,
+        }"
       >
         <template v-if="column.type === 'input'">
           <Input v-model="filterValue" :column="column" @submit="preSubmit" />
@@ -11,6 +13,13 @@
         <template v-else-if="column.type === 'select'">
           <Select v-model="filterValue" :column="column" />
         </template>
+        <template v-else-if="column.type === 'date'">
+          <Date v-model="filterValue" :column="column" />
+        </template>
+        <template v-else-if="column.type === 'dateRange'">
+          <DateRange v-model="filterValue" :column="column" />
+        </template>
+        <template v-else>No Target Component!</template>
       </div>
     </template>
   </div>
@@ -24,9 +33,13 @@ import {
   MULTIPLE_INPUT_ACTIVE,
   MULTIPLE_INPUT_VALUE,
   PREFIX_SELECT_VALUE,
+  DEFAULT_DATERANGE_START_KEY,
+  DEFAULT_DATERANGE_END_KEY,
 } from "./constants";
 import Input from "./components/input.vue";
 import Select from "./components/select.vue";
+import Date from "./components/date.vue";
+import DateRange from "./components/dateRange.vue";
 import { reactive, watch } from "vue";
 
 const props = defineProps<FilterContainerComponentProps>();
@@ -60,6 +73,12 @@ watch(
           filterValue[`${column.prop}_${PREFIX_SELECT_VALUE}`] =
             defaultPrefixSelectValue || "";
         }
+        // 日期范围
+        if (column.type === "dateRange") {
+          filterValue[column.prop] = [];
+          filterValue[column.startKey || DEFAULT_DATERANGE_START_KEY] = null;
+          filterValue[column.endKey || DEFAULT_DATERANGE_END_KEY] = null;
+        }
       }
     });
   },
@@ -72,7 +91,10 @@ watch(
 watch(
   filterValue,
   (newFilterValue) => {
-    emits("update:modelValue", dataHandle(cloneDeep(newFilterValue)));
+    emits(
+      "update:modelValue",
+      nullHandle(dataHandle(cloneDeep(newFilterValue))),
+    );
   },
   {
     deep: true,
@@ -84,10 +106,11 @@ const multipleLineHandle = (text: string): Array<string> => {
   return text.split("\n").filter((item) => item);
 };
 
-// 做数据清洗
+// 做数据处理
 const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
   const formValue: Record<string, any> = {};
-  columnsValue.value.forEach(({ prop, type, multiple, prefixSelect }) => {
+  columnsValue.value.forEach((column) => {
+    const { prop, type, multiple, prefixSelect } = column;
     const propValue = originValue[prop];
     const multiplePropValue =
       multiple && type === "input"
@@ -107,8 +130,45 @@ const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
         prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop
       ] = propValue;
     }
+    if (type === "date") {
+      formValue[
+        prefixSelect ? originValue[`${prop}_${PREFIX_SELECT_VALUE}`] : prop
+      ] = propValue;
+    }
+    if (type === "dateRange") {
+      const startKey = column.startKey || DEFAULT_DATERANGE_START_KEY;
+      const endKey = column.endKey || DEFAULT_DATERANGE_END_KEY;
+      formValue[
+        prefixSelect
+          ? `${originValue[`${prop}_${PREFIX_SELECT_VALUE}`]}_${startKey}`
+          : startKey
+      ] = propValue && propValue.length ? propValue[0] : null;
+      formValue[
+        prefixSelect
+          ? `${originValue[`${prop}_${PREFIX_SELECT_VALUE}`]}_${endKey}`
+          : endKey
+      ] = propValue && propValue.length ? propValue[1] : null;
+    }
   });
   return formValue;
+};
+
+// 空值过滤
+const nullHandle = (formValue: Record<string, any>): Record<string, any> => {
+  const newValue: Record<string, any> = {};
+  Object.keys(formValue).forEach((key) => {
+    if (
+      formValue[key] === null ||
+      formValue[key] === undefined ||
+      formValue[key] === "" ||
+      (Array.isArray(formValue[key]) && !formValue[key].length)
+    ) {
+      return;
+    } else {
+      newValue[key] = formValue[key];
+    }
+  });
+  return newValue;
 };
 
 const preSubmit = () => {
@@ -121,6 +181,7 @@ const preSubmit = () => {
 .filterContainer {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   margin: 0 -8px;
   * {
     font-size: 13px;

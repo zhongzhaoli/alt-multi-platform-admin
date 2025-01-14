@@ -15,17 +15,21 @@
 .el-menu {
   &::before {
     display: table;
-    content: '';
+    content: "";
   }
   &::after {
     display: table;
     clear: both;
-    content: '';
+    content: "";
   }
   border-right: none;
   &.el-menu--collapse {
     $collapse-padding-left: calc(
-      (var(--sidebar-closed-width) - var(--el-menu-icon-width) - var(--sidebar-margin) * 2) / 2
+      (
+          var(--sidebar-closed-width) - var(--el-menu-icon-width) - var(
+              --sidebar-margin
+            ) * 2
+        ) / 2
     );
     & > .el-menu-item {
       padding-left: $collapse-padding-left;
@@ -39,7 +43,7 @@
   & > .el-menu-item {
     .el-icon {
       font-size: 16px;
-      & > i[class^='ri-'] {
+      & > i[class^="ri-"] {
         position: relative;
         top: -1px;
         vertical-align: top;
@@ -59,7 +63,7 @@
   & > .el-sub-menu {
     .el-icon {
       font-size: 16px;
-      & > i[class^='ri-'] {
+      & > i[class^="ri-"] {
         position: relative;
         top: -1px;
         vertical-align: top;
@@ -244,7 +248,8 @@
 
 // 日期选择器
 .el-date-editor {
-  & > .el-range__icon {
+  & > .el-range__icon,
+  & .el-input__prefix {
     color: var(--el-text-color-placeholder);
     float: left;
     height: inherit;
@@ -252,8 +257,13 @@
     font-size: 14px;
     position: absolute;
     right: 10px;
-    top: 0;
+    top: 0px;
     z-index: 1;
+    height: 100%;
+  }
+  & .el-input__suffix {
+    background-color: #fff;
+    z-index: 2;
   }
   & > .el-range__close-icon {
     width: 14px;

@@ -19,13 +19,20 @@ export interface InputColumnProps extends BaseFilterColumnProps {
 }
 
 // DateRange的额外类型
-interface DateRangeColumnProps extends BaseFilterColumnProps {
+export interface DateRangeColumnProps extends BaseFilterColumnProps {
   type: "dateRange";
   startKey?: string;
   endKey?: string;
+  startPlaceholder?: string;
+  endPlaceholder?: string;
+  rangeSeparator?: string;
 }
 
-// Select的额外类型
+// Date的额外类型
+export interface DateColumnProps extends BaseFilterColumnProps {
+  type: "date";
+}
+
 interface FilterSelectOptionsProp<T = string, P = any> {
   label: T;
   value: P;
@@ -52,7 +59,8 @@ export interface PrefixSelectProps {
 export type FilterColumnProps =
   | InputColumnProps
   | DateRangeColumnProps
-  | SelectColumnProps;
+  | SelectColumnProps
+  | DateColumnProps;
 
 // Component Props
 export interface FilterContainerComponentProps {

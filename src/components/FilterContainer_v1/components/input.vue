@@ -4,7 +4,7 @@
     :class="{ prefixSelect: column.prefixSelect }"
   >
     <template v-if="column.prefixSelect">
-      <prefixSelect
+      <PrefixSelect
         v-model="fValue[`${column.prop}_${PREFIX_SELECT_VALUE}`]"
         :prefix-select="column.prefixSelect"
       />
@@ -63,7 +63,7 @@ import {
 } from "../constants";
 import { ref } from "vue";
 import { PopoverInstance } from "element-plus";
-import prefixSelect from "./prefixSelect.vue";
+import PrefixSelect from "./prefixSelect.vue";
 import { InputColumnProps } from "../types";
 interface ComponentProps {
   modelValue: Record<string, any>;

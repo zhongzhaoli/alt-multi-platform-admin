@@ -104,19 +104,6 @@ export const generateOptions = (
     },
     series: [
       {
-        name: "当前",
-        lineStyle: {
-          color: "#267afa",
-        },
-        itemStyle: {
-          borderWidth: 0,
-          color: "#267afa",
-        },
-        data: series,
-        type: "line",
-        smooth: true,
-      },
-      {
         name: "环比",
         lineStyle: {
           color: "#a8cafd",
@@ -127,6 +114,19 @@ export const generateOptions = (
           color: "#a8cafd",
         },
         data: history,
+        type: "line",
+        smooth: true,
+      },
+      {
+        name: "当前",
+        lineStyle: {
+          color: "#267afa",
+        },
+        itemStyle: {
+          borderWidth: 0,
+          color: "#267afa",
+        },
+        data: series,
         type: "line",
         smooth: true,
       },
