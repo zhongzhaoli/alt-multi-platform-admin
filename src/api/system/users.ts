@@ -1,5 +1,5 @@
-import { ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
+import { ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
 
 export interface GetUserListDto {
   page: number;
@@ -27,51 +27,49 @@ export interface UserDto {
   role_id: string;
 }
 
-export type EditUserDto = UserDto & Pick<UserProps, "id">;
+export type EditUserDto = UserDto & Pick<UserProps, 'id'>;
 
 export interface ResetPasswordDto {
   id: number;
   password: string;
 }
 
-export function getUserList(
-  params: GetUserListDto,
-): Promise<ResponsePageJson<UserProps>> {
+export function getUserList(params: GetUserListDto): Promise<ResponsePageJson<UserProps>> {
   return request({
-    url: "/user/list",
-    method: "get",
-    params,
+    url: '/user/list',
+    method: 'get',
+    params
   });
 }
 
 export function createUser(data: UserDto) {
   return request({
-    url: "/user/add",
-    method: "post",
-    data,
+    url: '/user/add',
+    method: 'post',
+    data
   });
 }
 
 export function editUser(data: EditUserDto) {
   return request({
-    url: "/user/edit",
-    method: "put",
-    data,
+    url: '/user/edit',
+    method: 'put',
+    data
   });
 }
 
 export function deleteUser(id: number) {
   return request({
-    url: "/user/edit",
-    method: "put",
-    data: { id, status: 0 },
+    url: '/user/edit',
+    method: 'put',
+    data: { id, status: 0 }
   });
 }
 
 export function resetPassword(data: ResetPasswordDto) {
   return request({
-    url: "/user/edit",
-    method: "put",
-    data,
+    url: '/user/edit',
+    method: 'put',
+    data
   });
 }

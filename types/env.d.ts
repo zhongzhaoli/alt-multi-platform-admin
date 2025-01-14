@@ -2,7 +2,7 @@
 declare interface ImportMetaEnv {
   readonly VITE_GLOB_PUBLIC_PATH: string;
   readonly VITE_GLOB_APP_NAME: string;
-  readonly VITE_GLOB_ROUTER_MODE: "hash" | "history";
+  readonly VITE_GLOB_ROUTER_MODE: 'hash' | 'history';
   readonly VITE_GLOB_API_URL_SYSTEM: string;
   readonly VITE_GLOB_API_URL_TIKTOK: string;
   readonly VITE_GLOB_API_URL_WALMART: string;

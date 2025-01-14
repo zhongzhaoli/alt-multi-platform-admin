@@ -1,14 +1,7 @@
 <template>
   <div class="productItem d-flex align-center">
-    <ImageLoad
-      :src="imageUrl"
-      :width="`${size || 40}px`"
-      :height="`${size || 40}px`"
-    />
-    <div
-      class="rightBox d-flex fl-column justify-center"
-      :style="{ height: `${size || 40}px` }"
-    >
+    <ImageLoad :src="imageUrl" :width="`${size || 40}px`" :height="`${size || 40}px`" />
+    <div class="rightBox d-flex fl-column justify-center" :style="{ height: `${size || 40}px` }">
       <div class="productName d-flex align-center">
         <TextEllipsis
           placement="right"
@@ -35,9 +28,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import ImageLoad from "@/components/ImageLoad/index.vue";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import { RenderCopyIcon } from "@/utils";
+import ImageLoad from '@/components/ImageLoad/index.vue';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import { RenderCopyIcon } from '@/utils';
 
 interface ProductDescListProps {
   text: string;
@@ -53,7 +46,7 @@ defineProps<{
 }>();
 </script>
 <style lang="scss" scoped>
-@use "@/styles/mixins.scss" as *;
+@use '@/styles/mixins.scss' as *;
 .productItem {
   & > .rightBox {
     margin-left: 10px;

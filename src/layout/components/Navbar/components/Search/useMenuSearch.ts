@@ -13,14 +13,23 @@ export interface ItemProps {
   path: string;
   active: boolean;
 }
-export function useMenuSearch(itemRefs: Ref<HTMLElement[] | null>, scrollWrap: Ref<HTMLElement | null>, emits: (event: 'close', ...args: any[]) => void) {
+export function useMenuSearch(
+  itemRefs: Ref<HTMLElement[] | null>,
+  scrollWrap: Ref<HTMLElement | null>,
+  emits: (event: 'close', ...args: any[]) => void
+) {
   const resultList = ref<ItemProps[]>([]);
   const searchWord = ref<string>('');
   const router = useRouter();
   const routerStore = useRouterStore();
 
   // 搜索
-  const searchReslt = (keyWord: string, arr: RouteRecordRaw[], list: ListProps[] | null = null, parent?: RouteRecordRaw) => {
+  const searchReslt = (
+    keyWord: string,
+    arr: RouteRecordRaw[],
+    list: ListProps[] | null = null,
+    parent?: RouteRecordRaw
+  ) => {
     let result: ItemProps[] = [];
     arr.forEach((item) => {
       const { path, meta, children } = item;
@@ -28,7 +37,9 @@ export function useMenuSearch(itemRefs: Ref<HTMLElement[] | null>, scrollWrap: R
       let newList: ListProps[] = [];
       let parentHave: boolean = false;
       if (meta && meta.title) {
-        newList = list ? [...list, { title: meta.title, icon: (meta.icon || '') as string }] : [{ title: meta.title, icon: (meta.icon || '') as string }];
+        newList = list
+          ? [...list, { title: meta.title, icon: (meta.icon || '') as string }]
+          : [{ title: meta.title, icon: (meta.icon || '') as string }];
         if (meta.title.includes(keyWord)) {
           parentHave = true;
           result.push({

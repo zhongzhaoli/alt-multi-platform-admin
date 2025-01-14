@@ -15,36 +15,26 @@
         :table-columns="tableColumns"
         :table="{
           data: tableData,
-          border: true,
+          border: true
         }"
         :handle="{
-          columns: handleLeftButtons,
+          columns: handleLeftButtons
         }"
         :pagination="{
-          total,
+          total
         }"
         @page-change="getListFun"
         @table-refresh="getListFun"
         @handle-click="handleClick"
       >
         <template #table-shopAction="{ row }">
-          <el-button link type="primary" @click="editWalmartStore(row)">
-            沃尔玛
-          </el-button>
-          <el-button link type="primary" @click="editTiktokStore(row)">
-            Tiktok
-          </el-button>
+          <el-button link type="primary" @click="editWalmartStore(row)"> 沃尔玛 </el-button>
+          <el-button link type="primary" @click="editTiktokStore(row)"> Tiktok </el-button>
         </template>
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="editFun(row)">
-            编辑
-          </el-button>
-          <el-button link type="primary" @click="editPasswordFun(row)">
-            重置密码
-          </el-button>
-          <el-button link type="primary" @click="deleteUser(row)">
-            删除
-          </el-button>
+          <el-button link type="primary" @click="editFun(row)"> 编辑 </el-button>
+          <el-button link type="primary" @click="editPasswordFun(row)"> 重置密码 </el-button>
+          <el-button link type="primary" @click="deleteUser(row)"> 删除 </el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -55,34 +45,15 @@
       :submit-loading="submitLoading"
       @submit="createUserValidate"
     >
-      <el-form
-        ref="createUserFormRef"
-        :model="formValue"
-        :rules="createRules"
-        label-position="top"
-      >
+      <el-form ref="createUserFormRef" :model="formValue" :rules="createRules" label-position="top">
         <el-form-item prop="role_id" label="所属岗位：">
-          <SearchRole
-            v-model="formValue.role_id"
-            style="width: 100%"
-            clearable
-            filterable
-            remote
-          />
+          <SearchRole v-model="formValue.role_id" style="width: 100%" clearable filterable remote />
         </el-form-item>
         <el-form-item prop="workwx_user_id" label="企业微信ID">
-          <el-input
-            v-model="formValue.workwx_user_id"
-            clearable
-            placeholder="请输入企业微信ID"
-          />
+          <el-input v-model="formValue.workwx_user_id" clearable placeholder="请输入企业微信ID" />
         </el-form-item>
         <el-form-item prop="username" label="用户名：">
-          <el-input
-            v-model="formValue.username"
-            clearable
-            placeholder="请输入用户名"
-          />
+          <el-input v-model="formValue.username" clearable placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item prop="password" label="密码：">
           <el-input
@@ -116,12 +87,7 @@
         label-position="top"
       >
         <el-form-item prop="role_id" label="所属岗位：">
-          <SearchRole
-            v-model="editFormValue.role_id"
-            style="width: 100%"
-            clearable
-            filterable
-          />
+          <SearchRole v-model="editFormValue.role_id" style="width: 100%" clearable filterable />
         </el-form-item>
         <el-form-item prop="workwx_user_id" label="企业微信ID">
           <el-input
@@ -131,11 +97,7 @@
           />
         </el-form-item>
         <el-form-item prop="username" label="用户名：">
-          <el-input
-            v-model="editFormValue.username"
-            clearable
-            placeholder="请输入用户名"
-          />
+          <el-input v-model="editFormValue.username" clearable placeholder="请输入用户名" />
         </el-form-item>
       </el-form>
     </ConfirmDialog>
@@ -153,16 +115,12 @@
         :rules="{
           newPassword: {
             required: true,
-            message: '新密码不能为空',
-          },
+            message: '新密码不能为空'
+          }
         }"
       >
         <el-form-item label="新密码" prop="newPassword">
-          <el-input
-            v-model="newPassword"
-            placeholder="请输入新密码"
-            show-password
-          />
+          <el-input v-model="newPassword" placeholder="请输入新密码" show-password />
         </el-form-item>
       </el-form>
     </ConfirmDialog>
@@ -193,67 +151,61 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, unref } from "vue";
-import TsxElementTable from "tsx-element-table";
-import FilterContainer from "@/components/FilterContainer/index.vue";
-import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
-import SelectTarget from "@/components/SelectTarget/index.vue";
+import { ref, unref } from 'vue';
+import TsxElementTable from 'tsx-element-table';
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import SelectTarget from '@/components/SelectTarget/index.vue';
 import {
   getStoreList as getWalmartStoreList,
   userStoreIds as getWStoreIds,
-  userBindStore as bindWStore,
-} from "@/api/system/walmartStore";
+  userBindStore as bindWStore
+} from '@/api/system/walmartStore';
 import {
   getStoreList as getTiktokStoreList,
   userStoreIds as getTStoreIds,
-  userBindStore as bindTStore,
-} from "@/api/system/tiktokStore";
-import {
-  filterColumns,
-  tableColumns,
-  handleLeftButtons,
-  rules,
-  FilterDto,
-} from "./config";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
-import * as API_USERS from "@/api/system/users";
-import { ElMessage, FormInstance, type FormRules } from "element-plus";
-import SearchRole from "../components/SearchRole/index.vue";
-import { cloneDeep } from "lodash-es";
-import { useMessageBox } from "@/hooks/useMessageBox";
-import { SelectTargetInstance } from "@/components/SelectTarget/useSelectTarget";
+  userBindStore as bindTStore
+} from '@/api/system/tiktokStore';
+import { filterColumns, tableColumns, handleLeftButtons, rules, FilterDto } from './config';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
+import * as API_USERS from '@/api/system/users';
+import { ElMessage, FormInstance, type FormRules } from 'element-plus';
+import SearchRole from '../components/SearchRole/index.vue';
+import { cloneDeep } from 'lodash-es';
+import { useMessageBox } from '@/hooks/useMessageBox';
+import { SelectTargetInstance } from '@/components/SelectTarget/useSelectTarget';
 
 const currentPage = ref(PAGE);
 const pageSize = ref(PAGE_SIZE);
 const total = ref(100);
 const loading = ref(false);
 const tableData = ref<API_USERS.UserProps[]>([]);
-const filterValue = ref<Partial<FilterDto>>();
+const filterValue = ref<Partial<FilterDto>>({});
 const submitLoading = ref(false);
 
 const createRules: FormRules = {
   ...rules,
   password: {
     required: true,
-    message: "密码不能为空",
+    message: '密码不能为空'
   },
   c_password: [
     {
       required: true,
-      message: "确认密码不能为空",
+      message: '确认密码不能为空'
     },
     {
       validator: (_rule, value, callback) => {
-        if (value.trim() === "") {
+        if (value.trim() === '') {
           callback();
         } else if (value !== unref(formValue).password) {
-          callback(new Error("两次输入密码不一致"));
+          callback(new Error('两次输入密码不一致'));
         } else {
           callback();
         }
-      },
-    },
-  ],
+      }
+    }
+  ]
 };
 
 // 获取用户列表
@@ -264,7 +216,7 @@ const getListFun = async () => {
     const { data } = await API_USERS.getUserList({
       page: unref(currentPage),
       page_size: unref(pageSize),
-      ...unref(filterValue),
+      ...unref(filterValue)
     });
     tableData.value = data?.list || [];
     total.value = data?.total || 0;
@@ -278,7 +230,7 @@ getListFun();
 
 // 操作按钮点击
 const handleClick = (key: string) => {
-  if (key === "create") {
+  if (key === 'create') {
     formValue.value = {};
     dialogVisible.value = true;
     createUserFormRef.value?.resetFields();
@@ -302,7 +254,7 @@ const createUserHandle = async () => {
   submitLoading.value = true;
   try {
     await API_USERS.createUser(unref(formValue) as API_USERS.UserDto);
-    ElMessage.success("创建成功");
+    ElMessage.success('创建成功');
     getListFun();
     dialogVisible.value = false;
   } catch (err) {
@@ -325,7 +277,7 @@ const editUserValidate = async () => {
 const editFun = (row: API_USERS.UserProps) => {
   editDialogVisible.value = true;
   const cloneRow = cloneDeep(row);
-  if ("password" in cloneRow) delete cloneRow.password;
+  if ('password' in cloneRow) delete cloneRow.password;
   tempUser.value = cloneDeep(row);
   editFormValue.value = cloneRow;
   editUserFormRef.value?.resetFields();
@@ -338,7 +290,7 @@ const editUserHandle = async () => {
       delete editData.username;
     }
     await API_USERS.editUser(editData as API_USERS.EditUserDto);
-    ElMessage.success("编辑成功");
+    ElMessage.success('编辑成功');
     getListFun();
     editDialogVisible.value = false;
   } catch (err) {
@@ -349,14 +301,14 @@ const editUserHandle = async () => {
 };
 
 // 修改密码
-const newPassword = ref("");
+const newPassword = ref('');
 const nPasswordDialogVisible = ref(false);
 const nPasswordFormValue = ref<API_USERS.UserProps | null>(null);
 const passwordFormRef = ref<FormInstance | null>(null);
 const editPasswordFun = (row: API_USERS.UserProps) => {
   nPasswordFormValue.value = row;
   nPasswordDialogVisible.value = true;
-  newPassword.value = "";
+  newPassword.value = '';
   passwordFormRef.value?.resetFields();
 };
 const submitValidate = () => {
@@ -365,14 +317,14 @@ const submitValidate = () => {
   });
 };
 const editPasswordHandle = async () => {
-  if (!nPasswordFormValue.value) return ElMessage.error("用户不存在");
+  if (!nPasswordFormValue.value) return ElMessage.error('用户不存在');
   submitLoading.value = true;
   try {
     await API_USERS.resetPassword({
       id: nPasswordFormValue.value.id,
-      password: unref(newPassword),
+      password: unref(newPassword)
     });
-    ElMessage.success("修改成功");
+    ElMessage.success('修改成功');
     nPasswordDialogVisible.value = false;
   } catch (err) {
     console.log(err);
@@ -383,14 +335,14 @@ const editPasswordHandle = async () => {
 
 // 删除用户
 const deleteUser = (row: API_USERS.UserProps) => {
-  useMessageBox("确认删除此用户？", async () => {
+  useMessageBox('确认删除此用户？', async () => {
     try {
       await API_USERS.deleteUser(row.id);
-      ElMessage.success("删除成功");
+      ElMessage.success('删除成功');
       getListFun();
     } catch (err) {
       console.log(err);
-      ElMessage.error("删除失败");
+      ElMessage.error('删除失败');
     }
   });
 };
@@ -425,9 +377,9 @@ const submitWalmartStoreFun = async (list: string[]) => {
     try {
       await bindWStore({
         user_id: tempUser.value.user_id,
-        walmart_shop_ids: list,
+        walmart_shop_ids: list
       });
-      ElMessage.success("操作成功");
+      ElMessage.success('操作成功');
       selectWStoreRef.value?.closeDialog();
     } catch (err) {
       console.log(err);
@@ -458,9 +410,9 @@ const submitTiktokStoreFun = async (list: string[]) => {
     try {
       await bindTStore({
         user_id: tempUser.value.user_id,
-        tiktok_shop_ids: list,
+        tiktok_shop_ids: list
       });
-      ElMessage.success("操作成功");
+      ElMessage.success('操作成功');
       selectTStoreRef.value?.closeDialog();
     } catch (err) {
       console.log(err);

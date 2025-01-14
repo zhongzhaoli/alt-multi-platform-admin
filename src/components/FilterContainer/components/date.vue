@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="dateComponent d-flex"
-    :class="{ prefixSelect: column.prefixSelect }"
-  >
+  <div class="dateComponent d-flex" :class="{ prefixSelect: column.prefixSelect }">
     <template v-if="column.prefixSelect">
       <prefixSelect
         v-model="fValue[`${column.prop}_${PREFIX_SELECT_VALUE}`]"
@@ -14,17 +11,18 @@
         v-model="fValue[column.prop]"
         :placeholder="column.placeholder || column.label || '请输入'"
         type="date"
+        clearable
         @change="change"
       />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { useVModel } from "@vueuse/core";
-import { DateColumnProps } from "../types";
-import prefixSelect from "./prefixSelect.vue";
-import { PREFIX_SELECT_VALUE } from "../constants";
-import { nextTick } from "vue";
+import { useVModel } from '@vueuse/core';
+import { DateColumnProps } from '../types';
+import prefixSelect from './prefixSelect.vue';
+import { PREFIX_SELECT_VALUE } from '../constants';
+import { nextTick } from 'vue';
 
 interface ComponentProps {
   modelValue: Record<string, any>;
@@ -32,15 +30,15 @@ interface ComponentProps {
 }
 
 const props = defineProps<ComponentProps>();
-const emits = defineEmits(["update:modelValue", "change"]);
+const emits = defineEmits(['update:modelValue', 'change']);
 
-const fValue = useVModel(props, "modelValue", emits, {
-  deep: true,
+const fValue = useVModel(props, 'modelValue', emits, {
+  deep: true
 });
 
 const change = () => {
   nextTick(() => {
-    emits("change");
+    emits('change');
   });
 };
 </script>

@@ -1,9 +1,9 @@
-import axios from "axios";
-import axiosRetry from "axios-retry";
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
-const requestInstance = axios.create({ baseURL: "http://localhost:3332" });
+const requestInstance = axios.create({ baseURL: 'http://localhost:3332' });
 axiosRetry(requestInstance, {
-  retries: 3,
+  retries: 3
 });
 
 requestInstance.interceptors.response.use(
@@ -14,7 +14,7 @@ requestInstance.interceptors.response.use(
   (err) => {
     console.log(err);
     return Promise.reject(err);
-  },
+  }
 );
 
 export default requestInstance;

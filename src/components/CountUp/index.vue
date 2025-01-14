@@ -2,9 +2,9 @@
   <span>{{ value }}</span>
 </template>
 <script setup lang="ts">
-import { useTransition, TransitionPresets } from "@vueuse/core";
-import { ref, computed, unref, onMounted, watch, watchEffect } from "vue";
-import { isNumber } from "lodash-es";
+import { useTransition, TransitionPresets } from '@vueuse/core';
+import { ref, computed, unref, onMounted, watch, watchEffect } from 'vue';
+import { isNumber } from 'lodash-es';
 
 interface CountUpProps {
   // 开始值
@@ -29,19 +29,19 @@ interface CountUpProps {
   separator?: string;
 }
 
-const emits = defineEmits(["onStarted", "onFinished"]);
+const emits = defineEmits(['onStarted', 'onFinished']);
 
 const props = withDefaults(defineProps<CountUpProps>(), {
   startVal: 0,
   endVal: 2023,
   duration: 2000,
-  transition: "linear",
+  transition: 'linear',
   useEasing: true,
   autoplay: true,
   decimals: 0,
-  prefix: "",
-  suffix: "",
-  separator: ",",
+  prefix: '',
+  suffix: '',
+  separator: ','
 });
 
 const source = ref<number>(props.startVal);
@@ -51,16 +51,13 @@ const value = computed(() => formatNumber(unref(outputValue)));
 const run = () => {
   outputValue = useTransition(source, {
     duration: props.duration,
-    onStarted: () => emits("onStarted"),
-    onFinished: () => emits("onFinished"),
+    onStarted: () => emits('onStarted'),
+    onFinished: () => emits('onFinished'),
     ...(props.useEasing
       ? {
-          transition:
-            TransitionPresets[
-              props.transition as keyof typeof TransitionPresets
-            ],
+          transition: TransitionPresets[props.transition as keyof typeof TransitionPresets]
         }
-      : {}),
+      : {})
   });
 };
 
@@ -76,24 +73,24 @@ const reset = () => {
 
 const formatNumber = (num: string | number) => {
   if (!num && num !== 0) {
-    return "";
+    return '';
   }
   // 处理一些额外的字符串 prefix suffix decimals
   const { decimals, prefix, suffix, separator } = props;
   // 先处理保留小数问题
   num = Number(num).toFixed(decimals);
   // 变成字符串
-  num += "";
+  num += '';
 
-  const x = num.split(".");
+  const x = num.split('.');
   let x1 = x[0];
-  const x2 = x.length > 1 ? "." + x[1] : "";
+  const x2 = x.length > 1 ? '.' + x[1] : '';
 
   // 处理整数部份的分隔符 变成1,000,000
   const rgx = /(\d+)(\d{3})/;
   if (separator && !isNumber(separator)) {
     while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, "$1" + separator + "$2");
+      x1 = x1.replace(rgx, '$1' + separator + '$2');
     }
   }
   return `${prefix}${x1}${x2}${suffix}`;

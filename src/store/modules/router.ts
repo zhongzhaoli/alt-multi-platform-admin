@@ -1,9 +1,9 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import { RouteRecordRaw } from "vue-router";
-import { getUserRoutes } from "@/api/user/user";
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { RouteRecordRaw } from 'vue-router';
+import { getUserRoutes } from '@/api/user/user';
 
-export const useRouterStore = defineStore("router", () => {
+export const useRouterStore = defineStore('router', () => {
   // 处理后的路由
   const allRoutes = ref<RouteRecordRaw[]>([]);
   // 接口获取的路由
@@ -28,6 +28,6 @@ export const useRouterStore = defineStore("router", () => {
     asyncRoutes,
     setAllRoutes,
     setAsyncRoutes,
-    getRoutes,
+    getRoutes
   };
 });

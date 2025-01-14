@@ -15,21 +15,17 @@
 .el-menu {
   &::before {
     display: table;
-    content: "";
+    content: '';
   }
   &::after {
     display: table;
     clear: both;
-    content: "";
+    content: '';
   }
   border-right: none;
   &.el-menu--collapse {
     $collapse-padding-left: calc(
-      (
-          var(--sidebar-closed-width) - var(--el-menu-icon-width) - var(
-              --sidebar-margin
-            ) * 2
-        ) / 2
+      (var(--sidebar-closed-width) - var(--el-menu-icon-width) - var(--sidebar-margin) * 2) / 2
     );
     & > .el-menu-item {
       padding-left: $collapse-padding-left;
@@ -43,7 +39,7 @@
   & > .el-menu-item {
     .el-icon {
       font-size: 16px;
-      & > i[class^="ri-"] {
+      & > i[class^='ri-'] {
         position: relative;
         top: -1px;
         vertical-align: top;
@@ -63,7 +59,7 @@
   & > .el-sub-menu {
     .el-icon {
       font-size: 16px;
-      & > i[class^="ri-"] {
+      & > i[class^='ri-'] {
         position: relative;
         top: -1px;
         vertical-align: top;
@@ -257,7 +253,7 @@
     font-size: 14px;
     position: absolute;
     right: 10px;
-    top: 0px;
+    top: -1px;
     z-index: 1;
     height: 100%;
   }

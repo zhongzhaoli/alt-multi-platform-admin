@@ -1,17 +1,17 @@
-import { ResponsePageJson, walmartURL } from "@/config/request";
-import { request } from "@/utils/request";
-import { WalmartStausEnum } from "../order/walmart";
+import { ResponsePageJson, walmartURL } from '@/config/request';
+import { request } from '@/utils/request';
+import { WalmartStausEnum } from '../order/walmart';
 
 export enum OrderStatusEnum {
-  "INITIATED" = "INITIATED",
-  "CANCELLED" = "CANCELLED",
-  "REFUNDED" = "REFUNDED",
+  'INITIATED' = 'INITIATED',
+  'CANCELLED' = 'CANCELLED',
+  'REFUNDED' = 'REFUNDED'
 }
 
 export enum TrackingStatusEnum {
-  "INITIATED" = "INITIATED",
-  "SHIPPING" = "SHIPPING",
-  "RETURNED" = "RETURNED",
+  'INITIATED' = 'INITIATED',
+  'SHIPPING' = 'SHIPPING',
+  'RETURNED' = 'RETURNED'
 }
 
 export interface RefundWalmartProps {
@@ -44,15 +44,15 @@ export interface GetOrderDto extends Partial<WalmartRefunFilterProps> {
 }
 
 export function getWalmartRefundList(
-  params: GetOrderDto,
+  params: GetOrderDto
 ): Promise<ResponsePageJson<RefundWalmartProps>> {
   return request({
     baseURL: walmartURL,
-    url: "/order/",
-    method: "get",
+    url: '/order/',
+    method: 'get',
     params: {
       ...params,
-      status: JSON.stringify([WalmartStausEnum.Cancelled]),
-    },
+      status: JSON.stringify([WalmartStausEnum.Cancelled])
+    }
   });
 }

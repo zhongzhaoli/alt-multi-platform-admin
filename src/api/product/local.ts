@@ -1,10 +1,10 @@
-import { mockURL, ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
+import { mockURL, ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
 
 export enum ProductStatusEnum {
-  "ON_SALE" = "ON_SALE",
-  "OFF_SALE" = "OFF_SALE",
-  "OUT_OF_STOCK" = "OUT_OF_STOCK",
+  'ON_SALE' = 'ON_SALE',
+  'OFF_SALE' = 'OFF_SALE',
+  'OUT_OF_STOCK' = 'OUT_OF_STOCK'
 }
 
 export interface LocalProductChildrenProps {
@@ -40,12 +40,12 @@ export interface GetProductDto extends Partial<LocalProductFilterProps> {
 }
 
 export function getLocalProductList(
-  params: GetProductDto,
+  params: GetProductDto
 ): Promise<ResponsePageJson<LocalProductProps>> {
   return request({
     baseURL: mockURL,
-    url: "/product/local/list",
-    method: "get",
-    params,
+    url: '/product/local/list',
+    method: 'get',
+    params
   });
 }

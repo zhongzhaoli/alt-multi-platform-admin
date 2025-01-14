@@ -1,13 +1,13 @@
-import { ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
-import { walmartURL } from "@/config/request";
+import { ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
+import { walmartURL } from '@/config/request';
 export enum WalmartStausEnum {
-  "Created" = "Created",
-  "Acknowledged" = "Acknowledged",
-  "Shipped" = "Shipped",
-  "Delivered" = "Delivered",
-  "Cancelled" = "Cancelled",
-  "Refund" = "Refund",
+  'Created' = 'Created',
+  'Acknowledged' = 'Acknowledged',
+  'Shipped' = 'Shipped',
+  'Delivered' = 'Delivered',
+  'Cancelled' = 'Cancelled',
+  'Refund' = 'Refund'
 }
 
 export interface WalmartOrderProps {
@@ -56,13 +56,13 @@ export interface GetOrderDto extends Partial<WalmartOrderFilterProps> {
 
 // 列表
 export function getWalmartOrderList(
-  params: GetOrderDto,
+  params: GetOrderDto
 ): Promise<ResponsePageJson<WalmartOrderProps>> {
   return request({
     baseURL: walmartURL,
-    url: "/order",
-    method: "get",
-    params,
+    url: '/order',
+    method: 'get',
+    params
   });
 }
 
@@ -78,8 +78,8 @@ export interface DeliverProductsDto {
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
     baseURL: walmartURL,
-    url: "/order/shipping",
-    method: "post",
-    data,
+    url: '/order/shipping',
+    method: 'post',
+    data
   });
 }

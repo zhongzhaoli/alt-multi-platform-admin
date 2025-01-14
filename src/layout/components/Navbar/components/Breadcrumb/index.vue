@@ -18,7 +18,9 @@ const breadcrumbs = ref<RouteLocationMatched[]>([]);
 
 const route = useRoute();
 const getBreadcrumb = () => {
-  breadcrumbs.value = route.matched.filter((item) => item.meta && item.meta.title && item.meta.hideBreadcrumb !== true);
+  breadcrumbs.value = route.matched.filter(
+    (item) => item.meta && item.meta.title && item.meta.hideBreadcrumb !== true
+  );
 };
 
 addRouteListener(() => {

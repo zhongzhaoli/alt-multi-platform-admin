@@ -5,6 +5,7 @@
         v-model="filterValue"
         :columns="config.filterColumns"
         @submit="getListFun"
+        @reset="getListFun"
       >
         <!-- <template #shopId="{ form, row }">
           <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" />
@@ -20,14 +21,14 @@
           data: tableData,
           rowKey: 'id',
           border: true,
-          loading,
+          loading
         }"
         :handle="{
           show: true,
-          rightColumns: config.handleRightColumns,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
-          total,
+          total
         }"
         @selection-change="selectionChange"
         @table-refresh="getListFun"
@@ -36,9 +37,7 @@
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
-            <el-button type="warning" @click="multipleDeliver">
-              批量发货
-            </el-button>
+            <el-button type="warning" @click="multipleDeliver"> 批量发货 </el-button>
             <div class="vr" />
             <div class="frequencyText">更新频率：每天</div>
           </div>
@@ -52,11 +51,7 @@
               title="采购订单号"
               margin="r"
             />
-            <TextEllipsis
-              :line="1"
-              placement="right"
-              :text="`${row.purchase_order_id || '-'}`"
-            />
+            <TextEllipsis :line="1" placement="right" :text="`${row.purchase_order_id || '-'}`" />
           </div>
           <div class="d-inline-flex">
             CO：
@@ -66,11 +61,7 @@
               title="客户订单号"
               margin="r"
             />
-            <TextEllipsis
-              :line="1"
-              placement="right"
-              :text="`${row.customer_order_id || '-'}`"
-            />
+            <TextEllipsis :line="1" placement="right" :text="`${row.customer_order_id || '-'}`" />
           </div>
         </template>
         <template #table-productInfo="{ row }">
@@ -83,26 +74,19 @@
               :desc-list="[
                 {
                   text: row.product_sku,
-                  prefix: 'SKU',
+                  prefix: 'SKU'
                 },
                 {
                   text: row.item_id,
-                  prefix: 'Item ID',
-                },
+                  prefix: 'Item ID'
+                }
               ]"
             />
-            <div class="quantityAmount">
-              x{{ row.order_line_quantity_amount || 0 }}
-            </div>
+            <div class="quantityAmount"> x{{ row.order_line_quantity_amount || 0 }} </div>
           </div>
         </template>
         <template #table-asin="{ row }">
-          <RenderCopyIcon
-            :text="row.asin"
-            type="primary"
-            title="ASIN"
-            margin="r"
-          />{{ row.asin }}
+          <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" />{{ row.asin }}
         </template>
         <template #table-address="{ row }">
           <div>{{ row.phone }}</div>
@@ -121,9 +105,7 @@
               row.order_line_status === WalmartStausEnum.Acknowledged
             "
           >
-            <el-button link type="primary" @click="singleDeliver(row)">
-              发货
-            </el-button>
+            <el-button link type="primary" @click="singleDeliver(row)"> 发货 </el-button>
           </template>
           <template v-else>-</template>
         </template>
@@ -140,9 +122,7 @@
     >
       <div class="dialogPsBox">
         <div class="title">注意事项：</div>
-        <div class="desc">
-          1、翻页会自动存储已填写的发货信息，请至少填写一条订单的发货信息。
-        </div>
+        <div class="desc"> 1、翻页会自动存储已填写的发货信息，请至少填写一条订单的发货信息。 </div>
         <div class="desc">
           2、批量设置时，会统一设置当前页所有订单的物流承运商，新一页数据需要重新批量设置。
         </div>
@@ -173,20 +153,12 @@
         </div>
       </div>
       <el-table :data="selectedRows" :max-height="400" border>
-        <el-table-column
-          label="客户订单号"
-          align="center"
-          prop="customer_order_id"
-        >
+        <el-table-column label="客户订单号" align="center" prop="customer_order_id">
           <template #default="{ row }">
             <el-input v-model="row.customer_order_id" disabled />
           </template>
         </el-table-column>
-        <el-table-column
-          label="卖家订单号"
-          align="center"
-          prop="seller_order_id"
-        >
+        <el-table-column label="卖家订单号" align="center" prop="seller_order_id">
           <template #default="{ row }">
             <el-input v-model="row.seller_order_id" placeholder="卖家订单号" />
           </template>
@@ -205,11 +177,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column
-          label="物流追踪号"
-          align="center"
-          prop="tracking_number"
-        >
+        <el-table-column label="物流追踪号" align="center" prop="tracking_number">
           <template #default="{ row }">
             <el-input v-model="row.tracking_number" placeholder="物流追踪号" />
           </template>
@@ -219,18 +187,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import TsxElementTable from "tsx-element-table";
-import FilterContainer from "@/components/FilterContainer/index.vue";
+import TsxElementTable from 'tsx-element-table';
+import FilterContainer from '@/components/FilterContainer/index.vue';
 // import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
-import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
-import { RenderCopyIcon } from "@/utils/index";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import { carrierList } from "../carrier";
-import LinkItem from "@/components/LinkItem/index.vue";
-import ProductItem from "@/components/ProductItem/index.vue";
-import * as config from "./config";
-import { ref } from "vue";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import { RenderCopyIcon } from '@/utils/index';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import { carrierList } from '../carrier';
+import LinkItem from '@/components/LinkItem/index.vue';
+import ProductItem from '@/components/ProductItem/index.vue';
+import * as config from './config';
+import { ref } from 'vue';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   type WalmartOrderProps,
   getWalmartOrderList,
@@ -238,19 +206,19 @@ import {
   type DeliverProductsDto,
   type WalmartOrderFilterProps,
   type GetOrderDto,
-  WalmartStausEnum,
-} from "@/api/order/walmart";
-import { cloneDeep } from "lodash-es";
-import { ElMessage } from "element-plus";
+  WalmartStausEnum
+} from '@/api/order/walmart';
+import { cloneDeep } from 'lodash-es';
+import { ElMessage } from 'element-plus';
 
 // 排序条件变化
-const sortOrder = ref<{ [key: string]: "DESC" | "ASC" } | null>(null);
+const sortOrder = ref<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {
   if (!data.order) {
     sortOrder.value = null;
   } else {
     sortOrder.value = {
-      [data.prop]: data.order === "ascending" ? "ASC" : "DESC",
+      [data.prop]: data.order === 'ascending' ? 'ASC' : 'DESC'
     };
   }
   getListFun();
@@ -269,7 +237,7 @@ const getListFun = async () => {
     const searchParams: GetOrderDto = {
       page: currentPage.value,
       page_size: pageSize.value,
-      ...filterValue.value,
+      ...filterValue.value
     };
     if (sortOrder.value) {
       searchParams.order = JSON.stringify([sortOrder.value]);
@@ -277,12 +245,10 @@ const getListFun = async () => {
     const { data } = await getWalmartOrderList(searchParams);
     tableData.value = (data?.list || []).map((row) => {
       const taxAmount =
-        parseFloat(row.product_tax_amount || "0") +
-        row.fee_tax_amount +
-        row.shipping_tax_amount;
+        parseFloat(row.product_tax_amount || '0') + row.fee_tax_amount + row.shipping_tax_amount;
       return {
         ...row,
-        taxAmount,
+        taxAmount
       };
     });
     total.value = data?.total || 0;
@@ -311,33 +277,31 @@ const singleDeliver = (row: WalmartOrderProps) => {
   selectedRows.value = [cloneDeep(row)].map((v) => {
     return {
       ...v,
-      seller_order_id: "",
+      seller_order_id: ''
     };
   });
   dialogVisible.value = true;
 };
 const multipleDeliver = () => {
-  if (!selectionList.value.length) return ElMessage.warning("请选择订单");
+  if (!selectionList.value.length) return ElMessage.warning('请选择订单');
   selectedRows.value = cloneDeep(selectionList.value).map((v) => {
     return {
       ...v,
-      seller_order_id: "",
+      seller_order_id: ''
     };
   });
   dialogVisible.value = true;
 };
 const dialogClosed = () => {
-  batchName.value = "";
-  batchNumber.value = "";
+  batchName.value = '';
+  batchNumber.value = '';
   selectedRows.value = [];
 };
 const dialogSubmit = async () => {
   const carrierNameIsEmpty = selectedRows.value.some((row) => !row.carrier);
-  const trackingNumberIsEmpty = selectedRows.value.some(
-    (row) => !row.tracking_number,
-  );
+  const trackingNumberIsEmpty = selectedRows.value.some((row) => !row.tracking_number);
   if (carrierNameIsEmpty || trackingNumberIsEmpty) {
-    return ElMessage.warning("请填写物流承运商或物流追踪号");
+    return ElMessage.warning('请填写物流承运商或物流追踪号');
   }
   submitLoading.value = true;
   const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
@@ -345,12 +309,12 @@ const dialogSubmit = async () => {
     tracking_number: row.tracking_number,
     purchase_order_id: row.purchase_order_id,
     shop_id: row.shop_id,
-    seller_order_id: "",
-    order_line_number: row.order_line_number,
+    seller_order_id: '',
+    order_line_number: row.order_line_number
   }));
   try {
     await deliverProducts(deliverList);
-    ElMessage.success("发货成功");
+    ElMessage.success('发货成功');
     dialogVisible.value = false;
     getListFun();
   } catch (err) {
@@ -361,11 +325,11 @@ const dialogSubmit = async () => {
 };
 
 // 批量设置
-const batchName = ref("");
-const batchNumber = ref("");
-const batchOrderId = ref("");
+const batchName = ref('');
+const batchNumber = ref('');
+const batchOrderId = ref('');
 const batchSetting = () => {
-  if (!selectedRows.value.length) return ElMessage.warning("未选择订单");
+  if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
   selectedRows.value.forEach((row: SelectedRowsProps) => {
     row.carrier = batchName.value;
     row.tracking_number = batchNumber.value;

@@ -1,10 +1,10 @@
-import { ResponsePageJson, logURL } from "@/config/request";
-import { request } from "@/utils/request";
+import { ResponsePageJson, logURL } from '@/config/request';
+import { request } from '@/utils/request';
 
 export interface GetLogsDto {
   page: number;
   page_size?: number;
-  user_id?: string;
+  username?: string;
 }
 
 export interface LogProps {
@@ -20,13 +20,11 @@ export interface LogProps {
   user_name: string;
 }
 
-export function getLogList(
-  params: GetLogsDto,
-): Promise<ResponsePageJson<LogProps>> {
+export function getLogList(params: GetLogsDto): Promise<ResponsePageJson<LogProps>> {
   return request({
     baseURL: logURL,
-    url: "/logs",
-    method: "get",
-    params,
+    url: '/logs',
+    method: 'get',
+    params
   });
 }

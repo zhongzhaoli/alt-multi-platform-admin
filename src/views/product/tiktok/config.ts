@@ -1,140 +1,122 @@
-import { ProductStatusEnum } from "@/api/product/tiktok";
-import type { FilterColumnsProp } from "@/components/FilterContainer/types";
-import { Download } from "@element-plus/icons-vue";
-import { ElText } from "element-plus";
-import type {
-  HandleRightColumnProps,
-  TableColumnProps,
-} from "tsx-element-table";
-import { h } from "vue";
+import { ProductStatusEnum } from '@/api/product/tiktok';
+import type { FilterColumnProps } from '@/components/FilterContainer/types';
+import { Download } from '@element-plus/icons-vue';
+import { ElText } from 'element-plus';
+import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
+import { h } from 'vue';
 
 const tiktokProductStatusMap: Array<{
   label: string;
   value: ProductStatusEnum;
-  type: "primary" | "success" | "info" | "warning" | "danger";
+  type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
 }> = [
   {
-    label: "未发布",
+    label: '未发布',
     value: ProductStatusEnum.UNPUBLISHED,
-    type: "info",
+    type: 'info'
   },
   {
-    label: "已发布",
+    label: '已发布',
     value: ProductStatusEnum.PUBLISHED,
-    type: "success",
+    type: 'success'
   },
   {
-    label: "错误",
+    label: '错误',
     value: ProductStatusEnum.ERROR,
-    type: "danger",
-  },
+    type: 'danger'
+  }
 ];
 
-export const filterColumns: FilterColumnsProp[] = [
+export const filterColumns: FilterColumnProps[] = [
   {
-    label: "爬取平台",
-    prop: "platform",
-    type: "select",
-    selectOptions: [
-      {
-        label: "亚马逊",
-        value: "amazon",
-      },
-    ],
+    label: '店铺名称',
+    prop: 'shopId',
+    type: 'input'
   },
   {
-    label: "店铺名称",
-    prop: "shopId",
-    type: "select",
-  },
-  {
-    label: "状态",
-    prop: "status",
-    type: "select",
-    selectOptions: tiktokProductStatusMap,
-  },
+    label: '状态',
+    prop: 'status',
+    type: 'select',
+    multiple: true,
+    arrayHandle: (val: any[]) => JSON.stringify(val),
+    selectOptions: tiktokProductStatusMap
+  }
 ];
 
 export const tableColumns: TableColumnProps[] = [
   {
-    label: "爬取平台",
-    align: "center",
+    label: '爬取平台',
+    align: 'center',
     width: 160,
-    prop: "platform",
+    prop: 'platform'
   },
   {
-    label: "ASIN",
-    align: "center",
+    label: 'ASIN',
+    align: 'center',
     width: 160,
-    prop: "asin",
+    prop: 'asin'
   },
   {
-    label: "商品信息",
-    align: "center",
+    label: '商品信息',
+    align: 'center',
     minWidth: 300,
-    prop: "productInfo",
+    prop: 'productInfo'
   },
   {
-    label: "店铺名称",
-    align: "center",
+    label: '店铺名称',
+    align: 'center',
     width: 200,
     showOverflowTooltip: true,
-    prop: "shopName",
+    prop: 'shopName'
   },
   {
-    label: "店铺ID",
-    align: "center",
+    label: '店铺ID',
+    align: 'center',
     width: 160,
-    prop: "shopId",
+    prop: 'shopId'
   },
   {
-    label: "价格",
-    align: "center",
-    prop: "price",
+    label: '价格',
+    align: 'center',
+    prop: 'price',
     minWidth: 140,
     formatter: (_row, _column, cellValue) => {
-      return h("b", null, `$ ${parseFloat(cellValue).toFixed(2)}`);
-    },
+      return h('b', null, `$ ${parseFloat(cellValue).toFixed(2)}`);
+    }
   },
   {
-    label: "状态",
-    align: "center",
+    label: '状态',
+    align: 'center',
     minWidth: 140,
-    prop: "status",
+    prop: 'status',
     formatter: (_row, _column, cellValue) => {
-      const status = tiktokProductStatusMap.find(
-        (item) => item.value === cellValue,
-      );
-      return h(
-        ElText,
-        { type: status?.type || "info" },
-        () => status?.label || "",
-      );
-    },
+      const status = tiktokProductStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || 'info' }, () => status?.label || '');
+    }
   },
   {
-    label: "库存",
-    align: "center",
-    prop: "stock",
+    label: '库存',
+    align: 'center',
+    prop: 'stock',
     minWidth: 140,
     formatter: (_row, _column, cellValue) => {
-      return h("b", null, cellValue);
-    },
+      return h('b', null, cellValue);
+    }
   },
   {
-    label: "库存预警",
-    align: "center",
-    prop: "stockWarning",
-    minWidth: 140,
-  },
+    label: '库存预警',
+    align: 'center',
+    prop: 'stockWarning',
+    minWidth: 140
+  }
 ];
 
 // 右侧导出按钮
 export const handleRightColumns: HandleRightColumnProps[] = [
   {
-    key: "export",
-    tooltip: "数据导出",
+    key: 'export',
+    tooltip: '数据导出',
     loading: false,
-    icon: Download,
-  },
+    icon: Download
+  }
 ];

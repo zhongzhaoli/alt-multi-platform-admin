@@ -1,10 +1,10 @@
-import { mockURL, ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
+import { mockURL, ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
 
 export enum ProductStatusEnum {
-  "UNPUBLISHED" = "UNPUBLISHED",
-  "PUBLISHED" = "PUBLISHED",
-  "ERROR" = "ERROR",
+  'UNPUBLISHED' = 'UNPUBLISHED',
+  'PUBLISHED' = 'PUBLISHED',
+  'ERROR' = 'ERROR'
 }
 
 export interface WalmartProductProps {
@@ -33,12 +33,12 @@ export interface GetProductDto extends Partial<WalmartProductFilterProps> {
 }
 
 export function getWalmartProductList(
-  params: GetProductDto,
+  params: GetProductDto
 ): Promise<ResponsePageJson<WalmartProductProps>> {
   return request({
     baseURL: mockURL,
-    url: "/product/walmart/list",
-    method: "get",
-    params,
+    url: '/product/walmart/list',
+    method: 'get',
+    params
   });
 }

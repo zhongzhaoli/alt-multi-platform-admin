@@ -14,7 +14,7 @@
     :list="
       list.map((item) => ({
         label: item.role_name,
-        value: item.role_id,
+        value: item.role_id
       }))
     "
     @change="selectChange"
@@ -22,10 +22,10 @@
   />
 </template>
 <script setup lang="ts">
-import SelectLoadMore from "@/components/SelectLoadMore/index.vue";
-import { PAGE } from "@/constants/app";
-import { Ref, ref, watch, nextTick, unref } from "vue";
-import { type RoleProps, getRoleList } from "@/api/system/role";
+import SelectLoadMore from '@/components/SelectLoadMore/index.vue';
+import { PAGE } from '@/constants/app';
+import { Ref, ref, watch, nextTick, unref } from 'vue';
+import { type RoleProps, getRoleList } from '@/api/system/role';
 
 interface ComponentProps {
   modelValue: idType | idType[] | undefined;
@@ -41,7 +41,7 @@ interface ComponentProps {
   componentKey?: string;
 }
 
-type idType = RoleProps["role_id"];
+type idType = RoleProps['role_id'];
 
 const props = withDefaults(defineProps<ComponentProps>(), {
   clearable: false,
@@ -50,9 +50,9 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   multipleLimit: 5,
   remote: false,
   filterable: false,
-  componentKey: "selectRolement",
+  componentKey: 'selectRolement'
 });
-const emits = defineEmits(["update:modelValue", "change"]);
+const emits = defineEmits(['update:modelValue', 'change']);
 const selectValue: Ref<idType | idType[] | undefined> = ref(props.modelValue);
 
 const list = ref<RoleProps[]>([]);
@@ -62,21 +62,21 @@ const pageSize = ref(99);
 const loading = ref(true);
 const loadingMore = ref(false);
 
-const roleName = ref("");
+const roleName = ref('');
 
 watch(
   () => props.modelValue,
   (nV: string | string[] | undefined) => {
     if (!nV || !nV.length) {
-      roleName.value = "";
+      roleName.value = '';
     }
     selectValue.value = nV;
   },
-  { immediate: true, deep: true },
+  { immediate: true, deep: true }
 );
 
 const remoteMethod = (query?: string) => {
-  roleName.value = query || "";
+  roleName.value = query || '';
   page.value = 1;
   getListFun();
 };
@@ -87,7 +87,7 @@ const getListFun = async (first = false, loadMore = false) => {
     const { data } = await getRoleList({
       page: unref(page),
       page_size: unref(pageSize),
-      role_name: unref(roleName),
+      role_name: unref(roleName)
     });
     if (loadMore) {
       list.value = [...unref(list), ...(data?.list || [])];
@@ -109,27 +109,22 @@ const getListFun = async (first = false, loadMore = false) => {
 };
 
 const loadMoreFun = () => {
-  if (
-    unref(list).length >= unref(total) ||
-    unref(loading) ||
-    unref(loadingMore)
-  )
-    return;
+  if (unref(list).length >= unref(total) || unref(loading) || unref(loadingMore)) return;
   page.value++;
   getListFun(false, true);
 };
 
 const selectChange = () => {
-  emits("update:modelValue", selectValue.value);
+  emits('update:modelValue', selectValue.value);
   nextTick(() => {
-    emits("change");
+    emits('change');
   });
 };
 
 getListFun(true);
 </script>
 <style lang="scss" scoped>
-@use "@/styles/mixins.scss" as *;
+@use '@/styles/mixins.scss' as *;
 .selectedRoleName {
   max-width: 90%;
   overflow: hidden;

@@ -1,5 +1,5 @@
-import { cloneDeep } from "lodash-es";
-import { ref, unref } from "vue";
+import { cloneDeep } from 'lodash-es';
+import { ref, unref } from 'vue';
 
 export interface SelectTargetInstance {
   openDialog: () => void;
@@ -12,12 +12,12 @@ export function useSelectTarget(emits: any) {
   const cVisible = ref<boolean>(false);
 
   const closed = () => {
-    emits("closed");
+    emits('closed');
     closedVisible.value = true;
   };
 
   const close = () => {
-    emits("close");
+    emits('close');
   };
 
   const selectChange = (list: any[]) => {
@@ -30,7 +30,7 @@ export function useSelectTarget(emits: any) {
 
   // 确认
   const submitFun = () => {
-    emits("submit", cloneDeep(unref(selectList)));
+    emits('submit', cloneDeep(unref(selectList)));
   };
 
   const openDialog = () => {
@@ -53,6 +53,6 @@ export function useSelectTarget(emits: any) {
     closeDialog,
     selectList,
     multipleAll,
-    selectAll,
+    selectAll
   };
 }

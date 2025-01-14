@@ -14,7 +14,7 @@
     :list="
       list.map((item) => ({
         label: item.shop_name,
-        value: item.shop_id,
+        value: item.shop_id
       }))
     "
     @change="selectChange"
@@ -22,15 +22,11 @@
   />
 </template>
 <script setup lang="ts">
-import {
-  GetStoreDto,
-  getStoreListAuth,
-  StoreProps,
-} from "@/api/system/tiktokStore";
-import SelectLoadMore from "@/components/SelectLoadMore/index.vue";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
-import { useVModel } from "@vueuse/core";
-import { ref, watch, unref, nextTick } from "vue";
+import { GetStoreDto, getStoreListAuth, StoreProps } from '@/api/system/tiktokStore';
+import SelectLoadMore from '@/components/SelectLoadMore/index.vue';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
+import { useVModel } from '@vueuse/core';
+import { ref, watch, unref, nextTick } from 'vue';
 
 interface ComponentProps {
   modelValue: idType | idType[] | undefined;
@@ -46,7 +42,7 @@ interface ComponentProps {
   componentKey?: string;
 }
 
-export type idType = StoreProps["shop_id"];
+export type idType = StoreProps['shop_id'];
 
 const props = withDefaults(defineProps<ComponentProps>(), {
   clearable: true,
@@ -55,10 +51,10 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   multipleLimit: 0,
   remote: true,
   filterable: true,
-  componentKey: "selectWalmartStore",
+  componentKey: 'selectWalmartStore'
 });
-const emits = defineEmits(["update:modelValue", "change"]);
-const selectValue = useVModel(props, "modelValue", emits);
+const emits = defineEmits(['update:modelValue', 'change']);
+const selectValue = useVModel(props, 'modelValue', emits);
 
 const list = ref<StoreProps[]>([]);
 const total = ref(0);
@@ -67,21 +63,21 @@ const pageSize = ref(PAGE_SIZE);
 const loading = ref(true);
 const loadingMore = ref(false);
 
-const shopName = ref("");
+const shopName = ref('');
 
 watch(
   () => props.modelValue,
   (nV: string | string[] | undefined) => {
     if (!nV || !nV.length) {
-      shopName.value = "";
+      shopName.value = '';
     }
     selectValue.value = nV;
   },
-  { immediate: true, deep: true },
+  { immediate: true, deep: true }
 );
 
 const remoteMethod = (query?: string) => {
-  shopName.value = query || "";
+  shopName.value = query || '';
   page.value = 1;
   getListFun();
 };
@@ -91,7 +87,7 @@ const getListFun = async (first = false, loadMore = false) => {
   try {
     const params: GetStoreDto = {
       page: unref(page),
-      page_size: unref(pageSize),
+      page_size: unref(pageSize)
     };
     if (shopName.value) {
       params.shopName = shopName.value;
@@ -117,26 +113,21 @@ const getListFun = async (first = false, loadMore = false) => {
 };
 
 const loadMoreFun = () => {
-  if (
-    unref(list).length >= unref(total) ||
-    unref(loading) ||
-    unref(loadingMore)
-  )
-    return;
+  if (unref(list).length >= unref(total) || unref(loading) || unref(loadingMore)) return;
   page.value++;
   getListFun(false, true);
 };
 
 const selectChange = () => {
   nextTick(() => {
-    emits("change");
+    emits('change');
   });
 };
 
 getListFun(true);
 </script>
 <style lang="scss" scoped>
-@use "@/styles/mixins.scss" as *;
+@use '@/styles/mixins.scss' as *;
 .selectedStoreName {
   max-width: 90%;
   overflow: hidden;

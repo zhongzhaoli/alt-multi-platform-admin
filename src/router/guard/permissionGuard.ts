@@ -10,7 +10,7 @@ Progress.configure({
   easing: 'ease',
   speed: 500,
   trickleSpeed: 200,
-  showSpinner: false,
+  showSpinner: false
 });
 
 export function permissionGuard(router: Router) {

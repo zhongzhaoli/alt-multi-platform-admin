@@ -5,6 +5,7 @@
         v-model="filterValue"
         :columns="config.filterColumns"
         @submit="getListFun"
+        @reset="getListFun"
       >
         <!-- <template #shopId="{ form, row }">
           <SelectTiktokStore v-model="form[row.prop]" @change="getListFun" />
@@ -20,14 +21,14 @@
           data: tableData,
           border: true,
           rowKey: 'id',
-          loading,
+          loading
         }"
         :handle="{
           show: true,
-          rightColumns: config.handleRightColumns,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
-          total,
+          total
         }"
         @table-refresh="getListFun"
         @page-change="getListFun"
@@ -37,20 +38,15 @@
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
-            <el-button type="warning" @click="multipleDeliver">
-              批量发货
-            </el-button>
+            <el-button type="warning" @click="multipleDeliver"> 批量发货 </el-button>
             <div class="vr" />
             <div class="frequencyText">更新频率：每天</div>
           </div>
         </template>
         <template #table-orderSn="{ row }">
-          <RenderCopyIcon
-            :text="row.order_id"
-            type="primary"
-            title="ASIN"
-            margin="r"
-          />{{ row.order_id }}
+          <RenderCopyIcon :text="row.order_id" type="primary" title="ASIN" margin="r" />{{
+            row.order_id
+          }}
         </template>
         <template #table-productInfo="{ row }">
           <div class="d-flex align-center">
@@ -61,27 +57,22 @@
               :desc-list="[
                 {
                   text: row.seller_sku,
-                  prefix: 'MSKU',
-                },
+                  prefix: 'MSKU'
+                }
               ]"
             />
             <div class="quantityAmount">x1</div>
           </div>
         </template>
         <template #table-asin="{ row }">
-          <RenderCopyIcon
-            :text="row.asin"
-            type="primary"
-            title="ASIN"
-            margin="r"
-          />{{ row.asin }}
+          <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" />{{ row.asin }}
         </template>
         <template #table-address="{ row }">
           <div>{{ row.buyer_phone_number }}</div>
           <TextEllipsis :text="`${row.buyer_full_address}`" />
         </template>
         <template #table-logisticsInfo="{ row }">
-          <div>{{ row.shipping_provider_id || "-" }}</div>
+          <div>{{ row.shipping_provider_id || '-' }}</div>
           <template v-if="row.tracking_number">
             <TextEllipsis :text="row.tracking_number || '-'" />
           </template>
@@ -90,15 +81,9 @@
           <TextEllipsis :text="row.buyer_message || '-'" :line="2" />
         </template>
         <template #table-action="{ row }">
-          <template
-            v-if="row.order_status === TiktokStausEnum.AWAITING_SHIPMENT"
-          >
-            <el-button link type="primary" @click="singleDeliver(row)">
-              发货
-            </el-button>
-            <el-button link type="primary" @click="cancelOrder(row)">
-              取消
-            </el-button>
+          <template v-if="row.order_status === TiktokStausEnum.AWAITING_SHIPMENT">
+            <el-button link type="primary" @click="singleDeliver(row)"> 发货 </el-button>
+            <el-button link type="primary" @click="cancelOrder(row)"> 取消 </el-button>
           </template>
           <template v-else>-</template>
         </template>
@@ -114,9 +99,7 @@
     >
       <div class="dialogPsBox">
         <div class="title">注意事项：</div>
-        <div class="desc">
-          1、翻页会自动存储已填写的发货信息，请至少填写一条订单的发货信息。
-        </div>
+        <div class="desc"> 1、翻页会自动存储已填写的发货信息，请至少填写一条订单的发货信息。 </div>
         <div class="desc">
           2、批量设置时，会统一设置当前页所有订单的物流承运商，新一页数据需要重新批量设置。
         </div>
@@ -149,16 +132,9 @@
             <el-input v-model="row.order_id" disabled />
           </template>
         </el-table-column>
-        <el-table-column
-          label="物流承运商"
-          align="center"
-          prop="shipping_provider_id"
-        >
+        <el-table-column label="物流承运商" align="center" prop="shipping_provider_id">
           <template #default="{ row }">
-            <el-select
-              v-model="row.shipping_provider_id"
-              placeholder="物流承运商"
-            >
+            <el-select v-model="row.shipping_provider_id" placeholder="物流承运商">
               <el-option
                 v-for="item in carrierList"
                 :key="item.id"
@@ -170,23 +146,14 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column
-          label="物流追踪号"
-          align="center"
-          prop="tracking_number"
-        >
+        <el-table-column label="物流追踪号" align="center" prop="tracking_number">
           <template #default="{ row }">
             <el-input v-model="row.tracking_number" placeholder="物流追踪号" />
           </template>
         </el-table-column>
       </el-table>
     </ConfirmDialog>
-    <ConfirmDialog
-      v-model="cancelVisible"
-      width="400px"
-      title="取消订单"
-      @submit="cancelSubmit"
-    >
+    <ConfirmDialog v-model="cancelVisible" width="400px" title="取消订单" @submit="cancelSubmit">
       <template v-if="tempRow">
         <el-input
           v-model="tempRow.cancel_reason"
@@ -200,21 +167,17 @@
   </div>
 </template>
 <script setup lang="ts">
-import TsxElementTable from "tsx-element-table";
-import FilterContainer from "@/components/FilterContainer/index.vue";
+import TsxElementTable from 'tsx-element-table';
+import FilterContainer from '@/components/FilterContainer/index.vue';
 // import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
-import ConfirmDialog from "@/components/ConfirmDialog/index.vue";
-import { carrierList } from "../carrier";
-import {
-  downloadCore,
-  generateVisualNumber,
-  RenderCopyIcon,
-} from "@/utils/index";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import ProductItem from "@/components/ProductItem/index.vue";
-import * as config from "./config";
-import { ref } from "vue";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import { carrierList } from '../carrier';
+import { downloadCore, generateVisualNumber, RenderCopyIcon } from '@/utils/index';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import ProductItem from '@/components/ProductItem/index.vue';
+import * as config from './config';
+import { ref } from 'vue';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getTiktokOrderList,
   deliverProducts,
@@ -225,21 +188,21 @@ import {
   exportTiktokOrderList,
   GetOrderDto,
   CancelOrderDto,
-  cancelOrder as cancelOrderApi,
-} from "@/api/order/tiktok";
-import { cloneDeep } from "lodash-es";
-import { ElMessage } from "element-plus";
-import axios, { CancelTokenSource } from "axios";
-import { useFullLoading } from "@/hooks/useFullLoading";
+  cancelOrder as cancelOrderApi
+} from '@/api/order/tiktok';
+import { cloneDeep } from 'lodash-es';
+import { ElMessage } from 'element-plus';
+import axios, { CancelTokenSource } from 'axios';
+import { useFullLoading } from '@/hooks/useFullLoading';
 
 // 排序条件变化
-const sortOrder = ref<{ [key: string]: "DESC" | "ASC" } | null>(null);
+const sortOrder = ref<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {
   if (!data.order) {
     sortOrder.value = null;
   } else {
     sortOrder.value = {
-      [data.prop]: data.order === "ascending" ? "ASC" : "DESC",
+      [data.prop]: data.order === 'ascending' ? 'ASC' : 'DESC'
     };
   }
   getListFun();
@@ -258,7 +221,7 @@ const getListFun = async () => {
     const searchParams: GetOrderDto = {
       page: currentPage.value,
       page_size: pageSize.value,
-      ...filterValue.value,
+      ...filterValue.value
     };
     if (sortOrder.value) {
       searchParams.sort = JSON.stringify(sortOrder.value);
@@ -289,23 +252,23 @@ const tempRow = ref<CancelOrderProps | null>(null);
 const cancelOrder = (row: TiktokOrderProps) => {
   tempRow.value = {
     ...row,
-    cancel_reason: "",
+    cancel_reason: ''
   };
   cancelVisible.value = true;
 };
 const cancelSubmit = async () => {
-  if (!tempRow.value) return ElMessage.warning("请选择订单");
+  if (!tempRow.value) return ElMessage.warning('请选择订单');
   const requestData: CancelOrderDto = {
     order_id: tempRow.value.order_id,
-    cancel_reason: tempRow.value.cancel_reason || "",
+    cancel_reason: tempRow.value.cancel_reason || '',
     order_line_item_ids: [tempRow.value.order_line_item_id],
     shop_id: tempRow.value.shop_id,
-    skus: [{ sku_id: tempRow.value.sku_id, quantity: 1 }],
+    skus: [{ sku_id: tempRow.value.sku_id, quantity: 1 }]
   };
   submitLoading.value = true;
   try {
     await cancelOrderApi([requestData]);
-    ElMessage.success("取消成功");
+    ElMessage.success('取消成功');
     cancelVisible.value = false;
     tempRow.value = null;
     getListFun();
@@ -325,24 +288,20 @@ const singleDeliver = (row: TiktokOrderProps) => {
   dialogVisible.value = true;
 };
 const multipleDeliver = () => {
-  if (!selectionList.value.length) return ElMessage.warning("请选择订单");
+  if (!selectionList.value.length) return ElMessage.warning('请选择订单');
   selectedRows.value = cloneDeep(selectionList.value);
   dialogVisible.value = true;
 };
 const dialogClosed = () => {
-  batchName.value = "";
-  batchNumber.value = "";
+  batchName.value = '';
+  batchNumber.value = '';
   selectedRows.value = [];
 };
 const dialogSubmit = async () => {
-  const carrierNameIsEmpty = selectedRows.value.some(
-    (row) => !row.shipping_provider_id,
-  );
-  const trackingNumberIsEmpty = selectedRows.value.some(
-    (row) => !row.tracking_number,
-  );
+  const carrierNameIsEmpty = selectedRows.value.some((row) => !row.shipping_provider_id);
+  const trackingNumberIsEmpty = selectedRows.value.some((row) => !row.tracking_number);
   if (carrierNameIsEmpty || trackingNumberIsEmpty) {
-    return ElMessage.warning("请填写物流承运商或物流追踪号");
+    return ElMessage.warning('请填写物流承运商或物流追踪号');
   }
   submitLoading.value = true;
   const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
@@ -350,11 +309,11 @@ const dialogSubmit = async () => {
     order_id: row.order_id,
     shipping_provider_id: row.shipping_provider_id,
     tracking_number: row.tracking_number,
-    order_line_item_ids: [row.order_line_item_id],
+    order_line_item_ids: [row.order_line_item_id]
   }));
   try {
     await deliverProducts(deliverList);
-    ElMessage.success("发货成功");
+    ElMessage.success('发货成功');
     dialogVisible.value = false;
     getListFun();
   } catch (err) {
@@ -377,9 +336,9 @@ const handleRightClick = async () => {
         page: currentPage.value,
         page_size: pageSize.value,
         ...filterValue.value,
-        export: 1,
+        export: 1
       },
-      source.token,
+      source.token
     );
     downloadCore(data, `Tiktok订单列表 - ${generateVisualNumber()}.xlsx`);
   } catch (err) {
@@ -390,10 +349,10 @@ const handleRightClick = async () => {
 };
 
 // 批量设置
-const batchName = ref("");
-const batchNumber = ref("");
+const batchName = ref('');
+const batchNumber = ref('');
 const batchSetting = () => {
-  if (!selectedRows.value.length) return ElMessage.warning("未选择订单");
+  if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
   selectedRows.value.forEach((row: TiktokOrderProps) => {
     row.shipping_provider_id = batchName.value;
     row.tracking_number = batchNumber.value;

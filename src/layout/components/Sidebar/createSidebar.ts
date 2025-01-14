@@ -11,7 +11,7 @@ function createSubMenu(route: RouteRecordRaw, index: string) {
   return h(
     ElSubMenu,
     {
-      index,
+      index
     },
     {
       title: () => {
@@ -21,7 +21,7 @@ function createSubMenu(route: RouteRecordRaw, index: string) {
       },
       default: () => {
         return createList(route.children || []);
-      },
+      }
     }
   );
 }
@@ -30,7 +30,7 @@ function createMenuItem(route: RouteRecordRaw, index: string) {
   return h(
     ElMenuItem,
     {
-      index,
+      index
     },
     {
       default: () => {
@@ -41,7 +41,7 @@ function createMenuItem(route: RouteRecordRaw, index: string) {
         } else {
           return [h('span', titleText)];
         }
-      },
+      }
     }
   );
 }
@@ -85,7 +85,7 @@ export default function createSidebar(list: RouteRecordRaw[]) {
     return {
       render() {
         return h('div', 'Error: Route list is empty!');
-      },
+      }
     };
   }
   return {
@@ -100,13 +100,13 @@ export default function createSidebar(list: RouteRecordRaw[]) {
           uniqueOpened: true,
           router: true,
           style: {
-            width: '100%',
-          },
+            width: '100%'
+          }
         },
         {
-          default: () => vnode,
+          default: () => vnode
         }
       );
-    },
+    }
   };
 }

@@ -7,7 +7,7 @@ export const router = createRouter({
   history: ROUTE_MODE,
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),
-  routes: [...BASIC_ROUTES, PAGE_ERROR_ROUTE],
+  routes: [...BASIC_ROUTES, PAGE_ERROR_ROUTE]
 });
 
 // 配置路由

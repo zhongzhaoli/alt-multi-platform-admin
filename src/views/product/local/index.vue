@@ -5,6 +5,7 @@
         v-model="filterValue"
         :columns="config.filterColumns"
         @submit="getListFun"
+        @reset="getListFun"
       />
     </div>
     <div class="tableBox">
@@ -19,16 +20,16 @@
           rowKey: 'id',
           defaultExpandAll: true,
           treeProps: {
-            children: 'children',
+            children: 'children'
           },
-          spanMethod: arraySpanMethod,
+          spanMethod: arraySpanMethod
         }"
         :handle="{
           show: true,
-          rightColumns: config.handleRightColumns,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
-          total,
+          total
         }"
         @table-refresh="getListFun"
         @page-change="getListFun"
@@ -37,21 +38,19 @@
           <div class="frequencyText">更新频率：每 6 个小时</div>
         </template>
         <template #table-platform="{ row }">
-          <template
-            v-if="'children' in row && row.children && row.children.length"
-          >
+          <template v-if="'children' in row && row.children && row.children.length">
             <div class="parentForm">
               <div class="childFormItem">
                 <div class="label">父ASIN：</div>
-                <div class="value">{{ row.pasin || "-" }}</div>
+                <div class="value">{{ row.pasin || '-' }}</div>
               </div>
               <div class="childFormItem">
                 <div class="label">店铺：</div>
-                <div class="value">{{ row.shop_name || "-" }}</div>
+                <div class="value">{{ row.shop_name || '-' }}</div>
               </div>
               <div class="childFormItem">
                 <div class="label">品牌：</div>
-                <div class="value">{{ row.brand || "-" }}</div>
+                <div class="value">{{ row.brand || '-' }}</div>
               </div>
             </div>
           </template>
@@ -64,12 +63,12 @@
             :desc-list="[
               {
                 text: row.productSku,
-                prefix: 'SKU',
+                prefix: 'SKU'
               },
               {
                 text: row.productAsin,
-                prefix: 'ASIN',
-              },
+                prefix: 'ASIN'
+              }
             ]"
           />
         </template>
@@ -79,22 +78,16 @@
             effect="plain"
             :type="row.deliveryMethod ? 'primary' : 'info'"
           >
-            {{ row.deliveryMethod ? "是" : "否" }}
+            {{ row.deliveryMethod ? '是' : '否' }}
           </el-tag>
         </template>
         <template #table-deliveryTime="{ row }">
-          <el-tag
-            disable-transitions
-            effect="plain"
-            :type="row.deliveryTime ? 'primary' : 'info'"
-          >
-            {{ row.deliveryTime ? "是" : "否" }}
+          <el-tag disable-transitions effect="plain" :type="row.deliveryTime ? 'primary' : 'info'">
+            {{ row.deliveryTime ? '是' : '否' }}
           </el-tag>
         </template>
         <template #table-shops="{ row }">
-          <el-button link type="primary" @click="openShops(row)">
-            查看详情
-          </el-button>
+          <el-button link type="primary" @click="openShops(row)"> 查看详情 </el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -107,29 +100,29 @@
           data: shopsTableData,
           loading: shopsLoading,
           border: true,
-          size: 'small',
+          size: 'small'
         }"
         :handle="{ show: false }"
         :pagination="{
-          total: shopsTotal,
+          total: shopsTotal
         }"
       />
     </el-drawer>
   </div>
 </template>
 <script setup lang="ts">
-import FilterContainer from "@/components/FilterContainer/index.vue";
-import TsxElementTable from "tsx-element-table";
-import * as config from "./config";
-import { ref } from "vue";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import TsxElementTable from 'tsx-element-table';
+import * as config from './config';
+import { ref } from 'vue';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getLocalProductList,
   type LocalProductProps,
-  type LocalProductFilterProps,
-} from "@/api/product/local";
-import ProductItem from "@/components/ProductItem/index.vue";
-import { TableColumnCtx } from "element-plus";
+  type LocalProductFilterProps
+} from '@/api/product/local';
+import ProductItem from '@/components/ProductItem/index.vue';
+import { TableColumnCtx } from 'element-plus';
 
 // 获取列表
 const filterValue = ref<Partial<LocalProductFilterProps>>({});
@@ -144,7 +137,7 @@ const getListFun = async () => {
     const { data } = await getLocalProductList({
       page: currentPage.value,
       pageSize: pageSize.value,
-      ...filterValue.value,
+      ...filterValue.value
     });
     tableData.value = data?.list || [];
     total.value = data?.total || 0;
@@ -176,7 +169,7 @@ interface SpanMethodProps {
   columnIndex: number;
 }
 const arraySpanMethod = ({ row, columnIndex }: SpanMethodProps) => {
-  if ("children" in row && row.children && row.children.length > 0) {
+  if ('children' in row && row.children && row.children.length > 0) {
     if (columnIndex === 0) {
       return [1, 10];
     } else {

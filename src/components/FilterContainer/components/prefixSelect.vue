@@ -18,18 +18,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useVModel } from "@vueuse/core";
-import { PrefixSelectProps } from "../types";
-import { DEFAULT_PREFIX_SELECT_WIDTH } from "../constants";
+import { useVModel } from '@vueuse/core';
+import { PrefixSelectProps } from '../types';
+import { DEFAULT_PREFIX_SELECT_WIDTH } from '../constants';
 
 interface ComponentProps {
   modelValue: string;
   prefixSelect: PrefixSelectProps;
 }
 const props = defineProps<ComponentProps>();
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(['update:modelValue']);
 
-const value = useVModel(props, "modelValue", emits);
+const value = useVModel(props, 'modelValue', emits);
 </script>
 <style lang="scss" scoped>
 .prefixSelectComponent {

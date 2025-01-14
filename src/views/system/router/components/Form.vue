@@ -16,8 +16,19 @@
       </el-col>
       <el-col :span="12">
         <el-form-item label="类型">
-          <el-select v-model="formValue.type" :disabled="editType === 'edit'" style="width: 100%" placeholder="请选择菜单类型" @change="routeTypeChange">
-            <el-option v-for="item in menuTypeList" :key="item.value" :label="item.label" :value="item.value" />
+          <el-select
+            v-model="formValue.type"
+            :disabled="editType === 'edit'"
+            style="width: 100%"
+            placeholder="请选择菜单类型"
+            @change="routeTypeChange"
+          >
+            <el-option
+              v-for="item in menuTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
       </el-col>

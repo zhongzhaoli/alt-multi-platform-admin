@@ -1,22 +1,17 @@
-// 栅格布局大小
-export const COL = 4;
-// 栅格布局间距
-export const GUTTER = 12;
-// Form labelPosition
-export const LABEL_POSITION = "left";
-// Form labelWidth
-export const LABEL_WIDTH = "70px";
-// Multiple Active Suffix
-export const MULTIPLE_ACTIVE_SUFFIX = "_multiple_active";
-// Multiple List Suffix
-export const MULTIPLE_LIST_SUFFIX = "_multiple_list";
-// Multiple Text Suffix
-export const MULTIPLE_TEXT_SUFFIX = "_multiple_text";
-// DateRange Start Key
-export const DATERANGE_START_KEY = "start_date";
-// DateRange End Key
-export const DATERANGE_END_KEY = "end_date";
-// Form prefix Default Width
-export const PREFIX_WIDTH = 80;
-// Select Multiple Key
-export const SELECT_MULTIPLE_KEY = "_multiple_origin";
+export const DEFAULT_COLUMN_WIDTH = 200;
+
+export const DEFAULT_PREFIX_SELECT_WIDTH = 120;
+
+export const DEFAULT_SELECT_LIMIT = 0;
+
+export const DEFAULT_SELECT_COLLAPSE_TAGS = true;
+
+export const MULTIPLE_INPUT_ACTIVE = 'multipleInputActive';
+
+export const MULTIPLE_INPUT_VALUE = 'multipleInputValue';
+
+export const PREFIX_SELECT_VALUE = 'prefixSelectValue';
+
+export const DEFAULT_DATERANGE_START_KEY = 'startDate';
+
+export const DEFAULT_DATERANGE_END_KEY = 'endDate';

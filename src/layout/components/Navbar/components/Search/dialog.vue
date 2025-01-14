@@ -10,7 +10,13 @@
     >
       <div v-if="dialogVisible" class="dialogBody">
         <div class="inputBox">
-          <el-input ref="inputRef" v-model="searchWord" clearable placeholder="搜索" @input="searchHandle">
+          <el-input
+            ref="inputRef"
+            v-model="searchWord"
+            clearable
+            placeholder="搜索"
+            @input="searchHandle"
+          >
             <template #prefix>
               <i class="ri-search-line" />
             </template>
@@ -19,7 +25,13 @@
         <div class="resultBox">
           <div v-if="resultList && resultList.length" ref="scrollWrap" class="listBox">
             <div v-for="(result, index) in resultList" ref="itemRefs" :key="index">
-              <Item :item="result" :index="index" :active="index === activeIndex" @mouse-enter="mouseEnter" @click="handleEnter" />
+              <Item
+                :item="result"
+                :index="index"
+                :active="index === activeIndex"
+                @mouse-enter="mouseEnter"
+                @click="handleEnter"
+              />
             </div>
           </div>
           <div v-else class="noData flex-center">暂无搜索结果</div>
@@ -27,7 +39,12 @@
         <div class="promptBox">
           <div class="key">
             <div class="icon flex-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1em" height="1em">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1024 1024"
+                width="1em"
+                height="1em"
+              >
                 <path
                   fill="currentColor"
                   d="M864 170h-60c-4.4 0-8 3.6-8 8v518H310v-73c0-6.7-7.8-10.5-13-6.3l-141.9 112a8 8 0 0 0 0 12.6l141.9 112c5.3 4.2 13 .4 13-6.3v-75h498c35.3 0 64-28.7 64-64V178c0-4.4-3.6-8-8-8"
@@ -38,7 +55,12 @@
           </div>
           <div class="key">
             <div class="icon flex-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 512 512"
+              >
                 <path
                   fill="none"
                   stroke="currentColor"
@@ -50,7 +72,12 @@
               </svg>
             </div>
             <div class="icon flex-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 512 512"
+              >
                 <path
                   fill="none"
                   stroke="currentColor"
@@ -90,7 +117,8 @@ const emits = defineEmits(['close']);
 const itemRefs = ref<HTMLElement[] | null>(null);
 const scrollWrap = ref<HTMLElement | null>(null);
 const inputRef = ref<HTMLElement | null>();
-const { resultList, searchWord, mouseEnter, searchHandle, activeIndex, handleEnter, handleClose } = useMenuSearch(itemRefs, scrollWrap, emits);
+const { resultList, searchWord, mouseEnter, searchHandle, activeIndex, handleEnter, handleClose } =
+  useMenuSearch(itemRefs, scrollWrap, emits);
 
 // 焦点
 const opened = () => {

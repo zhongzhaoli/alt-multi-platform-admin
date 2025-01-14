@@ -10,7 +10,10 @@ export enum PageEnum {
 export const WHITE_PATH_LIST: string[] = [PageEnum.BASE_LOGIN];
 
 // 路由模式
-export const ROUTE_MODE = VITE_GLOB_ROUTER_MODE === 'hash' ? createWebHashHistory(VITE_GLOB_PUBLIC_PATH) : createWebHistory(VITE_GLOB_PUBLIC_PATH);
+export const ROUTE_MODE =
+  VITE_GLOB_ROUTER_MODE === 'hash'
+    ? createWebHashHistory(VITE_GLOB_PUBLIC_PATH)
+    : createWebHistory(VITE_GLOB_PUBLIC_PATH);
 
 // Layout
 export const LAYOUT = () => import('@/layout/index.vue');

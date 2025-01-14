@@ -1,10 +1,10 @@
-import { LoginDto, login as loginApi } from "@/api/user/login";
-import { getUserInfo as getUserInfoApi } from "@/api/user/user";
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import { piniaPersistConfig } from "@/utils/persist";
-import { resetRouter } from "@/router/helper";
-import { useTagsViewStore } from "./tagsView";
+import { LoginDto, login as loginApi } from '@/api/user/login';
+import { getUserInfo as getUserInfoApi } from '@/api/user/user';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { piniaPersistConfig } from '@/utils/persist';
+import { resetRouter } from '@/router/helper';
+import { useTagsViewStore } from './tagsView';
 
 export interface UserInfo {
   user_id: string;
@@ -22,7 +22,7 @@ export interface UserState {
 type UserStateKey = Array<keyof UserState>;
 
 export const useUserStore = defineStore(
-  "user",
+  'user',
   () => {
     // token
     const token = ref<string>();
@@ -39,14 +39,14 @@ export const useUserStore = defineStore(
         token.value = data;
         return data;
       } catch (err) {
-        console.log("授权失败");
+        console.log('授权失败');
         return Promise.reject(err);
       }
     };
     // 退出登录
     const logout = () => {
       const tagsViewStore = useTagsViewStore();
-      token.value = "";
+      token.value = '';
       userInfo.value = undefined;
       resetRouter();
       tagsViewStore.delAllVisitedView();
@@ -59,7 +59,7 @@ export const useUserStore = defineStore(
         setUserInfo(data as UserInfo);
         return data;
       } catch (_err) {
-        console.log("授权失败");
+        console.log('授权失败');
       }
     };
     return {
@@ -68,10 +68,10 @@ export const useUserStore = defineStore(
       setUserInfo,
       login,
       logout,
-      getUserInfo,
+      getUserInfo
     };
   },
   {
-    persist: piniaPersistConfig<UserStateKey>("USER_STORE", ["token"]),
-  },
+    persist: piniaPersistConfig<UserStateKey>('USER_STORE', ['token'])
+  }
 );

@@ -5,6 +5,7 @@
         v-model="filterValue"
         :columns="config.filterColumns"
         @submit="getListFun"
+        @reset="getListFun"
       >
         <!-- <template #shopId="{ form, row }"> -->
         <!-- <SelectTiktokStore v-model="form[row.prop]" @change="getListFun" /> -->
@@ -19,14 +20,14 @@
         :table="{
           data: tableData,
           border: true,
-          loading,
+          loading
         }"
         :handle="{
           show: true,
-          rightColumns: config.handleRightColumns,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
-          total,
+          total
         }"
         @table-refresh="getListFun"
         @page-change="getListFun"
@@ -36,12 +37,9 @@
           <div class="frequencyText">更新频率：每 3 个小时</div>
         </template>
         <template #table-order_id="{ row }">
-          <RenderCopyIcon
-            :text="row.order_id"
-            type="primary"
-            title="订单号"
-            margin="r"
-          />{{ row.order_id }}
+          <RenderCopyIcon :text="row.order_id" type="primary" title="订单号" margin="r" />{{
+            row.order_id
+          }}
         </template>
         <template #table-productInfo="{ row }">
           <div class="d-flex align-center">
@@ -52,8 +50,8 @@
               :desc-list="[
                 {
                   text: row.seller_sku,
-                  prefix: 'MSKU',
-                },
+                  prefix: 'MSKU'
+                }
               ]"
             />
             <div class="quantityAmount">x1</div>
@@ -67,26 +65,22 @@
   </div>
 </template>
 <script setup lang="ts">
-import FilterContainer from "@/components/FilterContainer/index.vue";
-import TsxElementTable from "tsx-element-table";
-import ProductItem from "@/components/ProductItem/index.vue";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import * as config from "./config";
-import { ref } from "vue";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import TsxElementTable from 'tsx-element-table';
+import ProductItem from '@/components/ProductItem/index.vue';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import * as config from './config';
+import { ref } from 'vue';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getTiktokRefundList,
   RefundTiktokProps,
   TiktokRefunFilterProps,
-  exportTiktokRefundOrderList,
-} from "@/api/refund/tiktok";
-import {
-  downloadCore,
-  generateVisualNumber,
-  RenderCopyIcon,
-} from "@/utils/index";
-import axios, { CancelTokenSource } from "axios";
-import { useFullLoading } from "@/hooks/useFullLoading";
+  exportTiktokRefundOrderList
+} from '@/api/refund/tiktok';
+import { downloadCore, generateVisualNumber, RenderCopyIcon } from '@/utils/index';
+import axios, { CancelTokenSource } from 'axios';
+import { useFullLoading } from '@/hooks/useFullLoading';
 
 const filterValue = ref<Partial<TiktokRefunFilterProps>>({});
 const tableData = ref<RefundTiktokProps[]>([]);
@@ -100,7 +94,7 @@ const getListFun = async () => {
     const { data } = await getTiktokRefundList({
       page: currentPage.value,
       page_size: pageSize.value,
-      ...filterValue.value,
+      ...filterValue.value
     });
     tableData.value = data?.list || [];
     total.value = data?.total || 0;
@@ -126,9 +120,9 @@ const handleRightClick = async () => {
         page: currentPage.value,
         page_size: pageSize.value,
         ...filterValue.value,
-        export: 1,
+        export: 1
       },
-      source.token,
+      source.token
     );
     downloadCore(data, `Tiktok退货订单列表 - ${generateVisualNumber()}.xlsx`);
   } catch (err) {

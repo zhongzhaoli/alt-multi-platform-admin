@@ -1,18 +1,18 @@
-import { ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
-import { tiktokURL } from "@/config/request";
-import { CancelToken } from "axios";
+import { ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
+import { tiktokURL } from '@/config/request';
+import { CancelToken } from 'axios';
 
 export enum TiktokStausEnum {
-  "ON_HOLD" = "ON_HOLD",
-  "UNPAID" = "UNPAID",
-  "AWAITING_SHIPMENT" = "AWAITING_SHIPMENT",
-  "PARTIALLY_SHIPPING" = "PARTIALLY_SHIPPING",
-  "AWAITING_COLLECTION" = "AWAITING_COLLECTION",
-  "IN_TRANSIT" = "IN_TRANSIT",
-  "DELIVERED" = "DELIVERED",
-  "COMPLETED" = "COMPLETED",
-  "CANCELLED" = "CANCELLED",
+  'ON_HOLD' = 'ON_HOLD',
+  'UNPAID' = 'UNPAID',
+  'AWAITING_SHIPMENT' = 'AWAITING_SHIPMENT',
+  'PARTIALLY_SHIPPING' = 'PARTIALLY_SHIPPING',
+  'AWAITING_COLLECTION' = 'AWAITING_COLLECTION',
+  'IN_TRANSIT' = 'IN_TRANSIT',
+  'DELIVERED' = 'DELIVERED',
+  'COMPLETED' = 'COMPLETED',
+  'CANCELLED' = 'CANCELLED'
 }
 
 export interface TiktokOrderProps {
@@ -57,28 +57,25 @@ export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
 
 // 列表
 export function getTiktokOrderList(
-  params: GetOrderDto,
+  params: GetOrderDto
 ): Promise<ResponsePageJson<TiktokOrderProps>> {
   return request({
     baseURL: tiktokURL,
-    url: "/tk/get_all_order",
-    method: "get",
-    params,
+    url: '/tk/get_all_order',
+    method: 'get',
+    params
   });
 }
 
 // 导出
-export function exportTiktokOrderList(
-  params: GetOrderDto,
-  cancelToken: CancelToken,
-): Promise<any> {
+export function exportTiktokOrderList(params: GetOrderDto, cancelToken: CancelToken): Promise<any> {
   return request({
     baseURL: tiktokURL,
-    url: "/tk/get_all_order",
-    method: "get",
+    url: '/tk/get_all_order',
+    method: 'get',
     params,
-    responseType: "blob",
-    cancelToken,
+    responseType: 'blob',
+    cancelToken
   });
 }
 
@@ -93,9 +90,9 @@ export interface DeliverProductsDto {
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
     baseURL: tiktokURL,
-    url: "/tk/mark_package_as_shipped",
-    method: "post",
-    data,
+    url: '/tk/mark_package_as_shipped',
+    method: 'post',
+    data
   });
 }
 
@@ -110,8 +107,8 @@ export interface CancelOrderDto {
 export function cancelOrder(data: CancelOrderDto[]): Promise<any> {
   return request({
     baseURL: tiktokURL,
-    url: "/tk/cancel_order",
-    method: "post",
-    data,
+    url: '/tk/cancel_order',
+    method: 'post',
+    data
   });
 }

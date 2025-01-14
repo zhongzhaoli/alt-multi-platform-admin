@@ -1,5 +1,5 @@
-import { ResponseJson, ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
+import { ResponseJson, ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
 
 export interface StoreProps {
   shop_id: string;
@@ -16,22 +16,20 @@ export interface GetStoreDto {
 }
 
 // 获取店铺列表
-export function getStoreList(
-  params?: GetStoreDto,
-): Promise<ResponsePageJson<StoreProps>> {
+export function getStoreList(params?: GetStoreDto): Promise<ResponsePageJson<StoreProps>> {
   return request({
-    url: "/tiktok/shop/list",
-    method: "get",
-    params,
+    url: '/tiktok/shop/list',
+    method: 'get',
+    params
   });
 }
 
 // 用户绑定店铺回显
 export function userStoreIds(userId: string): Promise<ResponseJson<string[]>> {
   return request({
-    url: "/tiktok/shop/ids",
-    method: "get",
-    params: { user_id: userId },
+    url: '/tiktok/shop/ids',
+    method: 'get',
+    params: { user_id: userId }
   });
 }
 
@@ -42,19 +40,17 @@ export interface TiktokBindDto {
 }
 export function userBindStore(data: TiktokBindDto): Promise<any> {
   return request({
-    url: "/user/authorize/tiktok/shops",
-    method: "put",
-    data,
+    url: '/user/authorize/tiktok/shops',
+    method: 'put',
+    data
   });
 }
 
 // 获取店铺列表 - 权限限制
-export function getStoreListAuth(
-  params?: GetStoreDto,
-): Promise<ResponsePageJson<StoreProps>> {
+export function getStoreListAuth(params?: GetStoreDto): Promise<ResponsePageJson<StoreProps>> {
   return request({
-    url: "/tiktok/shop/user/list",
-    method: "get",
-    params,
+    url: '/tiktok/shop/user/list',
+    method: 'get',
+    params
   });
 }

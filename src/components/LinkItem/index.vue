@@ -1,11 +1,6 @@
 <template>
   <div class="linkItem">
-    <a
-      v-if="text"
-      class="textBox"
-      :href="href || 'javascript:void(0)'"
-      target="_blank"
-    >
+    <a v-if="text" class="textBox" :href="href || 'javascript:void(0)'" target="_blank">
       <i class="ri-share-box-line" />
       <div class="textEllipsis" :style="{ maxWidth: width }">
         <TextEllipsis :text="text" />
@@ -15,7 +10,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
 interface ComponentProps {
   text: string | null;
   href: string | null;
@@ -23,7 +18,7 @@ interface ComponentProps {
 }
 
 withDefaults(defineProps<ComponentProps>(), {
-  width: "unset",
+  width: 'unset'
 });
 </script>
 <style lang="scss" scoped>

@@ -14,14 +14,14 @@
         :table="{
           data: tableData,
           border: true,
-          rowKey: 'id',
+          rowKey: 'id'
         }"
         :handle="{
           show: true,
-          columns: config.handleLeftButtons,
+          columns: config.handleLeftButtons
         }"
         :pagination="{
-          show: false,
+          show: false
         }"
         @table-refresh="getListFun"
       >
@@ -30,9 +30,7 @@
           <span style="padding-left: 10px">{{ row.meta.title }}</span>
         </template>
         <template #table-hidden="{ row }">
-          <el-tag v-if="!row.meta.hidden" disable-transitions type="success">
-            是
-          </el-tag>
+          <el-tag v-if="!row.meta.hidden" disable-transitions type="success"> 是 </el-tag>
           <el-tag v-else disable-transitions type="danger"> 否 </el-tag>
         </template>
       </TsxElementTable>
@@ -40,25 +38,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import TsxElementTable from "tsx-element-table";
-import FilterContainer from "@/components/FilterContainer/index.vue";
+import TsxElementTable from 'tsx-element-table';
+import FilterContainer from '@/components/FilterContainer/index.vue';
 // import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import { MenusProps } from "./components/Form.vue";
-import * as config from "./config";
-import { ref } from "vue";
-import * as API_ROUTER from "@/api/system/router";
-import { _RouteRecordBase } from "vue-router";
+import { MenusProps } from './components/Form.vue';
+import * as config from './config';
+import { ref } from 'vue';
+import * as API_ROUTER from '@/api/system/router';
+import { _RouteRecordBase } from 'vue-router';
 
 const tableData = ref<API_ROUTER.DataProps[]>([]);
 const treeSelectData = ref<MenusProps[]>([]);
 const loading = ref(false);
-const filterValue = ref<Partial<config.FilterDto>>();
+const filterValue = ref<Partial<config.FilterDto>>({});
 
 const getListFun = async () => {
   loading.value = true;
   try {
     const { data } = await API_ROUTER.getRouterList({
-      ...filterValue.value,
+      ...filterValue.value
     });
     const handledData = (data || []).map((item) => {
       return {
@@ -66,7 +64,7 @@ const getListFun = async () => {
         hidden: item.meta?.hidden || false,
         breadcrumb_hidden: item.meta?.breadcrumb_hidden || false,
         affix: item.meta?.affix || false,
-        keep_alive: item.meta?.keep_alive || false,
+        keep_alive: item.meta?.keep_alive || false
       };
     });
     tableData.value = handledData;
@@ -91,13 +89,13 @@ const generatePidList = (arr: API_ROUTER.DataProps[]): MenusProps[] => {
         item.id &&
         item.meta.title &&
         item.meta.type &&
-        item.meta.type !== "BUTTON"
+        item.meta.type !== 'BUTTON'
       ) {
         newItem = {
           label: item.meta.title,
           value: item.id,
           type: item.meta.type,
-          children: [],
+          children: []
         };
         if (item.children) {
           newItem.children.push(...fn(item.children as API_ROUTER.DataProps[]));
@@ -108,7 +106,7 @@ const generatePidList = (arr: API_ROUTER.DataProps[]): MenusProps[] => {
     return result;
   };
   const children: MenusProps[] = fn(arr);
-  return [{ label: "根目录", type: "ROOT", value: 0, children }];
+  return [{ label: '根目录', type: 'ROOT', value: 0, children }];
 };
 </script>
 <style lang="scss" scoped></style>

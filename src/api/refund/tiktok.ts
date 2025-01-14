@@ -1,11 +1,11 @@
-import { ResponsePageJson, tiktokURL } from "@/config/request";
-import { request } from "@/utils/request";
-import { CancelToken } from "axios";
+import { ResponsePageJson, tiktokURL } from '@/config/request';
+import { request } from '@/utils/request';
+import { CancelToken } from 'axios';
 
 export enum OrderStatusEnum {
-  "INITIATED" = "INITIATED",
-  "CANCELLED" = "CANCELLED",
-  "REFUNDED" = "REFUNDED",
+  'INITIATED' = 'INITIATED',
+  'CANCELLED' = 'CANCELLED',
+  'REFUNDED' = 'REFUNDED'
 }
 
 export interface RefundTiktokProps {
@@ -37,45 +37,45 @@ export interface GetOrderDto extends Partial<TiktokRefunFilterProps> {
 }
 
 export function getTiktokRefundList(
-  params: GetOrderDto,
+  params: GetOrderDto
 ): Promise<ResponsePageJson<RefundTiktokProps>> {
   return request({
     baseURL: tiktokURL,
-    url: "/tk/get_return_order",
-    method: "get",
-    params,
+    url: '/tk/get_return_order',
+    method: 'get',
+    params
   });
 }
 
 // 取消订单
 export function cancelOrder(orderSn: string): Promise<any> {
   return request({
-    url: "/refund/tiktok/cancelOrder",
-    method: "post",
-    data: { orderSn },
+    url: '/refund/tiktok/cancelOrder',
+    method: 'post',
+    data: { orderSn }
   });
 }
 
 // 导出
 export function exportTiktokRefundOrderList(
   params: GetOrderDto,
-  cancelToken: CancelToken,
+  cancelToken: CancelToken
 ): Promise<any> {
   return request({
     baseURL: tiktokURL,
-    url: "/tk/get_return_order",
-    method: "get",
+    url: '/tk/get_return_order',
+    method: 'get',
     params,
-    responseType: "blob",
-    cancelToken,
+    responseType: 'blob',
+    cancelToken
   });
 }
 
 // 审核退款
 export function reviewRefund(orderSn: string, review: boolean): Promise<any> {
   return request({
-    url: "/refund/tiktok/refundReview",
-    method: "post",
-    data: { orderSn, review },
+    url: '/refund/tiktok/refundReview',
+    method: 'post',
+    data: { orderSn, review }
   });
 }

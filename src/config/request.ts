@@ -1,10 +1,10 @@
-import { getAppEnvConfig } from "@/utils/env";
+import { getAppEnvConfig } from '@/utils/env';
 const {
   VITE_GLOB_API_URL_SYSTEM,
   VITE_GLOB_API_URL_TIKTOK,
   VITE_GLOB_API_URL_WALMART,
   VITE_GLOG_API_URL_MOCK,
-  VITE_GLOB_API_URL_LOG,
+  VITE_GLOB_API_URL_LOG
 } = getAppEnvConfig();
 
 // 请求路径
@@ -20,10 +20,10 @@ export const logURL = VITE_GLOB_API_URL_LOG;
 // 超时事件
 export const requestTimeout = 20000;
 // 请求格式
-export const contentType = "application/json;charset=UTF-8";
+export const contentType = 'application/json;charset=UTF-8';
 
 // 图片服务器
-export const QINIU_IMG_SERVER = "https://img.altspicerver.com/";
+export const QINIU_IMG_SERVER = 'https://img.altspicerver.com/';
 
 // 返回code
 export enum ResponseCode {
@@ -31,7 +31,7 @@ export enum ResponseCode {
   ERROR = 422,
   BODYERROR = 400,
   UNAUTHORIZATION = 401,
-  SERVERERROR = 500,
+  SERVERERROR = 500
 }
 // 返回信息格式
 export interface ResponseJson<T = string> {

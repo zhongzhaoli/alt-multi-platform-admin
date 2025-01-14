@@ -1,30 +1,17 @@
 <template>
   <div class="qiniuContainer">
-    <input
-      ref="fileRef"
-      type="file"
-      :multiple="limit !== 1"
-      @change="fileChange"
-    />
+    <input ref="fileRef" type="file" :multiple="limit !== 1" @change="fileChange" />
     <draggable v-model="list" class="listBox" item-key="id">
       <template #item="{ element }">
         <div class="itemBox">
           <div class="item">
             <!-- 删除 -->
-            <div
-              v-if="create"
-              class="deleteBox flex-center"
-              @click="handleDelete(element)"
-            >
+            <div v-if="create" class="deleteBox flex-center" @click="handleDelete(element)">
               <i class="ri-delete-bin-line" />
             </div>
             <!-- 蒙板 -->
             <div class="mb flex-center">
-              <div
-                v-if="element.type === 'image'"
-                class="icon"
-                @click="handlePreview(element)"
-              >
+              <div v-if="element.type === 'image'" class="icon" @click="handlePreview(element)">
                 <i class="ri-zoom-in-line" />
               </div>
               <div class="icon" @click="handleDownload(element)">
@@ -39,17 +26,10 @@
                 :percentage="element.percent"
               />
             </template>
-            <template
-              v-if="
-                element.status === 'success' || element.status === 'loading'
-              "
-            >
+            <template v-if="element.status === 'success' || element.status === 'loading'">
               <template v-if="element.type === 'image' && element.url">
                 <div class="imageLoadingBox">
-                  <div
-                    v-if="element.status === 'loading'"
-                    class="loadingContainer flex-center"
-                  >
+                  <div v-if="element.status === 'loading'" class="loadingContainer flex-center">
                     <div class="loading-circle" />
                   </div>
                   <el-image
@@ -72,20 +52,12 @@
             </template>
           </div>
           <div v-if="fileName !== false" class="fileName">
-            <TextEllipsis
-              placement="right"
-              :text="element.fileName"
-              :line="1"
-            />
+            <TextEllipsis placement="right" :text="element.fileName" :line="1" />
           </div>
         </div>
       </template>
       <template #footer>
-        <div
-          v-if="create && list.length < limit"
-          class="itemBox"
-          @click="selectFile"
-        >
+        <div v-if="create && list.length < limit" class="itemBox" @click="selectFile">
           <div v-loading="tokenLoading" class="item add">
             <i class="ri-add-fill" />
           </div>
@@ -95,20 +67,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import FileImage from "@/assets/file.png";
-import ZipImage from "@/assets/zip.png";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import { getQiniuToken } from "@/api/qiniu";
-import { ElMessage } from "element-plus";
-import * as qiniu from "qiniu-js";
-import { QINIU_IMG_SERVER } from "@/config/request";
-import { downloadFile, generateVisualNumber } from "@/utils";
-import { api as viewerApi } from "v-viewer";
-import { uniqueId } from "lodash-es";
-import draggable from "vuedraggable";
+import { ref, watch } from 'vue';
+import FileImage from '@/assets/file.png';
+import ZipImage from '@/assets/zip.png';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import { getQiniuToken } from '@/api/qiniu';
+import { ElMessage } from 'element-plus';
+import * as qiniu from 'qiniu-js';
+import { QINIU_IMG_SERVER } from '@/config/request';
+import { downloadFile, generateVisualNumber } from '@/utils';
+import { api as viewerApi } from 'v-viewer';
+import { uniqueId } from 'lodash-es';
+import draggable from 'vuedraggable';
 
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(['update:modelValue']);
 const props = withDefaults(
   defineProps<{
     modelValue: FileItem[];
@@ -121,23 +93,18 @@ const props = withDefaults(
   {
     create: false,
     fileName: true,
-    accept: "all",
-    dirName: "multi-platform-localProduct",
-    limit: 5,
-  },
+    accept: 'all',
+    dirName: 'multi-platform-localProduct',
+    limit: 5
+  }
 );
 
 const fileRef = ref<HTMLInputElement | undefined>(undefined);
-const imageTypes = ["image/png", "image/jpeg", "image/gif"];
-const zipTypes = ["application/zip"];
+const imageTypes = ['image/png', 'image/jpeg', 'image/gif'];
+const zipTypes = ['application/zip'];
 
-export type FileType = "image" | "zip" | "other";
-export type FileStatus =
-  | "pending"
-  | "success"
-  | "error"
-  | "loading"
-  | "loadError";
+export type FileType = 'image' | 'zip' | 'other';
+export type FileStatus = 'pending' | 'success' | 'error' | 'loading' | 'loadError';
 export interface SimpleFileItem {
   url: string;
   fileName: string;
@@ -166,15 +133,10 @@ const qiniuCore = (file: File, token: string, id: string) => {
   const item = list.value.find((item) => item.id === id);
   const newFileName = `${generateVisualNumber()}_${file.name}`;
   if (!item) return;
-  const observable = qiniu.upload(
-    file,
-    `${props.dirName}/${newFileName}`,
-    token,
-    {
-      fname: newFileName,
-    },
-  );
-  item.status = "pending";
+  const observable = qiniu.upload(file, `${props.dirName}/${newFileName}`, token, {
+    fname: newFileName
+  });
+  item.status = 'pending';
   observable.subscribe({
     next(res: {
       total: {
@@ -185,16 +147,16 @@ const qiniuCore = (file: File, token: string, id: string) => {
     },
     error(err) {
       console.log(err);
-      item.status = "error";
+      item.status = 'error';
     },
     complete(res: { key: string }) {
       item.url = `${QINIU_IMG_SERVER}${res.key}`;
-      if (item.type === "image") {
-        item.status = "loading";
+      if (item.type === 'image') {
+        item.status = 'loading';
       } else {
-        item.status = "success";
+        item.status = 'success';
       }
-    },
+    }
   });
 };
 
@@ -207,7 +169,7 @@ const fileChange = async (v: Event) => {
     token = data;
     const fileList: File[] = Array.prototype.slice.call(input.files || []);
     const realFileList: File[] = [];
-    if (props.accept !== "all") {
+    if (props.accept !== 'all') {
       fileList.forEach((file) => {
         if (!fileTypeValidate(file.name)) {
           ElMessage.error(`文件 ${file.name} 类型不符合`);
@@ -219,28 +181,28 @@ const fileChange = async (v: Event) => {
     for (const file of realFileList) {
       let type: FileType;
       if (imageTypes.includes(file.type)) {
-        type = "image";
+        type = 'image';
       } else if (zipTypes.includes(file.type)) {
-        type = "zip";
+        type = 'zip';
       } else {
-        type = "other";
+        type = 'other';
       }
       const id = uniqueId();
       list.value.push({
         id,
         file,
         fileName: file.name,
-        status: "pending",
+        status: 'pending',
         type,
         size: file.size,
         percent: 0,
-        url: null,
+        url: null
       });
       qiniuCore(file, token, id);
     }
   } catch (err) {
     console.log(err);
-    ElMessage.error("七牛云Token获取失败");
+    ElMessage.error('七牛云Token获取失败');
   } finally {
     tokenLoading.value = false;
   }
@@ -257,8 +219,8 @@ const handleDownload = (item: FileItem) => {
 
 const fileTypeValidate = (fileName: string) => {
   let check = false;
-  if (props.accept !== "all") {
-    const acceptArr = props.accept.split(",").map((item) => item.trim());
+  if (props.accept !== 'all') {
+    const acceptArr = props.accept.split(',').map((item) => item.trim());
     acceptArr.forEach((item) => {
       const index = fileName.indexOf(item);
       if (index + item.length === fileName.length) {
@@ -272,20 +234,18 @@ const fileTypeValidate = (fileName: string) => {
 };
 
 const handlePreview = (item: FileItem) => {
-  const index = list.value
-    .filter((v) => v.type === "image")
-    .findIndex((v) => v.id === item.id);
+  const index = list.value.filter((v) => v.type === 'image').findIndex((v) => v.id === item.id);
   viewerApi({
     options: {
       zIndex: 9999999,
-      initialViewIndex: index || 0,
+      initialViewIndex: index || 0
     },
     images: list.value.reduce((prev, next) => {
-      if (next.type === "image" && next.url) {
+      if (next.type === 'image' && next.url) {
         prev.push(next.url);
       }
       return prev;
-    }, [] as string[]),
+    }, [] as string[])
   });
 };
 
@@ -296,25 +256,25 @@ watch(
   },
   {
     immediate: true,
-    deep: true,
-  },
+    deep: true
+  }
 );
 watch(
   list,
   (nV) => {
-    emits("update:modelValue", nV);
+    emits('update:modelValue', nV);
   },
   {
     immediate: true,
-    deep: true,
-  },
+    deep: true
+  }
 );
 </script>
 <style lang="scss" scoped>
 .qiniuContainer {
   width: 100%;
   height: 100%;
-  input[type="file"] {
+  input[type='file'] {
     display: none;
   }
   & > .listBox {

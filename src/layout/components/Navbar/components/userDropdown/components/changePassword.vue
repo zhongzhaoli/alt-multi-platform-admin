@@ -1,15 +1,37 @@
 <template>
   <Teleport to="body">
-    <ConfirmDialog v-model="passwordVisible" width="400px" :submit-loading="loading" title="修改密码" @closed="closed" @submit="submitFun">
+    <ConfirmDialog
+      v-model="passwordVisible"
+      width="400px"
+      :submit-loading="loading"
+      title="修改密码"
+      @closed="closed"
+      @submit="submitFun"
+    >
       <el-form ref="formRef" :model="passwordValue" :rules="rules" label-position="top">
         <el-form-item prop="old_password" label="旧密码">
-          <el-input v-model="passwordValue.old_password" placeholder="请输入旧密码" type="password" show-password />
+          <el-input
+            v-model="passwordValue.old_password"
+            placeholder="请输入旧密码"
+            type="password"
+            show-password
+          />
         </el-form-item>
         <el-form-item prop="new_password" label="新密码">
-          <el-input v-model="passwordValue.new_password" placeholder="请输入新密码" type="password" show-password />
+          <el-input
+            v-model="passwordValue.new_password"
+            placeholder="请输入新密码"
+            type="password"
+            show-password
+          />
         </el-form-item>
         <el-form-item prop="confirm_password" label="确认密码">
-          <el-input v-model="passwordValue.confirm_password" placeholder="请再次输入密码" type="password" show-password />
+          <el-input
+            v-model="passwordValue.confirm_password"
+            placeholder="请再次输入密码"
+            type="password"
+            show-password
+          />
         </el-form-item>
       </el-form>
     </ConfirmDialog>

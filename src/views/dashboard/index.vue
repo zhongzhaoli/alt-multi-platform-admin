@@ -1,7 +1,5 @@
 <template>
   <div class="scrollContainer">
-    <FilterContainer v-model="testFilterValue" :columns="testColumnsValue" />
-    {{ testFilterValue }}
     <div v-loading="dashboardLoading" class="cardBox">
       <div class="header">
         <div class="title">
@@ -22,16 +20,8 @@
             </div>
           </div>
           <div class="selectBox">
-            <el-select
-              v-model="granularity"
-              size="small"
-              placement="bottom"
-              @change="getSalesData"
-            >
-              <template
-                v-for="(item, _index) in granularityRange"
-                :key="_index"
-              >
+            <el-select v-model="granularity" size="small" placement="bottom" @change="getSalesData">
+              <template v-for="(item, _index) in granularityRange" :key="_index">
                 <el-option :value="item.value" :label="item.label">
                   {{ item.label }}
                 </el-option>
@@ -44,28 +34,16 @@
         <div class="countBox">
           <el-row :gutter="normalPadding">
             <el-col :span="6">
-              <CountNumberCard
-                :count="27430.15"
-                count-prefix="$"
-                title="商品销售额"
-              />
+              <CountNumberCard :count="27430.15" count-prefix="$" title="商品销售额" />
             </el-col>
             <el-col :span="6">
-              <CountNumberCard
-                :count="29608.55"
-                count-prefix="$"
-                title="已支付金额"
-              />
+              <CountNumberCard :count="29608.55" count-prefix="$" title="已支付金额" />
             </el-col>
             <el-col :span="6">
               <CountNumberCard :count="871" :decimals="0" title="已售出" />
             </el-col>
             <el-col :span="6">
-              <CountNumberCard
-                :count="779"
-                :decimals="0"
-                title="已支付订单数"
-              />
+              <CountNumberCard :count="779" :decimals="0" title="已支付订单数" />
             </el-col>
           </el-row>
         </div>
@@ -88,10 +66,10 @@
           :table="{
             data: tableData,
             border: true,
-            loading,
+            loading
           }"
           :pagination="{
-            total,
+            total
           }"
           @page-change="getListFun"
         >
@@ -111,136 +89,38 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import CountNumberCard from "./components/countNumberCard.vue";
-import TsxElementTable from "tsx-element-table";
-import orderCharts from "./components/orderCharts.vue";
-import { getCssVariableValue } from "@/utils/css";
-import { DatePickerInstance } from "element-plus";
-import { Calendar } from "@element-plus/icons-vue";
-import ProductItem from "@/components/ProductItem/index.vue";
-import * as API_DASHBOARD from "@/api/dashboard";
-import * as config from "./config";
-import moment from "moment-timezone";
-import { EChartsOption } from "echarts";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import FilterContainer from "@/components/FilterContainer_v1/index.vue";
-import { FilterColumnProps } from "@/components/FilterContainer_v1/types";
+import { computed, ref } from 'vue';
+import CountNumberCard from './components/countNumberCard.vue';
+import TsxElementTable from 'tsx-element-table';
+import orderCharts from './components/orderCharts.vue';
+import { getCssVariableValue } from '@/utils/css';
+import { DatePickerInstance } from 'element-plus';
+import { Calendar } from '@element-plus/icons-vue';
+import ProductItem from '@/components/ProductItem/index.vue';
+import * as API_DASHBOARD from '@/api/dashboard';
+import * as config from './config';
+import moment from 'moment-timezone';
+import { EChartsOption } from 'echarts';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
 
-const testFilterValue = ref({});
-const testColumnsValue = ref<FilterColumnProps[]>([
-  {
-    label: "测试1",
-    prop: "input",
-    multiple: true,
-    width: 300,
-    type: "input",
-    arrayHandle: (val: any[]) => JSON.stringify(val),
-    prefixSelect: {
-      width: 110,
-      options: [
-        {
-          label: "其他测试1",
-          value: "other1",
-        },
-        {
-          label: "其他测试2",
-          value: "other2",
-        },
-      ],
-    },
-  },
-  {
-    label: "测试1",
-    prop: "select",
-    width: 300,
-    type: "select",
-    multiple: true,
-    arrayHandle: (val: any[]) => JSON.stringify(val),
-    selectOptions: [
-      {
-        label: "值1",
-        value: "value1",
-      },
-      {
-        label: "值2",
-        value: "value2",
-      },
-    ],
-    prefixSelect: {
-      width: 110,
-      options: [
-        {
-          label: "下拉测试1",
-          value: "select1",
-        },
-        {
-          label: "下拉测试2",
-          value: "select2",
-        },
-      ],
-    },
-  },
-  {
-    label: "测试3",
-    prop: "testDtte",
-    type: "date",
-    width: 240,
-    prefixSelect: {
-      width: 100,
-      options: [
-        {
-          label: "创建时间",
-          value: "create_time_date",
-        },
-        {
-          label: "更新时间",
-          value: "update_time_date",
-        },
-      ],
-    },
-  },
-  {
-    label: "测试4",
-    prop: "testDtteRange",
-    type: "dateRange",
-    width: 290,
-    prefixSelect: {
-      width: 100,
-      options: [
-        {
-          label: "创建时间",
-          value: "create_time_dateRange",
-        },
-        {
-          label: "更新时间",
-          value: "update_time_dateRange",
-        },
-      ],
-    },
-  },
-]);
+let normalPadding: string | number = getCssVariableValue('--normal-padding');
+normalPadding = parseFloat((normalPadding as string).replace('px', ''));
 
-let normalPadding: string | number = getCssVariableValue("--normal-padding");
-normalPadding = parseFloat((normalPadding as string).replace("px", ""));
-
-const granularity = ref("hour");
+const granularity = ref('hour');
 const datePickerRef = ref<DatePickerInstance | null>(null);
 const dateRange = ref<[Date, Date]>([new Date(), new Date()]);
 const dateRangeText = computed(() => {
   const [start, end] = dateRange.value;
   if (start.getTime() === end.getTime()) {
-    return moment(start).format("YYYY-MM-DD");
+    return moment(start).format('YYYY-MM-DD');
   } else {
-    return `${moment(start).format("YYYY-MM-DD")} / ${moment(end).format(
-      "YYYY-MM-DD",
-    )}`;
+    return `${moment(start).format('YYYY-MM-DD')} / ${moment(end).format('YYYY-MM-DD')}`;
   }
 });
 const granularityRange = computed(() => {
   const [start, end] = dateRange.value;
-  const diff = moment(end).diff(moment(start), "days") + 1;
+  const diff = moment(end).diff(moment(start), 'days') + 1;
   if (diff < 7 && diff >= 1) {
     return config.levelOneGranularity;
   } else if (diff < 360 && diff >= 7) {
@@ -255,9 +135,7 @@ const openDatePicker = () => {
 };
 
 const datePickerChange = () => {
-  const index = granularityRange.value.findIndex(
-    (item) => item.value === granularity.value,
-  );
+  const index = granularityRange.value.findIndex((item) => item.value === granularity.value);
   if (index < 0) {
     granularity.value = granularityRange.value[0].value;
   }
@@ -270,14 +148,14 @@ const getSalesData = async () => {
   dashboardLoading.value = true;
   try {
     const { data } = await API_DASHBOARD.getDashboardData({
-      start_date: moment(dateRange.value[0]).format("YYYY-MM-DD"),
-      end_date: moment(dateRange.value[1]).format("YYYY-MM-DD"),
-      granularity: granularity.value,
+      start_date: moment(dateRange.value[0]).format('YYYY-MM-DD'),
+      end_date: moment(dateRange.value[1]).format('YYYY-MM-DD'),
+      granularity: granularity.value
     });
     cloneOptions = config.generateOptions(
       data?.date_range || [],
       data?.list || [],
-      data?.history || [],
+      data?.history || []
     );
   } catch (err) {
     console.log(err);
@@ -297,7 +175,7 @@ const getListFun = async () => {
   try {
     const { data } = await API_DASHBOARD.getSkuData({
       page: currentPage.value,
-      page_size: pageSize.value,
+      page_size: pageSize.value
     });
     tableData.value = data?.list || [];
     total.value = data?.total || 0;

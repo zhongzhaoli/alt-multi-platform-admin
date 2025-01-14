@@ -5,6 +5,7 @@
         v-model="filterValue"
         :columns="config.filterColumns"
         @submit="getListFun"
+        @reset="getListFun"
       >
         <!-- <template #shopId="{ form, row }">
           <SelectTiktokStore v-model="form[row.prop]" @change="getListFun" />
@@ -19,14 +20,14 @@
         :table="{
           data: tableData,
           border: true,
-          loading,
+          loading
         }"
         :handle="{
           show: true,
-          rightColumns: config.handleRightColumns,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
-          total,
+          total
         }"
         @page-change="getListFun"
         @table-refresh="getListFun"
@@ -35,12 +36,9 @@
           <div class="frequencyText">更新频率：每 6 个小时</div>
         </template>
         <template #table-shopId="{ row }">
-          <RenderCopyIcon
-            :text="row.shopId"
-            type="primary"
-            title="店铺ID"
-            margin="r"
-          />{{ row.shopId }}
+          <RenderCopyIcon :text="row.shopId" type="primary" title="店铺ID" margin="r" />{{
+            row.shopId
+          }}
         </template>
         <template #table-productInfo="{ row }">
           <ProductItem
@@ -52,12 +50,12 @@
             :desc-list="[
               {
                 text: row.productId,
-                prefix: 'ID',
+                prefix: 'ID'
               },
               {
                 text: row.productSku,
-                prefix: 'SKU',
-              },
+                prefix: 'SKU'
+              }
             ]"
           />
         </template>
@@ -70,7 +68,7 @@
             effect="plain"
             :type="row.stockWarning ? 'primary' : 'danger'"
           >
-            {{ row.stockWarning ? "库存正常" : "库存低于 5 个" }}
+            {{ row.stockWarning ? '库存正常' : '库存低于 5 个' }}
           </el-tag>
         </template>
       </TsxElementTable>
@@ -78,20 +76,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import FilterContainer from "@/components/FilterContainer/index.vue";
-import TsxElementTable from "tsx-element-table";
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import TsxElementTable from 'tsx-element-table';
 // import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
-import * as config from "./config";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
-import { ref } from "vue";
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import * as config from './config';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
+import { ref } from 'vue';
 import {
   getTiktokProductList,
   type TiktokProductProps,
-  type TiktokProductFilterProps,
-} from "@/api/product/tiktok";
-import ProductItem from "@/components/ProductItem/index.vue";
-import { RenderCopyIcon } from "@/utils";
+  type TiktokProductFilterProps
+} from '@/api/product/tiktok';
+import ProductItem from '@/components/ProductItem/index.vue';
+import { RenderCopyIcon } from '@/utils';
 
 const filterValue = ref<Partial<TiktokProductFilterProps>>({});
 const currentPage = ref(PAGE);
@@ -105,7 +103,7 @@ const getListFun = async () => {
     const { data } = await getTiktokProductList({
       page: currentPage.value,
       pageSize: pageSize.value,
-      ...filterValue.value,
+      ...filterValue.value
     });
     tableData.value = data?.list || [];
     total.value = data?.total || 0;

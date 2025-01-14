@@ -146,7 +146,8 @@ const toLastView = (visitedViews: TagView[]) => {
   // 没有页面了，跳转到首页
   if (visitedViews.length === 0) return router.push('/');
   const latestView = visitedViews.slice(-1)[0];
-  if (latestView && latestView.path) return router.push({ path: latestView.path, query: latestView.query });
+  if (latestView && latestView.path)
+    return router.push({ path: latestView.path, query: latestView.query });
 };
 
 // 筛选出固定在tagsView上的tag

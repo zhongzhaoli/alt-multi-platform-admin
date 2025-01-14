@@ -5,6 +5,6 @@ import { request } from '@/utils/request';
 export function getQiniuToken(): Promise<ResponseJson<string>> {
   return request({
     url: '/qiniu/temp/token',
-    method: 'get',
+    method: 'get'
   });
 }

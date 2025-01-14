@@ -12,7 +12,3 @@ const toggleCollapse = () => {
   appStore.toggleSidebarCollapsed();
 };
 </script>
-<style lang="scss" scoped>
-.hamburgerContainer {
-}
-</style>

@@ -1,10 +1,10 @@
-import { mockURL, ResponsePageJson } from "@/config/request";
-import { request } from "@/utils/request";
+import { mockURL, ResponsePageJson } from '@/config/request';
+import { request } from '@/utils/request';
 
 export enum ProductStatusEnum {
-  "UNPUBLISHED" = "UNPUBLISHED",
-  "PUBLISHED" = "PUBLISHED",
-  "ERROR" = "ERROR",
+  'UNPUBLISHED' = 'UNPUBLISHED',
+  'PUBLISHED' = 'PUBLISHED',
+  'ERROR' = 'ERROR'
 }
 
 export interface TiktokProductProps {
@@ -33,12 +33,12 @@ export interface GetProductDto extends Partial<TiktokProductFilterProps> {
 }
 
 export function getTiktokProductList(
-  params: GetProductDto,
+  params: GetProductDto
 ): Promise<ResponsePageJson<TiktokProductProps>> {
   return request({
     baseURL: mockURL,
-    url: "/product/tiktok/list",
-    method: "get",
-    params,
+    url: '/product/tiktok/list',
+    method: 'get',
+    params
   });
 }

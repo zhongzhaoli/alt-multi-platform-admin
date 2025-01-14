@@ -1,11 +1,11 @@
-import { ResponsePageJson, walmartURL } from "@/config/request";
-import { request } from "@/utils/request";
+import { ResponsePageJson, walmartURL } from '@/config/request';
+import { request } from '@/utils/request';
 
 export interface ListingProps {
   all_count: number;
   for_sale_count: number;
   listing_count: number;
-  platform: "Walmart" | "Tiktok";
+  platform: 'Walmart' | 'Tiktok';
   remove_count: number;
   shop_id: string;
   shop_name: string;
@@ -25,46 +25,42 @@ export interface GetListingDto extends Partial<ListingFilterProps> {
   order?: string;
 }
 export function getWalmartListingList(
-  params: GetListingDto,
+  params: GetListingDto
 ): Promise<ResponsePageJson<ListingProps>> {
   return request({
     baseURL: walmartURL,
-    url: "/walmart/board/listing",
-    method: "get",
-    params,
+    url: '/walmart/board/listing',
+    method: 'get',
+    params
   });
 }
 
 export function getTiktokListingList(
-  params: GetListingDto,
+  params: GetListingDto
 ): Promise<ResponsePageJson<ListingProps>> {
   return request({
     baseURL: walmartURL,
-    url: "/tk/board/listing",
-    method: "get",
-    params,
+    url: '/tk/board/listing',
+    method: 'get',
+    params
   });
 }
 
-export function getWalmartSummary(
-  params: GetListingDto,
-): Promise<ResponsePageJson<ListingProps>> {
+export function getWalmartSummary(params: GetListingDto): Promise<ResponsePageJson<ListingProps>> {
   console.log(walmartURL);
   return request({
     baseURL: walmartURL,
-    url: "/walmart/board/listing/summary/",
-    method: "get",
-    params,
+    url: '/walmart/board/listing/summary/',
+    method: 'get',
+    params
   });
 }
 
-export function getTiktokSummary(
-  params: GetListingDto,
-): Promise<ResponsePageJson<ListingProps>> {
+export function getTiktokSummary(params: GetListingDto): Promise<ResponsePageJson<ListingProps>> {
   return request({
     baseURL: walmartURL,
-    url: "/tk/board/listing/summary/",
-    method: "get",
-    params,
+    url: '/tk/board/listing/summary/',
+    method: 'get',
+    params
   });
 }

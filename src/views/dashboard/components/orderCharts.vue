@@ -4,9 +4,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type EChartsOption } from "echarts";
-import { watchEffect, Ref, ref, unref } from "vue";
-import { useEcharts } from "@/hooks/useEcharts";
+import { type EChartsOption } from 'echarts';
+import { watchEffect, Ref, ref, unref } from 'vue';
+import { useEcharts } from '@/hooks/useEcharts';
 const target = ref<HTMLElement | null>(null);
 const props = defineProps<{
   options: EChartsOption;

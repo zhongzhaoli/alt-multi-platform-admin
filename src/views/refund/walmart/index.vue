@@ -5,6 +5,7 @@
         v-model="filterValue"
         :columns="config.filterColumns"
         @submit="getListFun"
+        @reset="getListFun"
       >
         <!-- <template #shopId="{ form, row }"> -->
         <!-- <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" /> -->
@@ -19,14 +20,14 @@
         :table="{
           data: tableData,
           border: true,
-          loading,
+          loading
         }"
         :handle="{
           show: true,
-          rightColumns: config.handleRightColumns,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
-          total,
+          total
         }"
         @table-refresh="getListFun"
         @page-change="getListFun"
@@ -43,11 +44,7 @@
               title="采购订单号"
               margin="r"
             />
-            <TextEllipsis
-              :line="1"
-              placement="right"
-              :text="`${row.purchase_order_id || '-'}`"
-            />
+            <TextEllipsis :line="1" placement="right" :text="`${row.purchase_order_id || '-'}`" />
           </div>
           <div class="d-inline-flex">
             CO：
@@ -57,11 +54,7 @@
               title="客户订单号"
               margin="r"
             />
-            <TextEllipsis
-              :line="1"
-              placement="right"
-              :text="`${row.customer_order_id || '-'}`"
-            />
+            <TextEllipsis :line="1" placement="right" :text="`${row.customer_order_id || '-'}`" />
           </div>
         </template>
         <template #table-productInfo="{ row }">
@@ -73,13 +66,11 @@
               :desc-list="[
                 {
                   text: row.product_sku,
-                  prefix: 'SKU',
-                },
+                  prefix: 'SKU'
+                }
               ]"
             />
-            <div class="quantityAmount">
-              x{{ row.status_quantity_amount || 0 }}
-            </div>
+            <div class="quantityAmount"> x{{ row.status_quantity_amount || 0 }} </div>
           </div>
         </template>
       </TsxElementTable>
@@ -87,19 +78,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import FilterContainer from "@/components/FilterContainer/index.vue";
-import TsxElementTable from "tsx-element-table";
-import ProductItem from "@/components/ProductItem/index.vue";
-import * as config from "./config";
-import { ref } from "vue";
-import { PAGE, PAGE_SIZE } from "@/constants/app";
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import TsxElementTable from 'tsx-element-table';
+import ProductItem from '@/components/ProductItem/index.vue';
+import * as config from './config';
+import { ref } from 'vue';
+import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   type RefundWalmartProps,
   getWalmartRefundList,
-  type WalmartRefunFilterProps,
-} from "@/api/refund/walmart";
-import { RenderCopyIcon } from "@/utils/index";
-import TextEllipsis from "@/components/TextEllipsis/index.vue";
+  type WalmartRefunFilterProps
+} from '@/api/refund/walmart';
+import { RenderCopyIcon } from '@/utils/index';
+import TextEllipsis from '@/components/TextEllipsis/index.vue';
 
 const filterValue = ref<Partial<WalmartRefunFilterProps>>({});
 const tableData = ref<RefundWalmartProps[]>([]);
@@ -113,7 +104,7 @@ const getListFun = async () => {
     const { data } = await getWalmartRefundList({
       page: currentPage.value,
       page_size: pageSize.value,
-      ...filterValue.value,
+      ...filterValue.value
     });
     tableData.value = data?.list || [];
     total.value = data?.total || 0;

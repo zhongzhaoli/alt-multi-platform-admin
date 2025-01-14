@@ -16,7 +16,8 @@ export const useTagsViewStore = defineStore('tagsView', () => {
     const index = visitedViews.value.findIndex((v) => v.path === view.path);
     if (index !== -1) {
       // 已存在，处理query参数
-      visitedViews.value[index].fullPath !== view.fullPath && (visitedViews.value[index] = { ...view });
+      visitedViews.value[index].fullPath !== view.fullPath &&
+        (visitedViews.value[index] = { ...view });
     } else {
       // 不存在
       visitedViews.value.push({ ...view });
@@ -50,7 +51,9 @@ export const useTagsViewStore = defineStore('tagsView', () => {
 
   // 删除操作 - 其他
   const delOthersVisitedView = (view: TagView) => {
-    visitedViews.value = visitedViews.value.filter((tag) => tag.meta?.affix || tag.path === view.path);
+    visitedViews.value = visitedViews.value.filter(
+      (tag) => tag.meta?.affix || tag.path === view.path
+    );
   };
   const delOthersCachedView = (view: TagView) => {
     if (typeof view.name !== 'string') return;
