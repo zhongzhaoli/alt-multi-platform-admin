@@ -9,7 +9,12 @@
       >
         <slot :name="column.prop" v-bind="{ row: column, form: filterValue, change: preSubmit }">
           <template v-if="column.type === 'input'">
-            <Input v-model="filterValue" :column="column" @submit="preSubmit" />
+            <Input v-model="filterValue" :column="column" @submit="preSubmit">
+              <slot
+                :name="`${column.prop}-main`"
+                v-bind="{ row: column, form: filterValue, change: preSubmit }"
+              />
+            </Input>
           </template>
           <template v-else-if="column.type === 'select'">
             <Select v-model="filterValue" :column="column" @change="preSubmit" />

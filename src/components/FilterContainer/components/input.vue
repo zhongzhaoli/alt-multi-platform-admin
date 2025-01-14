@@ -7,37 +7,39 @@
       />
     </template>
     <div class="mainComponent">
-      <el-input
-        v-model="fValue[column.prop]"
-        :placeholder="column.placeholder || column.label || '请输入'"
-        @keydown.enter="inputEnter"
-      >
-        <template v-if="!!column.multiple" #suffix>
-          <el-popover ref="popoverRef" placement="bottom" :width="250" trigger="click">
-            <template #reference>
-              <div
-                class="btnBox"
-                :class="{
-                  isActive: !!fValue[`${column.prop}_${MULTIPLE_INPUT_ACTIVE}`]
-                }"
-              >
-                <i class="ri-list-check-3" />
+      <slot name="default" v-bind="{ row: column, form: fValue, change: submit }">
+        <el-input
+          v-model="fValue[column.prop]"
+          :placeholder="column.placeholder || column.label || '请输入'"
+          @keydown.enter="inputEnter"
+        >
+          <template v-if="!!column.multiple" #suffix>
+            <el-popover ref="popoverRef" placement="bottom" :width="250" trigger="click">
+              <template #reference>
+                <div
+                  class="btnBox"
+                  :class="{
+                    isActive: !!fValue[`${column.prop}_${MULTIPLE_INPUT_ACTIVE}`]
+                  }"
+                >
+                  <i class="ri-list-check-3" />
+                </div>
+              </template>
+              <el-input
+                v-model="fValue[`${column.prop}_${MULTIPLE_INPUT_VALUE}`]"
+                :input-style="{ fontSize: '12px' }"
+                type="textarea"
+                :rows="5"
+                placeholder="精确搜索，一行一项，最多支持100行"
+              />
+              <div class="d-flex justify-end align-center" style="margin-top: 10px">
+                <el-button size="small" @click="clear"> 清空 </el-button>
+                <el-button size="small" type="primary" @click="submit"> 搜索 </el-button>
               </div>
-            </template>
-            <el-input
-              v-model="fValue[`${column.prop}_${MULTIPLE_INPUT_VALUE}`]"
-              :input-style="{ fontSize: '12px' }"
-              type="textarea"
-              :rows="5"
-              placeholder="精确搜索，一行一项，最多支持100行"
-            />
-            <div class="d-flex justify-end align-center" style="margin-top: 10px">
-              <el-button size="small" @click="clear"> 清空 </el-button>
-              <el-button size="small" type="primary" @click="submit"> 搜索 </el-button>
-            </div>
-          </el-popover>
-        </template>
-      </el-input>
+            </el-popover>
+          </template>
+        </el-input>
+      </slot>
     </div>
   </div>
 </template>
