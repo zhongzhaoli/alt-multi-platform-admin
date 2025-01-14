@@ -1,5 +1,7 @@
 <template>
   <div class="scrollContainer">
+    <FilterContainer v-model="testFilterValue" :columns="testColumnsValue" />
+    {{ testFilterValue }}
     <div v-loading="dashboardLoading" class="cardBox">
       <div class="header">
         <div class="title">
@@ -123,6 +125,61 @@ import moment from "moment-timezone";
 import { EChartsOption } from "echarts";
 import { PAGE, PAGE_SIZE } from "@/constants/app";
 import TextEllipsis from "@/components/TextEllipsis/index.vue";
+import FilterContainer from "@/components/FilterContainer_v1/index.vue";
+import { FilterColumnProps } from "@/components/FilterContainer_v1/types";
+
+const testFilterValue = ref({});
+const testColumnsValue = ref<FilterColumnProps[]>([
+  {
+    label: "测试1",
+    prop: "input",
+    multiple: true,
+    width: 300,
+    type: "input",
+    prefixSelect: {
+      width: 110,
+      options: [
+        {
+          label: "其他测试1",
+          value: "other1",
+        },
+        {
+          label: "其他测试2",
+          value: "other2",
+        },
+      ],
+    },
+  },
+  {
+    label: "测试1",
+    prop: "select",
+    width: 300,
+    type: "select",
+    selectOptions: [
+      {
+        label: "值1",
+        value: "value1",
+      },
+      {
+        label: "值2",
+        value: "value2",
+      },
+    ],
+    prefixSelect: {
+      width: 110,
+      options: [
+        {
+          label: "下拉测试1",
+          value: "select1",
+        },
+        {
+          label: "下拉测试2",
+          value: "select2",
+        },
+      ],
+    },
+  },
+]);
 
 let normalPadding: string | number = getCssVariableValue("--normal-padding");
 normalPadding = parseFloat((normalPadding as string).replace("px", ""));

@@ -49,6 +49,7 @@ export function getTiktokListingList(
 export function getWalmartSummary(
   params: GetListingDto,
 ): Promise<ResponsePageJson<ListingProps>> {
+  console.log(walmartURL);
   return request({
     baseURL: walmartURL,
     url: "/walmart/board/listing/summary/",

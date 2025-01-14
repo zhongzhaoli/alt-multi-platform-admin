@@ -7,7 +7,7 @@ export enum ProductStatusEnum {
   "OUT_OF_STOCK" = "OUT_OF_STOCK",
 }
 
-export interface LocalProductProps {
+export interface LocalProductChildrenProps {
   platform: string;
   productImageUrl: string;
   productName: string;
@@ -19,6 +19,14 @@ export interface LocalProductProps {
   price: number;
   deliveryMethod: boolean;
   deliveryTime: boolean;
+}
+
+export interface LocalProductProps {
+  brand: string;
+  pasin: string;
+  shop_name: string;
+  id: number;
+  children: LocalProductChildrenProps[];
 }
 
 export interface LocalProductFilterProps {
