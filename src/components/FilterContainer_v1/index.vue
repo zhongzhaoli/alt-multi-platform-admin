@@ -48,7 +48,7 @@ import Input from "./components/input.vue";
 import Select from "./components/select.vue";
 import Date from "./components/date.vue";
 import DateRange from "./components/dateRange.vue";
-import { reactive, watch } from "vue";
+import { nextTick, reactive, watch } from "vue";
 
 const props = defineProps<FilterContainerComponentProps>();
 const emits = defineEmits(["update:modelValue", "submit", "reset"]);
@@ -199,14 +199,18 @@ const reset = () => {
   Object.keys(filterValue).forEach((key) => {
     filterValue[key] = null;
   });
-  props.resetFun && props.resetFun();
-  emits("reset");
+  nextTick(() => {
+    props.resetFun && props.resetFun();
+    emits("reset");
+  });
 };
 
 const preSubmit = () => {
-  const newValue = dataHandle(cloneDeep(filterValue));
-  props.submitFun && props.submitFun(newValue);
-  emits("submit", newValue);
+  const newValue = dataHandle(nullHandle(cloneDeep(filterValue)));
+  nextTick(() => {
+    props.submitFun && props.submitFun(newValue);
+    emits("submit", newValue);
+  });
 };
 </script>
 <style lang="scss" scoped>
