@@ -123,10 +123,12 @@ const granularityRange = computed(() => {
   const diff = moment(end).diff(moment(start), 'days') + 1;
   if (diff < 7 && diff >= 1) {
     return config.levelOneGranularity;
+  } else if (diff < 360 && diff >= 31) {
+    return config.levelThreeGranularity;
   } else if (diff < 360 && diff >= 7) {
     return config.levelTwoGranularity;
   } else {
-    return config.levelThreeGranularity;
+    return config.levelFourGranularity;
   }
 });
 
@@ -152,11 +154,7 @@ const getSalesData = async () => {
       end_date: moment(dateRange.value[1]).format('YYYY-MM-DD'),
       granularity: granularity.value
     });
-    cloneOptions = config.generateOptions(
-      data?.date_range || [],
-      data?.list || [],
-      data?.history || []
-    );
+    cloneOptions = config.generateOptions(data?.list || [], data?.history || []);
   } catch (err) {
     console.log(err);
   } finally {

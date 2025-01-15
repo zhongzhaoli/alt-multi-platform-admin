@@ -6,10 +6,16 @@ interface getDashboardDataDto {
   end_date: string;
   granularity: string;
 }
+
+export interface ListItemProps {
+  desc: string;
+  value: number;
+  xText: string;
+}
+
 interface DashboardProps {
-  list: number[];
-  history: number[];
-  date_range: string[];
+  list: ListItemProps[];
+  history: ListItemProps[];
 }
 export function getDashboardData(
   params: getDashboardDataDto

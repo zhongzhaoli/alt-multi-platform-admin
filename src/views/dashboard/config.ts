@@ -1,3 +1,4 @@
+import { ListItemProps } from '@/api/dashboard';
 import { EChartsOption } from 'echarts';
 import { TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
@@ -33,8 +34,27 @@ export const levelTwoGranularity: GranularityProps[] = [
     value: 'week'
   }
 ];
-// 360<=x
+// 31<=x<360
 export const levelThreeGranularity: GranularityProps[] = [
+  {
+    label: '小时',
+    value: 'hour'
+  },
+  {
+    label: '天',
+    value: 'day'
+  },
+  {
+    label: '周',
+    value: 'week'
+  },
+  {
+    label: '月',
+    value: 'month'
+  }
+];
+// 360<=x
+export const levelFourGranularity: GranularityProps[] = [
   {
     label: '小时',
     value: 'hour'
@@ -50,14 +70,13 @@ export const levelThreeGranularity: GranularityProps[] = [
 ];
 
 export const generateOptions = (
-  xAxisData: string[],
-  series: number[],
-  history: number[]
+  series: ListItemProps[],
+  history: ListItemProps[]
 ): EChartsOption => {
   return {
     xAxis: {
       type: 'category',
-      data: xAxisData,
+      data: series.map((item) => item.xText),
       axisLine: {
         lineStyle: {
           color: '#dce1ee'
@@ -93,13 +112,10 @@ export const generateOptions = (
         let rowsText: string = '';
         for (let index = 0; index < params.length; index++) {
           const row = params[index];
-          const { date, value } = row.data;
-          rowsText += `${row.marker}${date}：${value}`;
-          if (index < params.length - 1) {
-            rowsText += `</br>`;
-          }
+          const { desc, value } = row.data;
+          rowsText += `<div>${row.marker}${desc}：<b>$ ${value}</b></div>`;
         }
-        return rowsText;
+        return `<div style='font-size: 13px;'>${rowsText}</div>`;
       }
     },
     series: [

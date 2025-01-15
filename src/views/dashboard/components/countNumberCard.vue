@@ -23,6 +23,10 @@ withDefaults(defineProps<ComponentProps>(), {
   border: 1px #eaeaea solid;
   border-radius: 4px;
   padding: var(--normal-padding) 16px;
+  transition: all 0.3s;
+  &:hover {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  }
   & > .title {
     font-size: 14px;
     color: #616161;
