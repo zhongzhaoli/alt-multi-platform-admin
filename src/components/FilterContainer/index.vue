@@ -53,12 +53,12 @@ import Input from './components/input.vue';
 import Select from './components/select.vue';
 import Date from './components/date.vue';
 import DateRange from './components/dateRange.vue';
-import { nextTick, reactive, watch } from 'vue';
+import { nextTick, shallowReactive, watch } from 'vue';
 
 const props = defineProps<FilterContainerComponentProps>();
 const emits = defineEmits(['update:modelValue', 'submit', 'reset']);
 
-let filterValue = reactive(cloneDeep(props.modelValue));
+let filterValue = shallowReactive(cloneDeep(props.modelValue));
 // 单向获取
 const columnsValue = useVModel(props, 'columns', undefined, {
   clone: (values: FilterColumnProps[]) => {

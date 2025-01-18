@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core';
 import { MULTIPLE_INPUT_VALUE, MULTIPLE_INPUT_ACTIVE, PREFIX_SELECT_VALUE } from '../constants';
-import { ref } from 'vue';
+import { shallowRef } from 'vue';
 import { PopoverInstance } from 'element-plus';
 import PrefixSelect from './prefixSelect.vue';
 import { InputColumnProps } from '../types';
@@ -62,7 +62,7 @@ const fValue = useVModel(props, 'modelValue', emits, {
   deep: true
 });
 
-const popoverRef = ref<PopoverInstance | null>(null);
+const popoverRef = shallowRef<PopoverInstance | null>(null);
 
 const clear = () => {
   fValue.value[`${props.column.prop}_${MULTIPLE_INPUT_VALUE}`] = '';

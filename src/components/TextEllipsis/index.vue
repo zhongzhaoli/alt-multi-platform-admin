@@ -15,7 +15,7 @@
   </el-tooltip>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, shallowRef, watch } from 'vue';
 
 interface ComponentProps {
   text: string | number;
@@ -45,8 +45,8 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   wordBreak: true
 });
 
-const textEllipsisRef = ref<HTMLElement | null>(null);
-const disabledTooptip = ref(false);
+const textEllipsisRef = shallowRef<HTMLElement | null>(null);
+const disabledTooptip = shallowRef(false);
 
 function getTextWidth(text: string) {
   const element = textEllipsisRef.value;
@@ -63,8 +63,8 @@ function getTextWidth(text: string) {
   }
 }
 
-const isMounted = ref(false);
-const needCal = ref(false);
+const isMounted = shallowRef(false);
+const needCal = shallowRef(false);
 watch(
   () => props.text,
   () => {

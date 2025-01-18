@@ -67,7 +67,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
 import FileImage from '@/assets/file.png';
 import ZipImage from '@/assets/zip.png';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
@@ -123,7 +123,7 @@ export interface FileItem {
   url: null | string;
 }
 const list = ref<FileItem[]>(props.modelValue);
-const tokenLoading = ref(false);
+const tokenLoading = shallowRef(false);
 
 const selectFile = () => {
   fileRef.value?.click();

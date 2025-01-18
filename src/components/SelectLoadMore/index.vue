@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core';
-import { ref, onMounted, unref, onDeactivated, onBeforeUnmount, onActivated } from 'vue';
+import { onMounted, unref, onDeactivated, onBeforeUnmount, onActivated, shallowRef } from 'vue';
 
 type idType = string | number;
 
@@ -56,7 +56,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   remoteMethod: () => {}
 });
 const emits = defineEmits(['loadMore', 'update:modelValue', 'change']);
-const domElementNode = ref<HTMLElement | null>(null);
+const domElementNode = shallowRef<HTMLElement | null>(null);
 
 const selectValue = useVModel(props, 'modelValue', emits);
 
@@ -95,7 +95,7 @@ const registerEventListener = () => {
   }
 };
 
-const isRegister = ref(false);
+const isRegister = shallowRef(false);
 
 onMounted(() => {
   registerEventListener();

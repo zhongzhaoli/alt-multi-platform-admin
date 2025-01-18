@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import { useTransition, TransitionPresets } from '@vueuse/core';
-import { ref, computed, unref, onMounted, watch, watchEffect } from 'vue';
+import { computed, unref, onMounted, watch, watchEffect, shallowRef } from 'vue';
 import { isNumber } from 'lodash-es';
 
 interface CountUpProps {
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<CountUpProps>(), {
   separator: ','
 });
 
-const source = ref<number>(props.startVal);
+const source = shallowRef<number>(props.startVal);
 let outputValue = useTransition(source);
 const value = computed(() => formatNumber(unref(outputValue)));
 

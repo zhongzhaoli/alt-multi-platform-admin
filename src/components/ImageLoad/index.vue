@@ -36,7 +36,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch, nextTick } from 'vue';
+import { onBeforeUnmount, watch, nextTick, shallowRef } from 'vue';
 import axios, { CancelTokenSource } from 'axios';
 const cancelToken = axios.CancelToken;
 
@@ -54,14 +54,14 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   preview: true
 });
 
-const blob = ref('');
-const imageOnLoad = ref(false);
-const realLoad = ref(false);
-const success = ref(false);
-const target = ref<Element>();
-const loading = ref(false);
+const blob = shallowRef('');
+const imageOnLoad = shallowRef(false);
+const realLoad = shallowRef(false);
+const success = shallowRef(false);
+const target = shallowRef<Element>();
+const loading = shallowRef(false);
 
-const originSrc = ref<string | null>('');
+const originSrc = shallowRef<string | null>('');
 let source: CancelTokenSource;
 
 // 开始加载

@@ -33,7 +33,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, unref, nextTick } from 'vue';
+import { ref, watch, unref, nextTick, shallowRef } from 'vue';
 
 type ArrayValueType = string[];
 type ValueType = string;
@@ -58,8 +58,8 @@ const emits = defineEmits([
 ]);
 
 const formValueArray = ref<Set<string>>(new Set());
-const formValue = ref<ValueType>('');
-const formValueArrayText = ref<string>('');
+const formValue = shallowRef<ValueType>('');
+const formValueArrayText = shallowRef<string>('');
 
 const submit = () => {
   updateData();

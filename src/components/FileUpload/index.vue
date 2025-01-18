@@ -60,7 +60,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, unref } from 'vue';
+import { computed, ref, shallowRef, unref } from 'vue';
 import { baseURL } from '@/config/request';
 import { useUserStore } from '@/store/modules/user';
 import { request } from '@/utils/request';
@@ -89,8 +89,8 @@ const emits = defineEmits(['success', 'error', 'partSuccess']);
 
 const userStore = useUserStore();
 const token = computed(() => userStore.token);
-const uploadRef = ref<UploadInstance>();
-const disabled = ref(false);
+const uploadRef = shallowRef<UploadInstance>();
+const disabled = shallowRef(false);
 // 提交所有文件
 const submit = () => {
   if (!fileList.value.length) {
