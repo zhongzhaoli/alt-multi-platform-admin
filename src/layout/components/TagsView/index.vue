@@ -39,7 +39,7 @@ import { useRouteListener } from '@/hooks/useRouteListener';
 import { useRoute, useRouter, RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router';
 import ScrollPane from './components/ScrollPane/index.vue';
 import { useRouterStore } from '@/store/modules/router';
-import { onMounted, ref, unref } from 'vue';
+import { onMounted, shallowRef, unref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { RouterLink } from 'vue-router';
 import { PageEnum } from '@/router/constant';
@@ -48,22 +48,22 @@ const { addRouteListener } = useRouteListener();
 const route = useRoute();
 const router = useRouter();
 const routerStore = useRouterStore();
-const contextmenu = ref<HTMLElement>();
-const tagsViewRef = ref<HTMLElement>();
+const contextmenu = shallowRef<HTMLElement>();
+const tagsViewRef = shallowRef<HTMLElement>();
 
 // TagRef的集合
-const tagRefs = ref<InstanceType<typeof RouterLink>[]>([]);
+const tagRefs = shallowRef<InstanceType<typeof RouterLink>[]>([]);
 
 // 固定在TagsView上的菜单集合
 let affixTags: TagView[] = [];
 
 // 右键菜单一些参数
-const menuPosition = ref<{ left: number; top: number }>({
+const menuPosition = shallowRef<{ left: number; top: number }>({
   left: 0,
   top: 0
 });
-const visible = ref<boolean>(false);
-const selectedTag = ref<TagView>({});
+const visible = shallowRef<boolean>(false);
+const selectedTag = shallowRef<TagView>({});
 
 // 打开右键菜单
 const openMenu = (tag: TagView, e: MouseEvent) => {

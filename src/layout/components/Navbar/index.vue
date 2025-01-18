@@ -27,11 +27,11 @@ import Screenfull from './components/Screenfull/index.vue';
 import Breadcrumb from './components/Breadcrumb/index.vue';
 import Search from './components/Search/index.vue';
 import { useRouterStore } from '@/store/modules/router';
-import { ref } from 'vue';
+import { shallowRef } from 'vue';
 
 const routerStore = useRouterStore();
 // 这里要改成按钮权限
-const showNotify = ref(false);
+const showNotify = shallowRef(false);
 routerStore.asyncRoutes.forEach((item) => {
   if (item.name === 'NotifyList') {
     showNotify.value = true;

@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 import { ElScrollbar } from 'element-plus';
-import { ref, nextTick } from 'vue';
+import { nextTick, shallowRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { useRouteListener } from '@/hooks/useRouteListener';
 
@@ -30,9 +30,9 @@ const translateDistance = 200;
 // 当前滚动条位置
 let currentScrollLeft = 0;
 // 滚动条ref
-const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
+const scrollbarRef = shallowRef<InstanceType<typeof ElScrollbar>>();
 // 内容区ref
-const scrollbarContentRef = ref<HTMLElement>();
+const scrollbarContentRef = shallowRef<HTMLElement>();
 
 // scorll滚动事件
 const scroll = ({ scrollLeft }: { scrollLeft: number }) => {
