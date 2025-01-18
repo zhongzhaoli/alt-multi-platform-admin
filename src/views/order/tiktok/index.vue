@@ -176,7 +176,7 @@ import { downloadCore, generateVisualNumber, RenderCopyIcon } from '@/utils/inde
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getTiktokOrderList,
@@ -196,7 +196,7 @@ import axios, { CancelTokenSource } from 'axios';
 import { useFullLoading } from '@/hooks/useFullLoading';
 
 // 排序条件变化
-const sortOrder = ref<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
+const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {
   if (!data.order) {
     sortOrder.value = null;
@@ -210,11 +210,11 @@ const sortChange = (data: { column: any; prop: string; order: any }) => {
 
 // 获取列表
 const filterValue = ref<Partial<TiktokOrderFilterProps>>({});
-const tableData = ref<TiktokOrderProps[]>([]);
-const loading = ref(false);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(0);
+const tableData = shallowRef<TiktokOrderProps[]>([]);
+const loading = shallowRef(false);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(0);
 const getListFun = async () => {
   loading.value = true;
   try {
@@ -238,7 +238,7 @@ const getListFun = async () => {
 getListFun();
 
 // 多选
-const selectionList = ref<TiktokOrderProps[]>([]);
+const selectionList = shallowRef<TiktokOrderProps[]>([]);
 const selectionChange = (rows: TiktokOrderProps[]) => {
   selectionList.value = cloneDeep(rows);
 };
@@ -280,8 +280,8 @@ const cancelSubmit = async () => {
 };
 
 // 发货
-const dialogVisible = ref(false);
-const submitLoading = ref(false);
+const dialogVisible = shallowRef(false);
+const submitLoading = shallowRef(false);
 const selectedRows = ref<TiktokOrderProps[]>([]);
 const singleDeliver = (row: TiktokOrderProps) => {
   selectedRows.value = [cloneDeep(row)];
@@ -349,8 +349,8 @@ const handleRightClick = async () => {
 };
 
 // 批量设置
-const batchName = ref('');
-const batchNumber = ref('');
+const batchName = shallowRef('');
+const batchNumber = shallowRef('');
 const batchSetting = () => {
   if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
   selectedRows.value.forEach((row: TiktokOrderProps) => {

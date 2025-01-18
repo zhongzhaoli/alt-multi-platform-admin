@@ -89,7 +89,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 import CountNumberCard from './components/countNumberCard.vue';
 import TsxElementTable from 'tsx-element-table';
 import orderCharts from './components/orderCharts.vue';
@@ -107,8 +107,8 @@ import TextEllipsis from '@/components/TextEllipsis/index.vue';
 let normalPadding: string | number = getCssVariableValue('--normal-padding');
 normalPadding = parseFloat((normalPadding as string).replace('px', ''));
 
-const granularity = ref('hour');
-const datePickerRef = ref<DatePickerInstance | null>(null);
+const granularity = shallowRef('hour');
+const datePickerRef = shallowRef<DatePickerInstance | null>(null);
 const dateRange = ref<[Date, Date]>([new Date(), new Date()]);
 const dateRangeText = computed(() => {
   const [start, end] = dateRange.value;
@@ -163,11 +163,11 @@ const getSalesData = async () => {
 };
 getSalesData();
 
-const loading = ref(false);
-const tableData = ref<API_DASHBOARD.SkuDataProps[]>([]);
-const total = ref(0);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
+const loading = shallowRef(false);
+const tableData = shallowRef<API_DASHBOARD.SkuDataProps[]>([]);
+const total = shallowRef(0);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
 const getListFun = async () => {
   loading.value = true;
   try {

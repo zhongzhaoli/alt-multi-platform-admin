@@ -79,7 +79,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
@@ -90,19 +90,19 @@ import * as API_ROLE from '@/api/system/role';
 import { DataProps, getRouterList } from '@/api/system/router';
 import { ElMessage, FormInstance } from 'element-plus';
 
-const tableData = ref<API_ROLE.RoleProps[]>([]);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(0);
-const loading = ref(false);
-const dialogVisible = ref(false);
-const dialogCreate = ref(true);
-const submitLoading = ref(false);
+const tableData = shallowRef<API_ROLE.RoleProps[]>([]);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(0);
+const loading = shallowRef(false);
+const dialogVisible = shallowRef(false);
+const dialogCreate = shallowRef(true);
+const submitLoading = shallowRef(false);
 const formValue = ref<Partial<API_ROLE.EditRoleDto>>({
   role_name: ''
 });
 
-const formRef = ref<FormInstance | null>();
+const formRef = shallowRef<FormInstance | null>();
 const filterValue = ref<Partial<config.FilterDto>>({});
 
 const getListFun = async () => {
@@ -178,12 +178,12 @@ const editRoleFun = async () => {
 };
 
 // 设置权限
-const selectPermissionVisible = ref(false);
-const permissionLoading = ref(false);
-const menuList = ref<DataProps[]>([]);
-const defaultCheckedKeys = ref<string[]>([]);
-const tempRoleId = ref<string>('');
-const perimissionTreeRef = ref<{
+const selectPermissionVisible = shallowRef(false);
+const permissionLoading = shallowRef(false);
+const menuList = shallowRef<DataProps[]>([]);
+const defaultCheckedKeys = shallowRef<string[]>([]);
+const tempRoleId = shallowRef<string>('');
+const perimissionTreeRef = shallowRef<{
   getCheckedNodes: () => string[];
   setCheckedKeys: () => void;
 } | null>(null);

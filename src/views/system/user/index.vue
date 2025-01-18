@@ -151,7 +151,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, unref } from 'vue';
+import { ref, shallowRef, unref } from 'vue';
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
@@ -175,13 +175,13 @@ import { cloneDeep } from 'lodash-es';
 import { useMessageBox } from '@/hooks/useMessageBox';
 import { SelectTargetInstance } from '@/components/SelectTarget/useSelectTarget';
 
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(100);
-const loading = ref(false);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(100);
+const loading = shallowRef(false);
 const tableData = ref<API_USERS.UserProps[]>([]);
 const filterValue = ref<Partial<FilterDto>>({});
-const submitLoading = ref(false);
+const submitLoading = shallowRef(false);
 
 const createRules: FormRules = {
   ...rules,
@@ -242,9 +242,9 @@ interface FormValueProps extends API_USERS.UserDto {
 }
 
 // 新增用户
-const dialogVisible = ref(false);
+const dialogVisible = shallowRef(false);
 const formValue = ref<Partial<FormValueProps>>({});
-const createUserFormRef = ref<FormInstance | null>(null);
+const createUserFormRef = shallowRef<FormInstance | null>(null);
 const createUserValidate = () => {
   unref(createUserFormRef)?.validate((nV: boolean) => {
     nV && createUserHandle();
@@ -265,10 +265,10 @@ const createUserHandle = async () => {
 };
 
 // 编辑用户
-const editDialogVisible = ref(false);
+const editDialogVisible = shallowRef(false);
 const editFormValue = ref<Partial<API_USERS.EditUserDto>>({});
-const tempUser = ref<API_USERS.UserProps | null>(null);
-const editUserFormRef = ref<FormInstance | null>(null);
+const tempUser = shallowRef<API_USERS.UserProps | null>(null);
+const editUserFormRef = shallowRef<FormInstance | null>(null);
 const editUserValidate = async () => {
   unref(editUserFormRef)?.validate((nV: boolean) => {
     nV && editUserHandle();
@@ -301,10 +301,10 @@ const editUserHandle = async () => {
 };
 
 // 修改密码
-const newPassword = ref('');
-const nPasswordDialogVisible = ref(false);
+const newPassword = shallowRef('');
+const nPasswordDialogVisible = shallowRef(false);
 const nPasswordFormValue = ref<API_USERS.UserProps | null>(null);
-const passwordFormRef = ref<FormInstance | null>(null);
+const passwordFormRef = shallowRef<FormInstance | null>(null);
 const editPasswordFun = (row: API_USERS.UserProps) => {
   nPasswordFormValue.value = row;
   nPasswordDialogVisible.value = true;
@@ -348,10 +348,10 @@ const deleteUser = (row: API_USERS.UserProps) => {
 };
 
 // 绑定店铺
-const selectWStoreRef = ref<SelectTargetInstance | null>(null);
-const selectTStoreRef = ref<SelectTargetInstance | null>(null);
-const selectLoading = ref(false);
-const defaultSelectStoreList = ref<string[]>([]);
+const selectWStoreRef = shallowRef<SelectTargetInstance | null>(null);
+const selectTStoreRef = shallowRef<SelectTargetInstance | null>(null);
+const selectLoading = shallowRef(false);
+const defaultSelectStoreList = shallowRef<string[]>([]);
 const selectStoreClosed = () => {
   defaultSelectStoreList.value = [];
 };
@@ -370,6 +370,7 @@ const editWalmartStore = async (row: API_USERS.UserProps) => {
     selectLoading.value = false;
   }
 };
+
 // 绑定walmart店铺
 const submitWalmartStoreFun = async (list: string[]) => {
   if (tempUser.value && !submitLoading.value) {
@@ -403,6 +404,7 @@ const editTiktokStore = async (row: API_USERS.UserProps) => {
     selectLoading.value = false;
   }
 };
+
 // 绑定tiktok店铺
 const submitTiktokStoreFun = async (list: string[]) => {
   if (tempUser.value && !submitLoading.value) {

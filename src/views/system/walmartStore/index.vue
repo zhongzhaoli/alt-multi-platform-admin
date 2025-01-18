@@ -83,7 +83,7 @@ import TsxElementTable from 'tsx-element-table';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ElMessage, FormInstance } from 'element-plus';
 import { RenderCopyIcon } from '@/utils';
@@ -100,11 +100,11 @@ import { useMessageBox } from '@/hooks/useMessageBox';
 import { cloneDeep } from 'lodash-es';
 
 // 店铺列表
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(0);
-const loading = ref(false);
-const tableData = ref<StoreProps[]>([]);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(0);
+const loading = shallowRef(false);
+const tableData = shallowRef<StoreProps[]>([]);
 const getListFun = async () => {
   loading.value = true;
   try {
@@ -123,10 +123,10 @@ const getListFun = async () => {
 getListFun();
 
 // 新增和编辑店铺
-const editFormRef = ref<FormInstance>();
-const dialogTitle = ref('新增店铺');
-const dialogVisible = ref(false);
-const submitLoading = ref(false);
+const editFormRef = shallowRef<FormInstance>();
+const dialogTitle = shallowRef('新增店铺');
+const dialogVisible = shallowRef(false);
+const submitLoading = shallowRef(false);
 const editFormValues = ref<Partial<StoreProps>>({});
 const editDialog = (row: StoreProps) => {
   editFormValues.value = cloneDeep(row);

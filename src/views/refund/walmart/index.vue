@@ -82,7 +82,7 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   type RefundWalmartProps,
@@ -93,11 +93,11 @@ import { RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 
 const filterValue = ref<Partial<WalmartRefunFilterProps>>({});
-const tableData = ref<RefundWalmartProps[]>([]);
-const total = ref(0);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const loading = ref(false);
+const tableData = shallowRef<RefundWalmartProps[]>([]);
+const total = shallowRef(0);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const loading = shallowRef(false);
 const getListFun = async () => {
   loading.value = true;
   try {

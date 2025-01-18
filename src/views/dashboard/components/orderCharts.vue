@@ -5,14 +5,14 @@
 </template>
 <script setup lang="ts">
 import { type EChartsOption } from 'echarts';
-import { watchEffect, Ref, ref, unref } from 'vue';
+import { watchEffect, shallowRef, ShallowRef, unref } from 'vue';
 import { useEcharts } from '@/hooks/useEcharts';
-const target = ref<HTMLElement | null>(null);
+const target = shallowRef<HTMLElement | null>(null);
 const props = defineProps<{
   options: EChartsOption;
 }>();
 const renderChart = () => {
-  const { setOptions } = useEcharts(target as Ref<HTMLElement>);
+  const { setOptions } = useEcharts(target as ShallowRef<HTMLElement>);
   setOptions(props.options);
 };
 

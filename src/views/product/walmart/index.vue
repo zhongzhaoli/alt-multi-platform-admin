@@ -82,7 +82,7 @@ import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import {
   getWalmartProductList,
   type WalmartProductFilterProps,
@@ -92,11 +92,11 @@ import ProductItem from '@/components/ProductItem/index.vue';
 import { RenderCopyIcon } from '@/utils';
 
 const filterValue = ref<Partial<WalmartProductFilterProps>>({});
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const tableData = ref<WalmartProductProps[]>([]);
-const loading = ref(false);
-const total = ref(0);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const tableData = shallowRef<WalmartProductProps[]>([]);
+const loading = shallowRef(false);
+const total = shallowRef(0);
 const getListFun = async () => {
   loading.value = true;
   try {

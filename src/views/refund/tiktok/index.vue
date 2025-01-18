@@ -70,7 +70,7 @@ import TsxElementTable from 'tsx-element-table';
 import ProductItem from '@/components/ProductItem/index.vue';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getTiktokRefundList,
@@ -83,11 +83,11 @@ import axios, { CancelTokenSource } from 'axios';
 import { useFullLoading } from '@/hooks/useFullLoading';
 
 const filterValue = ref<Partial<TiktokRefunFilterProps>>({});
-const tableData = ref<RefundTiktokProps[]>([]);
-const total = ref(0);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const loading = ref(false);
+const tableData = shallowRef<RefundTiktokProps[]>([]);
+const total = shallowRef(0);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const loading = shallowRef(false);
 const getListFun = async () => {
   loading.value = true;
   try {

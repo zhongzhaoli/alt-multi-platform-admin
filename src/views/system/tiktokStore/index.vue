@@ -82,7 +82,7 @@
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import * as API_TIKTOK from '@/api/system/tiktokStore';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
@@ -92,11 +92,11 @@ import { FormInstance } from 'element-plus';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { cloneDeep } from 'lodash-es';
 
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(0);
-const loading = ref(false);
-const tableData = ref<API_TIKTOK.StoreProps[]>([]);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(0);
+const loading = shallowRef(false);
+const tableData = shallowRef<API_TIKTOK.StoreProps[]>([]);
 
 const getListFun = async () => {
   if (loading.value) return;
@@ -115,10 +115,10 @@ const getListFun = async () => {
   }
 };
 // 新增和编辑店铺
-const editFormRef = ref<FormInstance>();
-const dialogTitle = ref('新增店铺');
-const dialogVisible = ref(false);
-const submitLoading = ref(false);
+const editFormRef = shallowRef<FormInstance>();
+const dialogTitle = shallowRef('新增店铺');
+const dialogVisible = shallowRef(false);
+const submitLoading = shallowRef(false);
 const editFormValues = ref<Partial<API_TIKTOK.StoreProps>>({});
 const editDialog = (row: API_TIKTOK.StoreProps) => {
   editFormValues.value = cloneDeep(row);

@@ -87,8 +87,9 @@
         </template>
         <template #table-asin="{ row }">
           <template v-if="row.asin">
-            <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" /> </template
-          >{{ row.asin || '-' }}
+            <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" />
+          </template>
+          {{ row.asin || '-' }}
         </template>
         <template #table-address="{ row }">
           <div>{{ row.phone }}</div>
@@ -199,7 +200,7 @@ import { carrierList } from '../carrier';
 import LinkItem from '@/components/LinkItem/index.vue';
 import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   type WalmartOrderProps,
@@ -214,7 +215,7 @@ import { cloneDeep } from 'lodash-es';
 import { ElMessage } from 'element-plus';
 
 // 排序条件变化
-const sortOrder = ref<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
+const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {
   if (!data.order) {
     sortOrder.value = null;
@@ -228,11 +229,11 @@ const sortChange = (data: { column: any; prop: string; order: any }) => {
 
 // 获取列表
 const filterValue = ref<Partial<WalmartOrderFilterProps>>({});
-const tableData = ref<WalmartOrderProps[]>([]);
-const loading = ref(false);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(0);
+const tableData = shallowRef<WalmartOrderProps[]>([]);
+const loading = shallowRef(false);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(0);
 const getListFun = async () => {
   loading.value = true;
   try {
@@ -263,20 +264,20 @@ const getListFun = async () => {
 getListFun();
 
 // 多选
-const selectionList = ref<WalmartOrderProps[]>([]);
+const selectionList = shallowRef<WalmartOrderProps[]>([]);
 const selectionChange = (rows: WalmartOrderProps[]) => {
   selectionList.value = cloneDeep(rows);
 };
 
 // 发货
-const dialogVisible = ref(false);
-const submitLoading = ref(false);
+const dialogVisible = shallowRef(false);
+const submitLoading = shallowRef(false);
 interface SelectedRowsProps extends WalmartOrderProps {
   seller_order_id: string;
 }
 const selectedRows = ref<SelectedRowsProps[]>([]);
 const singleDeliver = (row: WalmartOrderProps) => {
-  selectedRows.value = [cloneDeep(row)].map((v) => {
+  selectedRows.value = [row].map((v) => {
     return {
       ...v,
       seller_order_id: ''
@@ -286,7 +287,7 @@ const singleDeliver = (row: WalmartOrderProps) => {
 };
 const multipleDeliver = () => {
   if (!selectionList.value.length) return ElMessage.warning('请选择订单');
-  selectedRows.value = cloneDeep(selectionList.value).map((v) => {
+  selectedRows.value = selectionList.value.map((v) => {
     return {
       ...v,
       seller_order_id: ''
@@ -327,9 +328,9 @@ const dialogSubmit = async () => {
 };
 
 // 批量设置
-const batchName = ref('');
-const batchNumber = ref('');
-const batchOrderId = ref('');
+const batchName = shallowRef('');
+const batchNumber = shallowRef('');
+const batchOrderId = shallowRef('');
 const batchSetting = () => {
   if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
   selectedRows.value.forEach((row: SelectedRowsProps) => {

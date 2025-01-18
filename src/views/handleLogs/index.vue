@@ -64,16 +64,16 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import { filterColumns, tableColumns } from './config';
 import * as API_LOG from '@/api/handleLogs/index';
-import { ref, unref } from 'vue';
+import { ref, shallowRef, unref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 
 // 日志列表
 const filterValue = ref<object>({});
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const total = ref(0);
-const tableData = ref<any[]>([]);
-const loading = ref(false);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const total = shallowRef(0);
+const tableData = shallowRef<any[]>([]);
+const loading = shallowRef(false);
 const getListFun = async () => {
   loading.value = true;
   try {
@@ -93,8 +93,8 @@ const getListFun = async () => {
 getListFun();
 
 // 查看详情
-const detailVisible = ref(false);
-const tempDetail = ref<API_LOG.LogProps | null>(null);
+const detailVisible = shallowRef(false);
+const tempDetail = shallowRef<API_LOG.LogProps | null>(null);
 const viewDetailFun = (row: API_LOG.LogProps) => {
   tempDetail.value = row;
   detailVisible.value = true;

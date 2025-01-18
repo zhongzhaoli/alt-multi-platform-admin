@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
-import { ref, VNode } from 'vue';
+import { ref, VNode, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { shortcuts } from '@/config/dateRange';
 import {
@@ -72,7 +72,7 @@ const WALMART_RATING_NUMBER = 2000;
 const TIKTOK_RATING_NUMBER = 100;
 
 // 排序条件变化
-const sortOrder = ref<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
+const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {
   if (!data.order) {
     sortOrder.value = null;
@@ -85,14 +85,14 @@ const sortChange = (data: { column: any; prop: string; order: any }) => {
 };
 
 // 获取列表
-const tableData = ref<ListingProps[]>([]);
+const tableData = shallowRef<ListingProps[]>([]);
 const dateRange = ref<[Date, Date]>();
-const loading = ref(false);
-const total = ref(0);
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const platform = ref<'tiktok' | 'walmart'>('walmart');
-const summaryData = ref<ListingProps | null>(null);
+const loading = shallowRef(false);
+const total = shallowRef(0);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const platform = shallowRef<'tiktok' | 'walmart'>('walmart');
+const summaryData = shallowRef<ListingProps | null>(null);
 const getListFun = async () => {
   const startDate = dateRange.value ? dateRange.value[0] : new Date();
   const endDate = dateRange.value ? dateRange.value[1] : new Date();

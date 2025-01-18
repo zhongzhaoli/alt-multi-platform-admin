@@ -43,13 +43,13 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 // import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { MenusProps } from './components/Form.vue';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowReactive, shallowRef } from 'vue';
 import * as API_ROUTER from '@/api/system/router';
 import { _RouteRecordBase } from 'vue-router';
 
-const tableData = ref<API_ROUTER.DataProps[]>([]);
-const treeSelectData = ref<MenusProps[]>([]);
-const loading = ref(false);
+let tableData = shallowReactive<API_ROUTER.DataProps[]>([]);
+// let treeSelectData = shallowReactive<MenusProps[]>([]);
+const loading = shallowRef(false);
 const filterValue = ref<Partial<config.FilterDto>>({});
 
 const getListFun = async () => {
@@ -67,8 +67,9 @@ const getListFun = async () => {
         keep_alive: item.meta?.keep_alive || false
       };
     });
-    tableData.value = handledData;
-    treeSelectData.value = generatePidList(handledData);
+    tableData = handledData;
+    // treeSelectData = generatePidList(handledData);
+    generatePidList(handledData);
   } catch (err) {
     console.log(err);
   } finally {

@@ -114,7 +114,7 @@
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getLocalProductList,
@@ -126,11 +126,11 @@ import { TableColumnCtx } from 'element-plus';
 
 // 获取列表
 const filterValue = ref<Partial<LocalProductFilterProps>>({});
-const currentPage = ref(PAGE);
-const pageSize = ref(PAGE_SIZE);
-const tableData = ref<LocalProductProps[]>([]);
-const loading = ref(false);
-const total = ref(0);
+const currentPage = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const tableData = shallowRef<LocalProductProps[]>([]);
+const loading = shallowRef(false);
+const total = shallowRef(0);
 const getListFun = async () => {
   loading.value = true;
   try {
@@ -150,12 +150,12 @@ const getListFun = async () => {
 getListFun();
 
 // 上架店铺
-const shopsVisible = ref(false);
-const shopsTableData = ref([]);
-const shopsLoading = ref(false);
-const shopsPage = ref(PAGE);
-const shopsPageSize = ref(PAGE_SIZE);
-const shopsTotal = ref(0);
+const shopsVisible = shallowRef(false);
+const shopsTableData = shallowRef([]);
+const shopsLoading = shallowRef(false);
+const shopsPage = shallowRef(PAGE);
+const shopsPageSize = shallowRef(PAGE_SIZE);
+const shopsTotal = shallowRef(0);
 const openShops = (row: LocalProductProps) => {
   console.log(row);
   shopsVisible.value = true;

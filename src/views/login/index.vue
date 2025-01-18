@@ -51,7 +51,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, shallowRef } from 'vue';
 import logo from '@/assets/logo.png';
 import { useUserStore } from '@/store/modules/user';
 import { useRouter } from 'vue-router';
@@ -63,13 +63,13 @@ const userStore = useUserStore();
 const router = useRouter();
 
 // 按钮loading
-const loading = ref<boolean>(false);
+const loading = shallowRef<boolean>(false);
 // 登录信息载核
 const loginPayload = reactive<LoginDto>({
   username: '',
   password: ''
 });
-const remember = ref<boolean>(false);
+const remember = shallowRef<boolean>(false);
 
 // 登录操作
 const loginHandle = async () => {
