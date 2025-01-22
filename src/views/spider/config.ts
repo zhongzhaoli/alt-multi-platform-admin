@@ -10,18 +10,14 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '日期',
-    prop: 'date',
+    prop: 'crawl_date',
     minWidth: 180,
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
     align: 'center'
   },
   {
     label: '爬虫总数',
-    prop: 'spider_total',
+    prop: 'req_total',
     minWidth: 180,
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
     align: 'center',
     formatter: (_row, _column, cellValue) => {
       return h('b', null, cellValue);
@@ -29,13 +25,13 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '成功次数',
-    prop: 'success_total',
+    prop: 'req_200',
     minWidth: 180,
     align: 'center'
   },
   {
     label: '人机次数',
-    prop: 'fail_total',
+    prop: 'req_captcha',
     minWidth: 180,
     align: 'center'
   },
@@ -43,17 +39,18 @@ export const tableColumns: TableColumnProps[] = [
     label: '人机率',
     prop: 'fail_rate',
     minWidth: 180,
-    align: 'center'
+    align: 'center',
+    formatter: (row, _column, _cellValue) => {
+      return h('b', null, ((row.req_captcha / row.req_total) * 100).toFixed(2) + '%');
+    }
   },
   {
     label: '成功率',
     prop: 'success_rate',
     minWidth: 180,
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
     align: 'center',
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+    formatter: (row, _column, _cellValue) => {
+      return h('b', null, ((row.req_200 / row.req_total) * 100).toFixed(2) + '%');
     }
   }
 ];

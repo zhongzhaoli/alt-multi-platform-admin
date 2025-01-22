@@ -63,7 +63,7 @@ export const filterColumns: FilterColumnProps[] = [
   {
     label: '订单状态',
     type: 'select',
-    prop: 'status',
+    prop: 'order_line_status',
     multiple: true,
     selectOptions: walmartStatusMap
   }
@@ -122,32 +122,28 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '总金额',
     align: 'center',
-    prop: 'totalAmount',
+    prop: 'charge_amount',
     width: 100,
-    formatter: (row) => {
-      return h(
-        'b',
-        null,
-        `$ ${(parseFloat(row.fee_amount || '0') + parseFloat(row.product_amount || '0') + parseFloat(row.shipping_amount || '0') + parseFloat(row.product_tax_amount || '0') + parseFloat(row.fee_tax_amount || '0') + parseFloat(row.shipping_tax_amount || '0')).toFixed(2)}`
-      );
+    formatter: (_row, _column, _cellValue) => {
+      return h('b', null, `$ ${(_cellValue || 0).toFixed(2)}`);
     }
   },
   {
     label: '产品金额',
     align: 'center',
-    prop: 'product_amount',
+    prop: 'charge_amount_product',
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h('b', null, `$ ${(_cellValue || 0).toFixed(2)}`);
     }
   },
   {
     label: '运费',
     align: 'center',
-    prop: 'shipping_amount',
+    prop: 'charge_amount_shipping',
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h('b', null, `$ ${(_cellValue || 0).toFixed(2)}`);
     }
   },
   {
@@ -156,22 +152,26 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'taxFee',
     width: 100,
     formatter: (row) => {
-      return h('b', null, `$ ${parseFloat(row.taxAmount || 0).toFixed(2)}`);
+      return h(
+        'b',
+        null,
+        `$ ${(row.charge_amount_product_tax + row.charge_amount_shipping_tax).toFixed(2)}`
+      );
     }
   },
   {
     label: '下单时间',
     align: 'center',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
+    // sortable: 'custom',
+    // sortOrders: ['descending', 'ascending', null],
     prop: 'order_date',
     minWidth: 180
   },
   {
     label: '更新时间',
     align: 'center',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
+    // sortable: 'custom',
+    // sortOrders: ['descending', 'ascending', null],
     prop: 'update_time',
     minWidth: 180
   },

@@ -24,8 +24,7 @@
           loading
         }"
         :handle="{
-          show: true,
-          rightColumns: config.handleRightColumns
+          show: true
         }"
         :pagination="{
           total
@@ -68,7 +67,7 @@
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              :image-url="row.image_url"
+              :image-url="row.product_image_url"
               :product-name="row.product_name"
               :size="60"
               :desc-list="[
@@ -246,14 +245,7 @@ const getListFun = async () => {
       searchParams.order = JSON.stringify([sortOrder.value]);
     }
     const { data } = await getWalmartOrderList(searchParams);
-    tableData.value = (data?.list || []).map((row) => {
-      const taxAmount =
-        parseFloat(row.product_tax_amount || '0') + row.fee_tax_amount + row.shipping_tax_amount;
-      return {
-        ...row,
-        taxAmount
-      };
-    });
+    tableData.value = data?.data || [];
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
@@ -313,7 +305,8 @@ const dialogSubmit = async () => {
     purchase_order_id: row.purchase_order_id,
     shop_id: row.shop_id,
     seller_order_id: '',
-    order_line_number: row.order_line_number
+    order_line_number: String(row.order_line_number),
+    order_line_quantity_amount: String(row.order_line_quantity_amount)
   }));
   try {
     await deliverProducts(deliverList);

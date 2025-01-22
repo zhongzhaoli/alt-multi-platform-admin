@@ -49,6 +49,6 @@ export interface ResponsePageJson<T = any> {
 
 // 分页数据格式
 export interface PageListJson<T> {
-  list: T[];
+  data: T[];
   total: number;
 }

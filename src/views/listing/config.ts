@@ -37,12 +37,12 @@ export const tableColumns: TableColumnProps[] = [
     width: 180,
     align: 'center'
   },
-  {
-    label: '店铺存活状态',
-    align: 'center',
-    width: 160,
-    prop: 'shop_survival'
-  },
+  // {
+  //   label: '店铺存活状态',
+  //   align: 'center',
+  //   width: 160,
+  //   prop: 'shop_survival'
+  // },
   {
     label: '总链接数量',
     prop: 'all_count',

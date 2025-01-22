@@ -17,14 +17,16 @@ export interface WalmartOrderProps {
   purchase_order_id: string;
   customer_order_id: string;
   order_line_status: WalmartStausEnum;
-  image_url: string;
+  product_image_url: string;
   product_name: string;
   product_sku: string;
   order_line_quantity_amount: number;
   asin: string;
-  product_amount: number;
-  product_tax_amount: string;
-  shipping_tax_amount: number;
+  charge_amount: number;
+  charge_amount_product: number;
+  charge_amount_product_tax: string;
+  charge_amount_shipping: number;
+  charge_amount_shipping_tax: number;
   taxAmount: number;
   fee_amount: number;
   fee_tax_amount: number;
@@ -60,7 +62,7 @@ export function getWalmartOrderList(
 ): Promise<ResponsePageJson<WalmartOrderProps>> {
   return request({
     baseURL: walmartURL,
-    url: '/order',
+    url: '/walmart/order/list',
     method: 'get',
     params
   });
@@ -73,12 +75,13 @@ export interface DeliverProductsDto {
   carrier: string;
   tracking_number: string;
   shop_id: string;
-  order_line_number: number;
+  order_line_number: string;
+  order_line_quantity_amount: string;
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
     baseURL: walmartURL,
-    url: '/order/shipping',
+    url: '/walmart/order/shipping',
     method: 'post',
     data
   });
