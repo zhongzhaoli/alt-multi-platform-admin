@@ -154,7 +154,7 @@ const getSalesData = async () => {
       end_date: moment(dateRange.value[1]).format('YYYY-MM-DD'),
       granularity: granularity.value
     });
-    cloneOptions = config.generateOptions(data?.list || [], data?.history || []);
+    cloneOptions = config.generateOptions(data?.data || [], data?.history || []);
   } catch (err) {
     console.log(err);
   } finally {
@@ -175,7 +175,7 @@ const getListFun = async () => {
       page: currentPage.value,
       page_size: pageSize.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = data?.data || [];
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

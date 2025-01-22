@@ -120,7 +120,7 @@ const getWalmartList = async (params: GetListingDto, diff: number) => {
       getWalmartListingList(params),
       getWalmartSummary(params)
     ]);
-    tableData.value = (data1.data?.list || []).map((item) => ({
+    tableData.value = (data1.data?.data || []).map((item) => ({
       ...item,
       listing_rating: item.listing_count / (diff * WALMART_RATING_NUMBER)
     }));
@@ -144,7 +144,7 @@ const getTiktokList = async (params: GetListingDto, diff: number) => {
       getTiktokListingList(params),
       getTiktokSummary(params)
     ]);
-    tableData.value = (data1.data?.list || []).map((item) => ({
+    tableData.value = (data1.data?.data || []).map((item) => ({
       ...item,
       listing_rating: item.listing_count / (diff * TIKTOK_RATING_NUMBER)
     }));

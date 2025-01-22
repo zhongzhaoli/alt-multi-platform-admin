@@ -227,7 +227,7 @@ const getListFun = async () => {
       searchParams.sort = JSON.stringify(sortOrder.value);
     }
     const { data } = await getTiktokOrderList(searchParams);
-    tableData.value = data?.list || [];
+    tableData.value = data?.data || [];
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
