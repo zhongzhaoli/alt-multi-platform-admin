@@ -154,7 +154,7 @@ const getSalesData = async () => {
       end_date: moment(dateRange.value[1]).format('YYYY-MM-DD'),
       granularity: granularity.value
     });
-    cloneOptions = config.generateOptions(data?.data || [], data?.history || []);
+    cloneOptions = config.generateOptions(data?.list || [], data?.history || []);
   } catch (err) {
     console.log(err);
   } finally {

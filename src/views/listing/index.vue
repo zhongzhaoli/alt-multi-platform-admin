@@ -125,11 +125,13 @@ const getWalmartList = async (params: GetListingDto, diff: number) => {
       listing_rating: item.listing_count / (diff * WALMART_RATING_NUMBER)
     }));
     total.value = data1.data?.total || 0;
-    summaryData.value = {
-      ...data2.data!.list[0],
-      listing_rating:
-        data2.data!.list[0].listing_count / (diff * WALMART_RATING_NUMBER * total.value)
-    };
+    if (data2.data && data2.data.data) {
+      summaryData.value = {
+        ...data2.data!.data[0],
+        listing_rating:
+          data2.data!.data[0].listing_count / (diff * WALMART_RATING_NUMBER * total.value)
+      };
+    }
   } catch (err) {
     console.log(err);
   } finally {
@@ -144,16 +146,18 @@ const getTiktokList = async (params: GetListingDto, diff: number) => {
       getTiktokListingList(params),
       getTiktokSummary(params)
     ]);
-    tableData.value = (data1.data?.data || []).map((item) => ({
+    tableData.value = (data1?.data?.data || []).map((item) => ({
       ...item,
       listing_rating: item.listing_count / (diff * TIKTOK_RATING_NUMBER)
     }));
     total.value = data1.data?.total || 0;
-    summaryData.value = {
-      ...data2.data!.list[0],
-      listing_rating:
-        data2.data!.list[0].listing_count / (diff * TIKTOK_RATING_NUMBER * total.value)
-    };
+    if (data2.data && data2.data.data) {
+      summaryData.value = {
+        ...data2.data!.data[0],
+        listing_rating:
+          data2.data!.data[0].listing_count / (diff * TIKTOK_RATING_NUMBER * total.value)
+      };
+    }
   } catch (err) {
     console.log(err);
   } finally {
