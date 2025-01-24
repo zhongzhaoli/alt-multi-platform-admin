@@ -90,9 +90,9 @@ const getListFun = async (first = false, loadMore = false) => {
       role_name: unref(roleName)
     });
     if (loadMore) {
-      list.value = [...unref(list), ...(data?.data || [])];
+      list.value = [...unref(list), ...(data?.list || [])];
     } else {
-      list.value = data?.data || [];
+      list.value = data?.list || [];
     }
     total.value = data?.total || 0;
     if (first && props.defaultFirst && unref(list).length) {

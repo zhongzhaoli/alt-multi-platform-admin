@@ -32,7 +32,7 @@ export function useDataList(emits: any, props: ComponentProps) {
         };
         if (unref(searchKey)) params[unref(uNameKey)] = unref(searchKey);
         const { data } = await uApi.value(params);
-        const newList = (data?.data || []).map((item: any) => {
+        const newList = (data?.list || []).map((item: any) => {
           return {
             ...item,
             checked: false

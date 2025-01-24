@@ -1,17 +1,20 @@
-import { ResponsePageJson, walmartURL } from '@/config/request';
+import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export interface ListingProps {
-  all_count: number;
-  for_sale_count: number;
-  listing_count: number;
-  platform: 'Walmart' | 'Tiktok';
-  remove_count: number;
+  created_at: string;
+  feed_id: string;
+  feed_status: string;
+  feed_submission_date: string;
+  id: number;
+  items_failed: number;
+  items_processing: number;
+  items_received: number;
+  items_succeeded: number;
   shop_id: string;
   shop_name: string;
-  listing_rate: string;
-  listing_rating: number;
-  listing_survival: 1 | 0;
+  updated_at: string;
+  type: 'Products' | 'Prices';
 }
 
 export interface ListingFilterProps {
@@ -28,8 +31,7 @@ export function getWalmartListingList(
   params: GetListingDto
 ): Promise<ResponsePageJson<ListingProps>> {
   return request({
-    baseURL: walmartURL,
-    url: '/walmart/board/listing',
+    url: '/walmart/products/listing/monitor',
     method: 'get',
     params
   });
@@ -39,7 +41,6 @@ export function getTiktokListingList(
   params: GetListingDto
 ): Promise<ResponsePageJson<ListingProps>> {
   return request({
-    baseURL: walmartURL,
     url: '/tk/board/listing',
     method: 'get',
     params
@@ -47,10 +48,8 @@ export function getTiktokListingList(
 }
 
 export function getWalmartSummary(params: GetListingDto): Promise<ResponsePageJson<ListingProps>> {
-  console.log(walmartURL);
   return request({
-    baseURL: walmartURL,
-    url: '/walmart/board/listing/summary/',
+    url: '/walmart/board/listing/summary',
     method: 'get',
     params
   });
@@ -58,8 +57,7 @@ export function getWalmartSummary(params: GetListingDto): Promise<ResponsePageJs
 
 export function getTiktokSummary(params: GetListingDto): Promise<ResponsePageJson<ListingProps>> {
   return request({
-    baseURL: walmartURL,
-    url: '/tk/board/listing/summary/',
+    url: '/tk/board/listing/summary',
     method: 'get',
     params
   });

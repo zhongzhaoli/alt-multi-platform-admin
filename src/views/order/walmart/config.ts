@@ -45,8 +45,11 @@ const walmartStatusMap: Array<{
 export const filterColumns: FilterColumnProps[] = [
   {
     label: '所属店铺',
-    type: 'input',
-    prop: 'shop_id'
+    type: 'select',
+    prop: 'shop_id',
+    width: 280,
+    multiple: true,
+    selectOptions: []
   },
   {
     label: 'PO单号',
@@ -100,7 +103,6 @@ export const tableColumns: TableColumnProps[] = [
     label: '店铺名称',
     align: 'center',
     width: 180,
-    showOverflowTooltip: true,
     prop: 'shop_name'
   },
   {

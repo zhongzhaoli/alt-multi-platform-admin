@@ -2,28 +2,7 @@ import { Download } from '@element-plus/icons-vue';
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
-const platformMap: Array<{ label: string; value: string }> = [
-  {
-    label: '沃尔玛',
-    value: 'Walmart'
-  },
-  {
-    label: 'Tiktok',
-    value: 'Tiktok'
-  }
-];
-
 export const tableColumns: TableColumnProps[] = [
-  {
-    label: '平台',
-    prop: 'platform',
-    align: 'center',
-    width: 180,
-    formatter: (_row, _column, cellValue) => {
-      const platform = platformMap.find((item) => item.value === cellValue);
-      return h('span', null, platform?.label || '-');
-    }
-  },
   {
     label: '店铺名称',
     prop: 'shop_name',
@@ -37,6 +16,18 @@ export const tableColumns: TableColumnProps[] = [
     width: 180,
     align: 'center'
   },
+  {
+    label: '日期',
+    prop: 'created_at',
+    minWidth: 180,
+    align: 'center'
+  },
+  {
+    label: '类型',
+    prop: 'type',
+    minWidth: 160,
+    align: 'center'
+  },
   // {
   //   label: '店铺存活状态',
   //   align: 'center',
@@ -45,33 +36,36 @@ export const tableColumns: TableColumnProps[] = [
   // },
   {
     label: '总链接数量',
-    prop: 'all_count',
+    prop: 'items_received',
     minWidth: 160,
     align: 'center',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue);
+    }
+  },
+  // {
+  //   label: '在售链接数量',
+  //   prop: 'for_sale_count',
+  //   minWidth: 160,
+  //   align: 'center',
+  //   formatter: (_row, _column, cellValue) => {
+  //     return h('b', null, cellValue);
+  //   }
+  // },
+  {
+    label: '上架成功数量',
+    prop: 'items_succeeded',
+    minWidth: 160,
+    align: 'center',
     formatter: (_row, _column, cellValue) => {
       return h('b', null, cellValue);
     }
   },
   {
-    label: '在售链接数量',
-    prop: 'for_sale_count',
+    label: '上架失败数量',
+    prop: 'items_failed',
     minWidth: 160,
     align: 'center',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
-    }
-  },
-  {
-    label: '昨日上架链接数量',
-    prop: 'listing_count',
-    minWidth: 160,
-    align: 'center',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
       return h('b', null, cellValue);
     }
@@ -83,15 +77,6 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     formatter: (_row, _column, cellValue: number) => {
       return h('b', null, `${(cellValue * 100).toFixed(2)}%`);
-    }
-  },
-  {
-    label: '昨日下架链接数量',
-    prop: 'remove_count',
-    minWidth: 160,
-    align: 'center',
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
     }
   }
 ];

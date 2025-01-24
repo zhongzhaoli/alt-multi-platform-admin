@@ -94,9 +94,9 @@ const getListFun = async (first = false, loadMore = false) => {
     }
     const { data } = await getStoreListAuth(params);
     if (loadMore) {
-      list.value = [...unref(list), ...(data?.data || [])];
+      list.value = [...unref(list), ...(data?.list || [])];
     } else {
-      list.value = data?.data || [];
+      list.value = data?.list || [];
     }
     total.value = data?.total || 0;
     if (first && props.defaultFirst && unref(list).length) {

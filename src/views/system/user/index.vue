@@ -218,7 +218,7 @@ const getListFun = async () => {
       page_size: unref(pageSize),
       ...unref(filterValue)
     });
-    tableData.value = data?.data || [];
+    tableData.value = data?.list || [];
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

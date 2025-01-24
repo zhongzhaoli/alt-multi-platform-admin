@@ -74,7 +74,7 @@ const getListFun = async () => {
       };
     }
     const { data } = await getSpiderList(searchParams);
-    tableData.value = (data?.data || []).map((item) => {
+    tableData.value = (data?.list || []).map((item) => {
       return {
         ...item,
         req_total: (item.req_200 || 0) + (item.req_captcha || 0)

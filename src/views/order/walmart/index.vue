@@ -7,9 +7,9 @@
         @submit="getListFun"
         @reset="getListFun"
       >
-        <!-- <template #shopId="{ form, row }">
-          <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" />
-        </template> -->
+        <template #shop_id="{ form, row }">
+          <SelectWalmartStore v-model="form[row.prop]" multiple @change="getListFun" />
+        </template>
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -84,6 +84,9 @@
             <div class="quantityAmount"> x{{ row.order_line_quantity_amount || 0 }} </div>
           </div>
         </template>
+        <template #table-shop_name="{ row }">
+          <TextEllipsis :text="row.shop_name" :line="2" />
+        </template>
         <template #table-asin="{ row }">
           <template v-if="row.asin">
             <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" />
@@ -135,9 +138,6 @@
       </div>
       <div class="d-flex batchSettingBox">
         <div>
-          <el-input v-model="batchOrderId" placeholder="卖家订单号" />
-        </div>
-        <div>
           <el-select v-model="batchName" placeholder="物流承运商">
             <el-option
               v-for="item in carrierList"
@@ -158,11 +158,6 @@
         <el-table-column label="客户订单号" align="center" prop="customer_order_id">
           <template #default="{ row }">
             <el-input v-model="row.customer_order_id" disabled />
-          </template>
-        </el-table-column>
-        <el-table-column label="卖家订单号" align="center" prop="seller_order_id">
-          <template #default="{ row }">
-            <el-input v-model="row.seller_order_id" placeholder="卖家订单号" />
           </template>
         </el-table-column>
         <el-table-column label="物流承运商" align="center" prop="carrier">
@@ -191,7 +186,7 @@
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
-// import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
+import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
@@ -245,7 +240,7 @@ const getListFun = async () => {
       searchParams.order = JSON.stringify([sortOrder.value]);
     }
     const { data } = await getWalmartOrderList(searchParams);
-    tableData.value = data?.data || [];
+    tableData.value = data?.list || [];
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
@@ -304,7 +299,7 @@ const dialogSubmit = async () => {
     tracking_number: row.tracking_number,
     purchase_order_id: row.purchase_order_id,
     shop_id: row.shop_id,
-    seller_order_id: '',
+    seller_order_id: row.customer_order_id,
     order_line_number: String(row.order_line_number),
     order_line_quantity_amount: String(row.order_line_quantity_amount)
   }));
@@ -323,13 +318,11 @@ const dialogSubmit = async () => {
 // 批量设置
 const batchName = shallowRef('');
 const batchNumber = shallowRef('');
-const batchOrderId = shallowRef('');
 const batchSetting = () => {
   if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
   selectedRows.value.forEach((row: SelectedRowsProps) => {
     row.carrier = batchName.value;
     row.tracking_number = batchNumber.value;
-    row.seller_order_id = batchOrderId.value;
   });
 };
 </script>

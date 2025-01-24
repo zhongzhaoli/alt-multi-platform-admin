@@ -1,6 +1,5 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
-import { walmartURL } from '@/config/request';
 export enum WalmartStausEnum {
   'Created' = 'Created',
   'Acknowledged' = 'Acknowledged',
@@ -61,7 +60,6 @@ export function getWalmartOrderList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<WalmartOrderProps>> {
   return request({
-    baseURL: walmartURL,
     url: '/walmart/order/list',
     method: 'get',
     params
@@ -80,7 +78,6 @@ export interface DeliverProductsDto {
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
-    baseURL: walmartURL,
     url: '/walmart/order/shipping',
     method: 'post',
     data

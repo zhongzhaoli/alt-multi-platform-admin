@@ -1,22 +1,8 @@
 import { getAppEnvConfig } from '@/utils/env';
-const {
-  VITE_GLOB_API_URL_SYSTEM,
-  VITE_GLOB_API_URL_TIKTOK,
-  VITE_GLOB_API_URL_WALMART,
-  VITE_GLOG_API_URL_MOCK,
-  VITE_GLOB_API_URL_LOG
-} = getAppEnvConfig();
+const { VITE_GLOB_API_URL } = getAppEnvConfig();
 
 // 请求路径
-export const baseURL = VITE_GLOB_API_URL_SYSTEM;
-// Tiktok请求路径
-export const tiktokURL = VITE_GLOB_API_URL_TIKTOK;
-// Walmart请求路径
-export const walmartURL = VITE_GLOB_API_URL_WALMART;
-// Mock数据
-export const mockURL = VITE_GLOG_API_URL_MOCK;
-// Log请求路径
-export const logURL = VITE_GLOB_API_URL_LOG;
+export const baseURL = VITE_GLOB_API_URL;
 // 超时事件
 export const requestTimeout = 20000;
 // 请求格式
@@ -49,6 +35,6 @@ export interface ResponsePageJson<T = any> {
 
 // 分页数据格式
 export interface PageListJson<T> {
-  data: T[];
+  list: T[];
   total: number;
 }

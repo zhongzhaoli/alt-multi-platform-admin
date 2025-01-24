@@ -22,7 +22,7 @@
   />
 </template>
 <script setup lang="ts">
-import { GetStoreDto, getStoreListAuth, StoreProps } from '@/api/system/walmartStore';
+import { GetStoreDto, getStoreList, StoreProps } from '@/api/system/walmartStore';
 import SelectLoadMore from '@/components/SelectLoadMore/index.vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { useVModel } from '@vueuse/core';
@@ -92,11 +92,11 @@ const getListFun = async (first = false, loadMore = false) => {
     if (shopName.value) {
       params.shop_name = shopName.value;
     }
-    const { data } = await getStoreListAuth(params);
+    const { data } = await getStoreList(params);
     if (loadMore) {
-      list.value = [...unref(list), ...(data?.data || [])];
+      list.value = [...unref(list), ...(data?.list || [])];
     } else {
-      list.value = data?.data || [];
+      list.value = data?.list || [];
     }
     total.value = data?.total || 0;
     if (first && props.defaultFirst && unref(list).length) {

@@ -1,4 +1,4 @@
-import { ResponsePageJson, walmartURL } from '@/config/request';
+import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 import { WalmartStausEnum } from '../order/walmart';
 
@@ -47,7 +47,6 @@ export function getWalmartRefundList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<RefundWalmartProps>> {
   return request({
-    baseURL: walmartURL,
     url: '/order/',
     method: 'get',
     params: {

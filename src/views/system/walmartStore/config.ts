@@ -17,32 +17,26 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺名称',
     prop: 'shop_name',
-    minWidth: 200,
+    minWidth: 140,
     align: 'center'
-  },
-  {
-    label: '店铺存活状态',
-    align: 'center',
-    width: 160,
-    prop: 'shop_survival'
   },
   {
     label: 'Client',
     prop: 'client_id',
-    width: 160,
+    minWidth: 160,
     align: 'center'
   },
   {
     label: 'Client Secret',
     prop: 'client_secret',
-    width: 160,
+    minWidth: 160,
     align: 'center'
   },
   {
     label: '创建时间',
     align: 'center',
     prop: 'created_at',
-    minWidth: 160
+    width: 180
   },
   {
     label: '操作',

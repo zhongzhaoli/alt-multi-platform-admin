@@ -1,4 +1,4 @@
-import { ResponsePageJson, walmartURL } from '@/config/request';
+import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export interface GetSpiderDto {
@@ -17,7 +17,6 @@ export interface SpiderProps {
 
 export function getSpiderList(params: GetSpiderDto): Promise<ResponsePageJson<SpiderProps>> {
   return request({
-    baseURL: walmartURL,
     url: '/spider/amazon/list',
     method: 'get',
     params
