@@ -1,4 +1,4 @@
-import { ResponsePageJson, logURL } from '@/config/request';
+import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export interface GetLogsDto {
@@ -22,7 +22,6 @@ export interface LogProps {
 
 export function getLogList(params: GetLogsDto): Promise<ResponsePageJson<LogProps>> {
   return request({
-    baseURL: logURL,
     url: '/logs',
     method: 'get',
     params

@@ -1,6 +1,5 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
-import { tiktokURL } from '@/config/request';
 import { CancelToken } from 'axios';
 
 export enum TiktokStausEnum {
@@ -60,7 +59,6 @@ export function getTiktokOrderList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<TiktokOrderProps>> {
   return request({
-    baseURL: tiktokURL,
     url: '/tk/get_all_order',
     method: 'get',
     params
@@ -70,7 +68,6 @@ export function getTiktokOrderList(
 // 导出
 export function exportTiktokOrderList(params: GetOrderDto, cancelToken: CancelToken): Promise<any> {
   return request({
-    baseURL: tiktokURL,
     url: '/tk/get_all_order',
     method: 'get',
     params,
@@ -89,7 +86,6 @@ export interface DeliverProductsDto {
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({
-    baseURL: tiktokURL,
     url: '/tk/mark_package_as_shipped',
     method: 'post',
     data
@@ -106,7 +102,6 @@ export interface CancelOrderDto {
 }
 export function cancelOrder(data: CancelOrderDto[]): Promise<any> {
   return request({
-    baseURL: tiktokURL,
     url: '/tk/cancel_order',
     method: 'post',
     data

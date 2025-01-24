@@ -1,4 +1,4 @@
-import { ResponsePageJson, tiktokURL } from '@/config/request';
+import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 import { CancelToken } from 'axios';
 
@@ -40,7 +40,6 @@ export function getTiktokRefundList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<RefundTiktokProps>> {
   return request({
-    baseURL: tiktokURL,
     url: '/tk/get_return_order',
     method: 'get',
     params
@@ -62,7 +61,6 @@ export function exportTiktokRefundOrderList(
   cancelToken: CancelToken
 ): Promise<any> {
   return request({
-    baseURL: tiktokURL,
     url: '/tk/get_return_order',
     method: 'get',
     params,
