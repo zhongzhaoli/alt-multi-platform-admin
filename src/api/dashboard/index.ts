@@ -1,4 +1,4 @@
-import { mockURL, ResponseJson, ResponsePageJson } from '@/config/request';
+import { ResponseJson, ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 interface getDashboardDataDto {
@@ -21,7 +21,6 @@ export function getDashboardData(
   params: getDashboardDataDto
 ): Promise<ResponseJson<DashboardProps>> {
   return request({
-    baseURL: mockURL,
     url: '/dashboard/data',
     method: 'get',
     params
@@ -35,7 +34,6 @@ interface GetSkuDataDto {
 export interface SkuDataProps {}
 export function getSkuData(params: GetSkuDataDto): Promise<ResponsePageJson<SkuDataProps>> {
   return request({
-    baseURL: mockURL,
     url: '/dashboard/sku',
     method: 'get',
     params
