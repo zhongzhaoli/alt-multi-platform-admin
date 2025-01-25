@@ -75,7 +75,8 @@ const getWalmartList = async (params: GetListingDto) => {
     const { data } = await getWalmartListingList(params);
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
-      listing_rating: item.items_succeeded / item.items_received
+      listing_rating:
+        item.items_succeeded && item.items_received ? item.items_succeeded / item.items_received : 0
     }));
     total.value = data?.total || 0;
   } catch (err) {
