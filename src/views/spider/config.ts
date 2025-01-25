@@ -41,7 +41,14 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 180,
     align: 'center',
     formatter: (row, _column, _cellValue) => {
-      return h('b', null, ((row.req_captcha / row.req_total) * 100).toFixed(2) + '%');
+      return h(
+        'b',
+        null,
+        (row.req_captcha === 0 && row.req_total === 0
+          ? 0
+          : (row.req_captcha / row.req_total) * 100
+        ).toFixed(2) + '%'
+      );
     }
   },
   {
@@ -50,7 +57,14 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 180,
     align: 'center',
     formatter: (row, _column, _cellValue) => {
-      return h('b', null, ((row.req_200 / row.req_total) * 100).toFixed(2) + '%');
+      return h(
+        'b',
+        null,
+        (row.req_200 === 0 && row.req_total === 0
+          ? 0
+          : (row.req_200 / row.req_total) * 100
+        ).toFixed(2) + '%'
+      );
     }
   }
 ];
