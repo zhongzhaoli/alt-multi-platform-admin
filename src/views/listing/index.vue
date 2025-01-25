@@ -11,8 +11,8 @@
           loading
         }"
         :handle="{
-          show: true,
-          rightColumns: config.handleRightColumns
+          show: true
+          // rightColumns: config.handleRightColumns
         }"
         :pagination="{
           total
