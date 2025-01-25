@@ -18,7 +18,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '日期',
-    prop: 'created_at',
+    prop: 'created_date',
     minWidth: 180,
     align: 'center'
   },
@@ -52,6 +52,15 @@ export const tableColumns: TableColumnProps[] = [
   //     return h('b', null, cellValue);
   //   }
   // },
+  {
+    label: '上架中数量',
+    prop: 'items_processing',
+    minWidth: 160,
+    align: 'center',
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue);
+    }
+  },
   {
     label: '上架成功数量',
     prop: 'items_succeeded',

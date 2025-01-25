@@ -27,7 +27,7 @@
                 <el-option value="walmart" label="沃尔玛">沃尔玛</el-option>
               </el-select>
             </div>
-            <div class="dateRangeBox">
+            <!-- <div class="dateRangeBox">
               <el-date-picker
                 v-model="dateRange"
                 type="daterange"
@@ -37,7 +37,7 @@
                 :shortcuts="shortcuts"
                 @change="getListFun"
               />
-            </div>
+            </div> -->
           </div>
         </template>
         <template #table-shop_survival="{ row }">
@@ -51,14 +51,14 @@
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
-import { ref, shallowRef } from 'vue';
+import { shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { shortcuts } from '@/config/dateRange';
+// import { shortcuts } from '@/config/dateRange';
 import { type ListingProps, getWalmartListingList, GetListingDto } from '@/api/listing';
 
 // 获取列表
 const tableData = shallowRef<ListingProps[]>([]);
-const dateRange = ref<[Date, Date]>();
+// const dateRange = ref<[Date, Date]>();
 const loading = shallowRef(false);
 const total = shallowRef(0);
 const currentPage = shallowRef(PAGE);
