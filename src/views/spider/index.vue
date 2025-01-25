@@ -61,6 +61,7 @@ watch(dateRange, () => {
 });
 
 const getListFun = async () => {
+  loading.value = true;
   try {
     let searchParams: GetSpiderDto = {
       page: currentPage.value,
@@ -83,6 +84,8 @@ const getListFun = async () => {
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
+  } finally {
+    loading.value = false;
   }
 };
 getListFun();
