@@ -28,7 +28,7 @@ export interface HandleStoreProps {
 // 获取店铺列表 - 系统管理
 export function getStoreList(params?: GetStoreDto): Promise<ResponsePageJson<StoreProps>> {
   return request({
-    url: '/walmart/shop',
+    url: '/walmart/shop/list',
     method: 'get',
     params
   });
