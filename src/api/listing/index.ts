@@ -20,12 +20,12 @@ export interface ListingProps {
 export interface ListingFilterProps {
   start_date: string;
   end_date: string;
+  type: 'Products' | 'Prices' | 'Inventory';
 }
 
 export interface GetListingDto extends Partial<ListingFilterProps> {
   page: number;
   page_size?: number;
-  order?: string;
 }
 export function getWalmartListingList(
   params: GetListingDto

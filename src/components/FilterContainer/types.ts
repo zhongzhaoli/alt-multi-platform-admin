@@ -40,6 +40,7 @@ interface FilterSelectOptionsProp<T = string, P = any> {
 }
 export interface SelectColumnProps extends BaseFilterColumnProps {
   type: 'select';
+  clearable?: boolean;
   selectOptions: FilterSelectOptionsProp[] | (() => FilterSelectOptionsProp[]);
   arrayHandle?: (arr: any[]) => any;
 }

@@ -1,5 +1,13 @@
 <template>
   <div class="container">
+    <div class="filterBox">
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+        @reset="getListFun"
+      />
+    </div>
     <div class="tableBox">
       <TsxElementTable
         v-model:current-page="currentPage"
@@ -21,24 +29,11 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <div class="d-flex align-center">
-            <div class="selectBox">
-              <el-select v-model="platform" placeholder="请选择平台" @change="getListFun">
-                <el-option value="walmart" label="沃尔玛">沃尔玛</el-option>
-              </el-select>
-            </div>
-            <!-- <div class="dateRangeBox">
-              <el-date-picker
-                v-model="dateRange"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                :shortcuts="shortcuts"
-                @change="getListFun"
-              />
-            </div> -->
-          </div>
+          <el-radio-group v-model="filterType" @change="getListFun">
+            <template v-for="item in config.filterTypeOptions" :key="item.value">
+              <el-radio-button :label="item.label" :value="item.value" />
+            </template>
+          </el-radio-group>
         </template>
         <template #table-shop_survival="{ row }">
           <el-tag v-if="row.shop_survival === 1" disable-transitions type="success"> 存活 </el-tag>
@@ -50,30 +45,28 @@
 </template>
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
+import FilterContainer from '@/components/FilterContainer/index.vue';
 import * as config from './config';
-import { shallowRef } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-// import { shortcuts } from '@/config/dateRange';
 import { type ListingProps, getWalmartListingList, GetListingDto } from '@/api/listing';
 
 // 获取列表
 const tableData = shallowRef<ListingProps[]>([]);
-// const dateRange = ref<[Date, Date]>();
+const filterValue = ref<Partial<config.FilterDto>>({});
+const filterType = ref<'Products' | 'Prices' | 'Inventory'>('Products');
 const loading = shallowRef(false);
 const total = shallowRef(0);
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
-const platform = shallowRef<'tiktok' | 'walmart'>('walmart');
 const getListFun = async () => {
-  // const startDate = dateRange.value ? dateRange.value[0] : new Date();
-  // const endDate = dateRange.value ? dateRange.value[1] : new Date();
   const searchParams: GetListingDto = {
     page: currentPage.value,
-    page_size: pageSize.value
+    page_size: pageSize.value,
+    type: filterType.value,
+    ...filterValue.value
   };
-  if (platform.value === 'walmart') {
-    getWalmartList(searchParams);
-  }
+  getWalmartList(searchParams);
 };
 
 const getWalmartList = async (params: GetListingDto) => {
@@ -97,7 +90,6 @@ getListFun();
 <style lang="scss" scoped>
 .container {
   & > .tableBox {
-    margin-top: 0;
     & .selectBox {
       width: 140px;
       margin-right: 16px;
