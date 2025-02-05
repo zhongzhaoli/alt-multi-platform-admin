@@ -11,6 +11,7 @@ import 'element-plus/dist/index.css';
 import 'remixicon/fonts/remixicon.css';
 import '@/styles/index.scss';
 import 'tsx-element-table/dist/style.css';
+import 'vue-json-viewer/style.css';
 
 function bootstrap() {
   const app = createApp(App);

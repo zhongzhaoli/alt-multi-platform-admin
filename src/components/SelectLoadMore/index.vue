@@ -115,18 +115,23 @@ onDeactivated(() => {
 </script>
 <style lang="scss" scoped>
 .selectLoadMore {
-  &:deep(.el-select__selection) {
-    & > .el-select__selected-item {
-      max-width: calc(100% - 70px);
-      & > span {
-        max-width: 100% !important;
+  &:deep(.el-select__suffix) {
+    width: 14px;
+  }
+  &.multiple {
+    &:deep(.el-select__selection) {
+      & > .el-select__selected-item {
+        max-width: calc(100% - 70px);
+        & > span {
+          max-width: 100% !important;
+        }
       }
-    }
-    & > .el-select__selected-item.el-tooltip__trigger {
-      width: unset;
-    }
-    & > .el-select__selected-item.el-select__input-wrapper {
-      width: unset;
+      & > .el-select__selected-item.el-tooltip__trigger {
+        width: unset;
+      }
+      & > .el-select__selected-item.el-select__input-wrapper {
+        width: unset;
+      }
     }
   }
 }

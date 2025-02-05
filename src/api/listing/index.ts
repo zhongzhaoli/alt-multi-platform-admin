@@ -2,7 +2,7 @@ import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export interface ListingProps {
-  created_at: string;
+  created_date: string;
   feed_id: string;
   feed_status: string;
   feed_submission_date: string;
@@ -15,6 +15,21 @@ export interface ListingProps {
   shop_name: string;
   updated_at: string;
   type: 'Products' | 'Prices';
+}
+
+export interface FeedListProps {
+  feed_id: string;
+  shop_id: string;
+  feed_status: string;
+}
+
+export interface FeedDetailProps {
+  ingestion_errors: object | null;
+  ingestion_status: 'SUCCESS' | 'TIMEOUT_ERROR' | 'DATA_ERROR' | 'SYSTEM_ERROR';
+  item_id: string;
+  product_identifiers: object | null;
+  shop_id: string;
+  sku: string;
 }
 
 export interface ListingFilterProps {
@@ -58,6 +73,38 @@ export function getWalmartSummary(params: GetListingDto): Promise<ResponsePageJs
 export function getTiktokSummary(params: GetListingDto): Promise<ResponsePageJson<ListingProps>> {
   return request({
     url: '/tk/board/listing/summary',
+    method: 'get',
+    params
+  });
+}
+
+interface GetDetailListDto {
+  created_date: string;
+  shop_id: string;
+  type: 'Products' | 'Prices' | 'Inventory';
+  page: number;
+  page_size?: number;
+}
+
+export function getWlamartFeedList(
+  params: GetDetailListDto
+): Promise<ResponsePageJson<FeedListProps>> {
+  return request({
+    url: '/walmart/products/listing/monitor/feed/ids',
+    method: 'get',
+    params
+  });
+}
+
+interface GetDetailDto {
+  page: number;
+  page_size?: number;
+  feed_id: string;
+}
+
+export function getWalmartDetail(params: GetDetailDto): Promise<ResponsePageJson<FeedDetailProps>> {
+  return request({
+    url: '/walmart/products/listing/monitor/details',
     method: 'get',
     params
   });

@@ -25,6 +25,14 @@ export const filterTypeOptions = [
 ];
 
 export const filterColumns: FilterColumnProps[] = [
+  // {
+  //   label: '所属店铺',
+  //   type: 'select',
+  //   prop: 'shop_id',
+  //   width: 280,
+  //   multiple: true,
+  //   selectOptions: []
+  // },
   {
     label: '日期',
     type: 'dateRange',
@@ -114,6 +122,12 @@ export const tableColumns: TableColumnProps[] = [
     formatter: (_row, _column, cellValue: number) => {
       return h('b', null, `${(cellValue * 100).toFixed(2)}%`);
     }
+  },
+  {
+    label: '操作',
+    prop: 'action',
+    width: 120,
+    align: 'center'
   }
 ];
 
@@ -124,5 +138,100 @@ export const handleRightColumns: HandleRightColumnProps[] = [
     tooltip: '数据导出',
     loading: false,
     icon: Download
+  }
+];
+
+// Feed List表格
+export const feedListTableColumns: TableColumnProps[] = [
+  {
+    label: 'Feed Id',
+    prop: 'feed_id',
+    minWidth: 360,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
+    label: '总数量',
+    prop: 'items_received',
+    width: 90,
+    align: 'center',
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue);
+    }
+  },
+  {
+    label: '执行中',
+    prop: 'items_processing',
+    width: 90,
+    align: 'center',
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue);
+    }
+  },
+  {
+    label: '成功',
+    prop: 'items_succeeded',
+    width: 90,
+    align: 'center',
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue);
+    }
+  },
+  {
+    label: '失败',
+    prop: 'items_failed',
+    width: 90,
+    align: 'center',
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue);
+    }
+  },
+  {
+    label: '状态',
+    prop: 'feed_status',
+    width: 120,
+    align: 'center'
+  },
+  {
+    label: '操作',
+    prop: 'action',
+    width: 100,
+    align: 'center'
+  }
+];
+
+// Feed List Detail表格
+export const feedDetailTableColumns: TableColumnProps[] = [
+  {
+    label: '#',
+    width: 50,
+    align: 'center',
+    type: 'expand',
+    prop: 'expand'
+  },
+  {
+    label: 'Feed Id',
+    prop: 'feed_id',
+    width: 380,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
+    label: 'SKU',
+    prop: 'sku',
+    minWidth: 180,
+    align: 'center'
+  },
+  {
+    label: 'Item Id',
+    prop: 'item_id',
+    minWidth: 120,
+    align: 'center'
+  },
+  {
+    label: '状态',
+    prop: 'ingestion_status',
+    minWidth: 120,
+    align: 'center'
   }
 ];

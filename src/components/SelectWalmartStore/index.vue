@@ -1,6 +1,7 @@
 <template>
   <SelectLoadMore
     v-model="selectValue"
+    :class="{ multiple }"
     :component-key="componentKey"
     placeholder="输入查询 / 选择店铺"
     :loading="loading"
