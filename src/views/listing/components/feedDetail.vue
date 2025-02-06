@@ -6,7 +6,7 @@
       title="Feed ID 详情"
       :show-close="false"
       :show-confirm-btn="false"
-      @closed="emits('closed')"
+      @closed="closed"
     >
       <div class="tableBox">
         <TsxElementTable
@@ -79,6 +79,12 @@ const getFeedDetail = async () => {
   } finally {
     detailLoading.value = false;
   }
+};
+
+const closed = () => {
+  page.value = PAGE;
+  pageSize.value = PAGE_SIZE;
+  emits('closed');
 };
 
 watch(
