@@ -10,21 +10,27 @@
     >
       <div class="tableBox">
         <TsxElementTable
+          ref="tableRef"
           v-model:current-page="page"
           v-model:page-size="pageSize"
           :table-columns="config.feedDetailTableColumns"
-          :handle="{ show: false }"
+          :handle="{ show: true }"
           :table="{
+            rowKey: 'id',
             data: detailList,
             loading: detailLoading,
             border: true,
-            defaultExpandAll: true
+            defaultExpandAll
           }"
           :pagination="{
             total: detailTotal
           }"
+          @table-refresh="getFeedDetail"
           @page-change="getFeedDetail"
         >
+          <template #handle-left>
+            <el-button @click="handleExpand">展开 / 折叠</el-button>
+          </template>
           <template #table-expand="{ row }">
             <template v-if="row.ingestion_status === 'SUCCESS'">
               <ViewJson :value="row.product_identifiers || {}" :expand-depth="5" />
@@ -44,7 +50,7 @@ import * as config from '../config';
 import { FeedDetailProps, getWalmartDetail } from '@/api/listing/index';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import TsxElementTable from 'tsx-element-table';
-import { shallowRef, watch } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import ViewJson from 'vue-json-viewer';
 
@@ -59,7 +65,7 @@ const emits = defineEmits(['update:modelValue', 'closed']);
 const visible = useVModel(props, 'modelValue', emits);
 
 const detailLoading = shallowRef(false);
-const detailList = shallowRef<FeedDetailProps[]>([]);
+const detailList = ref<FeedDetailProps[]>([]);
 const detailTotal = shallowRef(0);
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
@@ -85,6 +91,20 @@ const closed = () => {
   page.value = PAGE;
   pageSize.value = PAGE_SIZE;
   emits('closed');
+};
+
+// 展开 / 折叠
+const defaultExpandAll = shallowRef(true);
+const tableRef = shallowRef<TsxElementTable.ComponentInstance | null>(null);
+const handleExpand = () => {
+  defaultExpandAll.value = !defaultExpandAll.value;
+  toggleRowExpansionAll(defaultExpandAll.value);
+};
+const toggleRowExpansionAll = (isExpansion: boolean) => {
+  if (!tableRef.value) return;
+  for (let i = 0; i < detailList.value.length; i++) {
+    tableRef.value.getTableRef().toggleRowExpansion(detailList.value[i], isExpansion);
+  }
 };
 
 watch(
