@@ -36,6 +36,7 @@ export function getWalmartProductList(
   params: GetProductDto
 ): Promise<ResponsePageJson<WalmartProductProps>> {
   return request({
+    baseURL: 'http://192.168.3.29:3332/api/v1',
     url: '/product/walmart/list',
     method: 'get',
     params

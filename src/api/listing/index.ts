@@ -23,9 +23,10 @@ export interface FeedListProps {
   feed_status: string;
 }
 
+export type IngestionStatus = 'SUCCESS' | 'TIMEOUT_ERROR' | 'DATA_ERROR' | 'SYSTEM_ERROR';
 export interface FeedDetailProps {
   ingestion_errors: object | null;
-  ingestion_status: 'SUCCESS' | 'TIMEOUT_ERROR' | 'DATA_ERROR' | 'SYSTEM_ERROR';
+  ingestion_status: IngestionStatus;
   item_id: string;
   product_identifiers: object | null;
   shop_id: string;
@@ -100,6 +101,7 @@ interface GetDetailDto {
   page: number;
   page_size?: number;
   feed_id: string;
+  ingestion_status?: IngestionStatus;
 }
 
 export function getWalmartDetail(params: GetDetailDto): Promise<ResponsePageJson<FeedDetailProps>> {

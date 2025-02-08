@@ -29,7 +29,21 @@
           @page-change="getFeedDetail"
         >
           <template #handle-left>
-            <el-button @click="handleExpand">展开 / 折叠</el-button>
+            <div class="d-flex">
+              <el-select
+                v-model="filterIngestionStatus"
+                placeholder="Feed ID 状态"
+                style="width: 200px; margin-right: var(--normal-padding)"
+                clearable
+                @change="getFeedDetail"
+              >
+                <el-option label="SUCCESS" value="SUCCESS">SUCCESS</el-option>
+                <el-option label="TIMEOUT_ERROR" value="TIMEOUT_ERROR">TIMEOUT_ERROR</el-option>
+                <el-option label="DATA_ERROR" value="DATA_ERROR">DATA_ERROR</el-option>
+                <el-option label="SYSTEM_ERROR" value="SYSTEM_ERROR">SYSTEM_ERROR</el-option>
+              </el-select>
+              <el-button @click="handleExpand">展开 / 折叠</el-button>
+            </div>
           </template>
           <template #table-expand="{ row }">
             <template v-if="row.ingestion_status === 'SUCCESS'">
@@ -47,7 +61,7 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core';
 import * as config from '../config';
-import { FeedDetailProps, getWalmartDetail } from '@/api/listing/index';
+import { FeedDetailProps, getWalmartDetail, IngestionStatus } from '@/api/listing/index';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import { ref, shallowRef, watch } from 'vue';
@@ -69,6 +83,7 @@ const detailList = ref<FeedDetailProps[]>([]);
 const detailTotal = shallowRef(0);
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
+const filterIngestionStatus = ref<IngestionStatus>();
 const getFeedDetail = async () => {
   if (!props.feedId) return;
   try {
@@ -76,7 +91,8 @@ const getFeedDetail = async () => {
     const { data } = await getWalmartDetail({
       page: page.value,
       page_size: pageSize.value,
-      feed_id: props.feedId
+      feed_id: props.feedId,
+      ingestion_status: filterIngestionStatus.value
     });
     detailList.value = data?.list || [];
     detailTotal.value = data?.total || 0;
