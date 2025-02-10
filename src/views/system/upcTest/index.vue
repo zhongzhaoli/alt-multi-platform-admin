@@ -60,7 +60,7 @@
       :show-confirm-btn="false"
       cancel-btn-text="关闭"
     >
-      <div class="logDiv">
+      <div v-loading="logLoading" class="logDiv">
         <el-scrollbar wrap-class="logDiv" style="height: 100%">
           <div v-for="(log, index) in logsList" :key="index">{{ log }}</div>
         </el-scrollbar>
