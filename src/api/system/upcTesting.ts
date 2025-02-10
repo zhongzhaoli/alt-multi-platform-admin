@@ -42,6 +42,15 @@ export function createUpcTesting(data: FormData): Promise<any> {
 export function getUpcTestingLogs(taskId: string): Promise<ResponseJson<string[]>> {
   return request({
     baseURL: VITE_NODE_API_URL,
-    url: `/upcTesting/logs/${taskId}`
+    url: `/upcTesting/logs/${taskId}`,
+    method: 'get'
+  });
+}
+
+export function getcanuseTotal(): Promise<ResponseJson<number>> {
+  return request({
+    baseURL: VITE_NODE_API_URL,
+    url: '/upcTesting/canuseTotal',
+    method: 'get'
   });
 }

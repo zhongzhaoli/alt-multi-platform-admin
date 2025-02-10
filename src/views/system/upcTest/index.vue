@@ -70,7 +70,12 @@
 </template>
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
-import { getUpcTestingList, createUpcTesting, getUpcTestingLogs } from '@/api/system/upcTesting';
+import {
+  getUpcTestingList,
+  createUpcTesting,
+  getUpcTestingLogs,
+  getcanuseTotal
+} from '@/api/system/upcTesting';
 import type { UpcTestingProps } from '@/api/system/upcTesting';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { Loading } from '@element-plus/icons-vue';
@@ -163,6 +168,16 @@ const openLogs = async (taskId: string) => {
   }
 };
 
+// 获取可用UPC池
+const getCanuseUpcPool = async () => {
+  try {
+    const { data } = await getcanuseTotal();
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+getCanuseUpcPool();
 getListFun();
 </script>
 <style lang="scss" scoped>
