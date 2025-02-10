@@ -213,9 +213,9 @@ getListFun();
     & > .poolNum {
       margin-left: var(--normal-padding);
       color: #a0a0a0;
+      display: inline-flex;
       & > span {
         display: inline-block;
-        vertical-align: middle;
         height: 14px;
         line-height: 14px;
       }
