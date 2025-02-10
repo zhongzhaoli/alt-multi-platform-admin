@@ -2,7 +2,7 @@
   <el-upload
     ref="uploadRef"
     drag
-    :action="`${baseURL}${api}`"
+    :action="`${actionUrl}`"
     :headers="{ Authorization: token }"
     :name="fileKey"
     :accept="accept"
@@ -75,6 +75,7 @@ import {
 interface ComponentProps {
   accept?: string;
   api?: string;
+  apiBaseUrl?: string;
   extraData?: Record<string, any>;
   multiple: boolean;
   fileKey?: string;
@@ -83,9 +84,12 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   accept: 'all',
   api: `/upload/case_img`,
   multiple: true,
-  fileKey: 'files'
+  fileKey: 'files',
+  apiBaseUrl: baseURL
 });
 const emits = defineEmits(['success', 'error', 'partSuccess']);
+
+const actionUrl = computed(() => `${props.apiBaseUrl}${props.api}`);
 
 const userStore = useUserStore();
 const token = computed(() => userStore.token);
@@ -168,7 +172,7 @@ const upload = async (formData: FormData, fileListItem: UploadFile) => {
   fileListItem.status = 'uploading';
   try {
     const response = await request({
-      url: props.api,
+      url: actionUrl.value,
       method: 'post',
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -236,6 +240,11 @@ const beforeUpload = (rawFile: UploadRawFile) => {
   });
 };
 
+// 返回文件列表
+const getFileList = () => {
+  return fileList.value;
+};
+
 // 删除单个文件
 const removeFile = (uid: number | string) => {
   fileList.value = fileList.value.filter((item) => item.uid !== uid);
@@ -244,8 +253,9 @@ const removeFile = (uid: number | string) => {
 export interface FileUploadInstance {
   submit: () => void;
   clean: () => void;
+  getFileList: () => UploadFile[];
 }
-defineExpose({ submit, clean });
+defineExpose({ submit, clean, getFileList });
 </script>
 <style lang="scss" scoped>
 .fileList {
