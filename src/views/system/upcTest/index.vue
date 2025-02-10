@@ -20,7 +20,15 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <el-button type="primary" @click="addTask">新增任务</el-button>
+          <div class="d-flex align-center handleLeftBox">
+            <el-button type="primary" @click="addTask">新增任务</el-button>
+            <div class="poolNum">
+              <span class="refresh" @click="getCanuseUpcPool(true)">
+                <el-icon size="13"><Refresh /></el-icon>
+              </span>
+              <span class="num">可用UPC池数量：{{ canuseUpcPool || 0 }}</span>
+            </div>
+          </div>
         </template>
         <template #table-status="{ row }">
           <el-tag :type="row.statusTag.type" disable-transitions>
@@ -61,9 +69,14 @@
       cancel-btn-text="关闭"
     >
       <div v-loading="logLoading" class="logDiv">
-        <el-scrollbar wrap-class="logDiv" style="height: 100%">
-          <div v-for="(log, index) in logsList" :key="index">{{ log }}</div>
-        </el-scrollbar>
+        <template v-if="logsList.length">
+          <el-scrollbar wrap-class="logDiv" style="height: 100%">
+            <div v-for="(log, index) in logsList" :key="index">{{ log }}</div>
+          </el-scrollbar>
+        </template>
+        <template v-if="isError">
+          <div>找不到日志文件</div>
+        </template>
       </div>
     </ConfirmDialog>
   </div>
@@ -78,7 +91,7 @@ import {
 } from '@/api/system/upcTesting';
 import type { UpcTestingProps } from '@/api/system/upcTesting';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import { Loading } from '@element-plus/icons-vue';
+import { Loading, Refresh } from '@element-plus/icons-vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import * as config from './config';
 import { ref, shallowRef } from 'vue';
@@ -154,25 +167,30 @@ const uploadSubmit = async () => {
 const logDialogVisible = shallowRef(false);
 const logLoading = shallowRef(false);
 const logsList = ref<string[]>([]);
+const isError = shallowRef(false);
 const openLogs = async (taskId: string) => {
   logDialogVisible.value = true;
   logLoading.value = true;
+  isError.value = false;
   logsList.value = [];
   try {
     const { data } = await getUpcTestingLogs(taskId);
     logsList.value = (data || []).reverse().filter((item) => item);
   } catch (err) {
     console.log(err);
+    isError.value = true;
   } finally {
     logLoading.value = false;
   }
 };
 
 // 获取可用UPC池
-const getCanuseUpcPool = async () => {
+const canuseUpcPool = shallowRef(0);
+const getCanuseUpcPool = async (refresh = false) => {
   try {
     const { data } = await getcanuseTotal();
-    console.log(data);
+    canuseUpcPool.value = data;
+    if (refresh) ElMessage.success('刷新成功');
   } catch (err) {
     console.log(err);
   }
@@ -189,6 +207,30 @@ getListFun();
     }
     &:deep(.el-tag__content) {
       display: flex;
+    }
+  }
+  & .handleLeftBox {
+    & > .poolNum {
+      margin-left: var(--normal-padding);
+      color: #a0a0a0;
+      & > span {
+        display: inline-block;
+        vertical-align: middle;
+        height: 14px;
+        line-height: 14px;
+      }
+      & > .refresh {
+        margin-right: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        &:hover {
+          color: var(--el-color-primary);
+          transform: rotate(90deg);
+        }
+      }
+      & > .num {
+        font-size: 13px;
+      }
     }
   }
   & .logDiv {
