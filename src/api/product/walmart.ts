@@ -1,43 +1,37 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
-export enum ProductStatusEnum {
-  'UNPUBLISHED' = 'UNPUBLISHED',
-  'PUBLISHED' = 'PUBLISHED',
-  'ERROR' = 'ERROR'
-}
+export type ProductStatus = 0 | 1 | 2 | 3;
 
 export interface WalmartProductProps {
-  platform: string;
-  shopName: string;
-  shopId: string;
-  productImageUrl: string;
-  productName: string;
-  productSku: string;
-  productId: string;
-  price: number;
-  status: ProductStatusEnum;
+  image_url: string[];
+  shop_id: string;
+  shop_name: string;
+  new_title: string;
+  title: string;
+  asin: string;
+  sku: string;
   stock: number;
-  stockWarning: boolean;
+  price: number;
+  status: ProductStatus;
 }
 
 export interface WalmartProductFilterProps {
   platform: string;
   shopId: string;
-  status: ProductStatusEnum;
+  status: ProductStatus;
 }
 
 export interface GetProductDto extends Partial<WalmartProductFilterProps> {
   page: number;
-  pageSize?: number;
+  page_size?: number;
 }
 
 export function getWalmartProductList(
   params: GetProductDto
 ): Promise<ResponsePageJson<WalmartProductProps>> {
   return request({
-    baseURL: 'http://192.168.3.29:3332/api/v1',
-    url: '/product/walmart/list',
+    url: '/walmart/products/list',
     method: 'get',
     params
   });

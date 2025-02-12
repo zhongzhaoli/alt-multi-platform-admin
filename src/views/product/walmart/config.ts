@@ -1,4 +1,4 @@
-import { ProductStatusEnum } from '@/api/product/walmart';
+import { ProductStatus } from '@/api/product/walmart';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
 import { ElText } from 'element-plus';
@@ -7,22 +7,27 @@ import { h } from 'vue';
 
 const walmartProductStatusMap: Array<{
   label: string;
-  value: ProductStatusEnum;
+  value: ProductStatus;
   type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
 }> = [
   {
-    label: '未发布',
-    value: ProductStatusEnum.UNPUBLISHED,
+    label: '未上架',
+    value: 0,
     type: 'info'
   },
   {
-    label: '已发布',
-    value: ProductStatusEnum.PUBLISHED,
+    label: '已上架',
+    value: 1,
     type: 'success'
   },
   {
-    label: '错误',
-    value: ProductStatusEnum.ERROR,
+    label: '上架失败',
+    value: 2,
+    type: 'danger'
+  },
+  {
+    label: '下架',
+    value: 3,
     type: 'danger'
   }
 ];
@@ -47,7 +52,10 @@ export const tableColumns: TableColumnProps[] = [
     label: '爬取平台',
     align: 'center',
     width: 160,
-    prop: 'platform'
+    prop: 'platform',
+    formatter: (_row, _column, _cellValue) => {
+      return '亚马逊';
+    }
   },
   {
     label: 'ASIN',
@@ -66,13 +74,13 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     width: 200,
     showOverflowTooltip: true,
-    prop: 'shopName'
+    prop: 'shop_name'
   },
   {
     label: '店铺ID',
     align: 'center',
     width: 160,
-    prop: 'shopId'
+    prop: 'shop_id'
   },
   {
     label: '价格',
@@ -101,13 +109,13 @@ export const tableColumns: TableColumnProps[] = [
     formatter: (_row, _column, cellValue) => {
       return h('b', null, cellValue);
     }
-  },
-  {
-    label: '库存预警',
-    align: 'center',
-    prop: 'stockWarning',
-    minWidth: 140
   }
+  // {
+  //   label: '库存预警',
+  //   align: 'center',
+  //   prop: 'stockWarning',
+  //   minWidth: 140
+  // }
 ];
 
 // 右侧导出按钮

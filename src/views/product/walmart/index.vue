@@ -46,14 +46,14 @@
             type="ordinary"
             :size="60"
             :image-url="row.productImageUrl"
-            :product-name="row.productName"
+            :product-name="row.new_title || row.title"
             :desc-list="[
               {
-                text: row.productId,
+                text: row.product_id,
                 prefix: 'ID'
               },
               {
-                text: row.productSku,
+                text: row.sku,
                 prefix: 'SKU'
               }
             ]"
@@ -102,10 +102,15 @@ const getListFun = async () => {
   try {
     const { data } = await getWalmartProductList({
       page: currentPage.value,
-      pageSize: pageSize.value,
+      page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => {
+      return {
+        ...item,
+        productImageUrl: item.image_url[0]
+      };
+    });
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

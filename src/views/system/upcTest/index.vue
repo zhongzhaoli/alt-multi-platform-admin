@@ -26,7 +26,9 @@
               <span class="refresh" @click="getCanuseUpcPool(true)">
                 <el-icon size="13"><Refresh /></el-icon>
               </span>
-              <span class="num">可用UPC池数量：{{ canuseUpcPool || 0 }}</span>
+              <span class="num">
+                可用UPC池数量：<b>{{ canuseUpcPool || 0 }}</b>
+              </span>
             </div>
           </div>
         </template>
@@ -71,7 +73,8 @@
       <div v-loading="logLoading" class="logDiv">
         <template v-if="logsList.length">
           <el-scrollbar wrap-class="logDiv" style="height: 100%">
-            <div v-for="(log, index) in logsList" :key="index">{{ log }}</div>
+            <!-- <div v-for="(log, index) in logsList" :key="index">{{ log }}</div> -->
+            {{ logsList.length }}
           </el-scrollbar>
         </template>
         <template v-if="isError">
