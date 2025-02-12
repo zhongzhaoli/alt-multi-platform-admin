@@ -73,8 +73,7 @@
       <div v-loading="logLoading" class="logDiv">
         <template v-if="logsList.length">
           <el-scrollbar wrap-class="logDiv" style="height: 100%">
-            <!-- <div v-for="(log, index) in logsList" :key="index">{{ log }}</div> -->
-            {{ logsList.length }}
+            <div v-for="(log, index) in logsList" :key="index">{{ log }}</div>
           </el-scrollbar>
         </template>
         <template v-if="isError">
