@@ -1,9 +1,26 @@
-import { ProductStatus } from '@/api/product/walmart';
+import { ProductStatus, ProductCheckStatus } from '@/api/product/walmart';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
 import { ElText } from 'element-plus';
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
+
+const walmartProductCheckStatusMap: Array<{
+  label: string;
+  value: ProductCheckStatus;
+  type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
+}> = [
+  {
+    label: '未检查',
+    value: 0,
+    type: 'info'
+  },
+  {
+    label: '已检查',
+    value: 1,
+    type: 'success'
+  }
+];
 
 const walmartProductStatusMap: Array<{
   label: string;
@@ -98,6 +115,16 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'status',
     formatter: (_row, _column, cellValue) => {
       const status = walmartProductStatusMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: status?.type || 'info' }, () => status?.label || '');
+    }
+  },
+  {
+    label: '检查状态',
+    align: 'center',
+    minWidth: 140,
+    prop: 'checked',
+    formatter: (_row, _column, cellValue) => {
+      const status = walmartProductCheckStatusMap.find((item) => item.value === cellValue);
       return h(ElText, { type: status?.type || 'info' }, () => status?.label || '');
     }
   },

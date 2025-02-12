@@ -2,6 +2,7 @@ import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export type ProductStatus = 0 | 1 | 2 | 3;
+export type ProductCheckStatus = 0 | 1;
 
 export interface WalmartProductProps {
   image_url: string[];
@@ -14,6 +15,7 @@ export interface WalmartProductProps {
   stock: number;
   price: number;
   status: ProductStatus;
+  checked: ProductCheckStatus;
 }
 
 export interface WalmartProductFilterProps {
