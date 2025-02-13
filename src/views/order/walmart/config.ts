@@ -47,7 +47,7 @@ export const filterColumns: FilterColumnProps[] = [
     label: '所属店铺',
     type: 'select',
     prop: 'shop_id',
-    width: 280,
+    width: 240,
     multiple: true,
     selectOptions: []
   },

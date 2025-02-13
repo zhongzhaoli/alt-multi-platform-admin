@@ -51,9 +51,12 @@ const walmartProductStatusMap: Array<{
 
 export const filterColumns: FilterColumnProps[] = [
   {
-    label: '店铺名称',
-    prop: 'shopId',
-    type: 'input'
+    label: '所属店铺',
+    type: 'select',
+    prop: 'shop_id',
+    width: 240,
+    multiple: true,
+    selectOptions: []
   },
   {
     label: '状态',
@@ -61,6 +64,18 @@ export const filterColumns: FilterColumnProps[] = [
     type: 'select',
     multiple: true,
     selectOptions: walmartProductStatusMap
+  },
+  {
+    label: 'ASIN',
+    prop: 'asin',
+    type: 'input',
+    multiple: true
+  },
+  {
+    label: 'SKU',
+    prop: 'sku',
+    type: 'input',
+    multiple: true
   }
 ];
 

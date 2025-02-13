@@ -7,9 +7,9 @@
         @submit="getListFun"
         @reset="getListFun"
       >
-        <!-- <template #shopId="{ form, row }"> -->
-        <!-- <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" /> -->
-        <!-- </template> -->
+        <template #shop_id="{ form, row }">
+          <SelectWalmartStore v-model="form[row.prop]" multiple @change="getListFun" />
+        </template>
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
-// import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
+import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import * as config from './config';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
