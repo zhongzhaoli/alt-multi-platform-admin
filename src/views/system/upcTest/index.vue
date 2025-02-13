@@ -45,7 +45,7 @@
           </el-tag>
         </template>
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="openLogs(row.taskId)">日志</el-button>
+          <el-button link type="primary" @click="downloadLog(row.taskId)">下载日志</el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -63,24 +63,6 @@
       </div>
       <FileUpload ref="fileUploadRef" accept=".xlsx" :multiple="true" />
     </ConfirmDialog>
-    <ConfirmDialog
-      v-model="logDialogVisible"
-      width="800px"
-      title="日志"
-      :show-confirm-btn="false"
-      cancel-btn-text="关闭"
-    >
-      <div v-loading="logLoading" class="logDiv">
-        <template v-if="logsList.length">
-          <el-scrollbar wrap-class="logDiv" style="height: 100%">
-            <div v-for="(log, index) in logsList" :key="index">{{ log }}</div>
-          </el-scrollbar>
-        </template>
-        <template v-if="isError">
-          <div>找不到日志文件</div>
-        </template>
-      </div>
-    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -88,8 +70,8 @@ import TsxElementTable from 'tsx-element-table';
 import {
   getUpcTestingList,
   createUpcTesting,
-  getUpcTestingLogs,
-  getcanuseTotal
+  getcanuseTotal,
+  getUpcTestingLogs
 } from '@/api/system/upcTesting';
 import type { UpcTestingProps } from '@/api/system/upcTesting';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
@@ -99,6 +81,8 @@ import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import FileUpload, { type FileUploadInstance } from '@/components/FileUpload/index.vue';
 import { ElMessage } from 'element-plus';
+import { useFullLoading } from '@/hooks/useFullLoading';
+import { downloadCore } from '@/utils';
 
 // 任务列表
 const currentPage = shallowRef(PAGE);
@@ -165,24 +149,17 @@ const uploadSubmit = async () => {
   }
 };
 
-// 日志
-const logDialogVisible = shallowRef(false);
-const logLoading = shallowRef(false);
-const logsList = ref<string[]>([]);
-const isError = shallowRef(false);
-const openLogs = async (taskId: string) => {
-  logDialogVisible.value = true;
-  logLoading.value = true;
-  isError.value = false;
-  logsList.value = [];
+// 下载日志
+const fullLoading = useFullLoading();
+const downloadLog = async (taskId: string) => {
+  fullLoading.open();
   try {
-    const { data } = await getUpcTestingLogs(taskId);
-    logsList.value = (data || []).reverse().filter((item) => item);
+    const blob = await getUpcTestingLogs(taskId);
+    downloadCore(blob, `UPC检测-${taskId}.txt`);
   } catch (err) {
     console.log(err);
-    isError.value = true;
   } finally {
-    logLoading.value = false;
+    // fullLoading.close();
   }
 };
 

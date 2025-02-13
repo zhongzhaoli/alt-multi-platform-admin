@@ -39,12 +39,12 @@ export function createUpcTesting(data: FormData): Promise<any> {
   });
 }
 
-export function getUpcTestingLogs(taskId: string): Promise<ResponseJson<string[]>> {
+export function getUpcTestingLogs(taskId: string): Promise<Blob> {
   return request({
     baseURL: VITE_NODE_API_URL,
-    url: `/upcTesting/logs/${taskId}`,
+    url: `/upcTesting/logs/download/${taskId}`,
     method: 'get',
-    customServerErrorMessage: null
+    responseType: 'blob'
   });
 }
 
