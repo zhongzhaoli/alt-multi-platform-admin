@@ -159,7 +159,7 @@ const downloadLog = async (taskId: string) => {
   } catch (err) {
     console.log(err);
   } finally {
-    // fullLoading.close();
+    fullLoading.close();
   }
 };
 
