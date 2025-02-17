@@ -99,6 +99,7 @@ getListFun();
       &:deep(.el-date-editor) {
         font-size: 12px;
         width: 100%;
+        box-sizing: border-box;
       }
       * {
         font-size: 13px;
