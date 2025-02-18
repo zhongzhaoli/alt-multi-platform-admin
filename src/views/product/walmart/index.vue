@@ -49,7 +49,7 @@
             :product-name="row.new_title || row.title"
             :desc-list="[
               {
-                text: row.product_id,
+                text: row.item_id,
                 prefix: 'ID'
               },
               {

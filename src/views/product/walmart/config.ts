@@ -115,12 +115,19 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'shop_id'
   },
   {
-    label: '价格',
+    label: '价格 / 亚马逊价格',
     align: 'center',
     prop: 'price',
     minWidth: 140,
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, `$ ${parseFloat(cellValue).toFixed(2)}`);
+    formatter: (row, _column, cellValue) => {
+      return h('div', null, [
+        h(
+          'div',
+          { style: { fontWeight: 'bold', color: '#000' } },
+          `$ ${parseFloat(row.shop_price).toFixed(2)}`
+        ),
+        h('div', { style: { color: '#999' } }, `$ ${parseFloat(cellValue).toFixed(2)}`)
+      ]);
     }
   },
   {
