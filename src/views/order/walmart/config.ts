@@ -90,7 +90,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '订单号',
     align: 'center',
-    width: 220,
+    width: 210,
     prop: 'orderNo'
   },
   {
@@ -102,13 +102,13 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺名称',
     align: 'center',
-    width: 180,
+    width: 140,
     prop: 'shop_name'
   },
   {
     label: '订单状态',
     align: 'center',
-    minWidth: 140,
+    minWidth: 110,
     prop: 'order_line_status',
     formatter: (_row, _column, cellValue) => {
       const status = walmartStatusMap.find((item) => item.value === cellValue);
@@ -118,7 +118,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '匹对ASIN',
     align: 'center',
-    width: 180,
+    width: 160,
     prop: 'asin'
   },
   {
