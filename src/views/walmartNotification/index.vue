@@ -41,6 +41,7 @@ import * as config from './config';
 import { getNotificationList, type NotificationProps } from '@/api/notification';
 import { shallowRef, ref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
+import moment from 'moment-timezone';
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = shallowRef<NotificationProps[]>([]);
@@ -56,7 +57,10 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      created_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
+    }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

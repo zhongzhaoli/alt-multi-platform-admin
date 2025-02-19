@@ -16,6 +16,8 @@ export interface WalmartProductProps {
   price: number;
   status: ProductStatus;
   checked: ProductCheckStatus;
+  updated_at: string;
+  created_at: string;
 }
 
 export interface WalmartProductFilterProps {

@@ -57,11 +57,23 @@
           data: feedList,
           loading: feedListLoading
         }"
+        :handle="{
+          show: true
+        }"
         :pagination="{
           total: feedListTotal
         }"
         @page-change="getFeedList"
+        @table-refresh="getFeedList"
       >
+        <template #handle-left>
+          <el-input
+            v-model="listingFilterFeedId"
+            placeholder="Feed Id"
+            style="width: 200px"
+            @keydown.enter="getFeedList"
+          />
+        </template>
         <template #table-action="{ row }">
           <el-button link type="primary" @click="openDetail(row)">详情</el-button>
         </template>
@@ -86,7 +98,8 @@ import {
   getWalmartListingList,
   GetListingDto,
   FeedListProps,
-  getWlamartFeedList
+  getWlamartFeedList,
+  GetDetailListDto
 } from '@/api/listing';
 import { cloneDeep } from 'lodash-es';
 
@@ -132,6 +145,7 @@ const feedListTotal = shallowRef(0);
 const feedListPage = shallowRef(PAGE);
 const feedListPageSize = shallowRef(PAGE_SIZE);
 const feedList = shallowRef<FeedListProps[]>([]);
+const listingFilterFeedId = ref<string>('');
 const tempListing = shallowRef<ListingProps | null>(null);
 const openFeedList = (row: ListingProps) => {
   feedListDrawer.value = true;
@@ -142,13 +156,17 @@ const getFeedList = async () => {
   if (!tempListing.value) return;
   try {
     feedListLoading.value = true;
-    const { data } = await getWlamartFeedList({
+    const searchParams: GetDetailListDto = {
       shop_id: tempListing.value.shop_id,
       created_date: tempListing.value.created_date,
       type: tempListing.value.type,
       page: feedListPage.value,
       page_size: feedListPageSize.value
-    });
+    };
+    if (listingFilterFeedId.value) {
+      searchParams.feed_id = listingFilterFeedId.value;
+    }
+    const { data } = await getWlamartFeedList(searchParams);
     feedList.value = data?.list || [];
     feedListTotal.value = data?.total || 0;
   } catch (err) {

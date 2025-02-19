@@ -174,6 +174,7 @@ import SearchRole from '../components/SearchRole/index.vue';
 import { cloneDeep } from 'lodash-es';
 import { useMessageBox } from '@/hooks/useMessageBox';
 import { SelectTargetInstance } from '@/components/SelectTarget/useSelectTarget';
+import moment from 'moment-timezone';
 
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
@@ -218,7 +219,10 @@ const getListFun = async () => {
       page_size: unref(pageSize),
       ...unref(filterValue)
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      login_time: moment(item.login_time).format('YYYY-MM-DD HH:mm:ss')
+    }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

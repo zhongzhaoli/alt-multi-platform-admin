@@ -83,7 +83,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '爬取平台',
     align: 'center',
-    width: 160,
+    width: 120,
     prop: 'platform',
     formatter: (_row, _column, _cellValue) => {
       return '亚马逊';
@@ -111,7 +111,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺ID',
     align: 'center',
-    width: 160,
+    width: 140,
     prop: 'shop_id'
   },
   {
@@ -133,7 +133,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '状态',
     align: 'center',
-    minWidth: 140,
+    minWidth: 120,
     prop: 'status',
     formatter: (_row, _column, cellValue) => {
       const status = walmartProductStatusMap.find((item) => item.value === cellValue);
@@ -143,7 +143,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '检查状态',
     align: 'center',
-    minWidth: 140,
+    minWidth: 120,
     prop: 'checked',
     formatter: (_row, _column, cellValue) => {
       const status = walmartProductCheckStatusMap.find((item) => item.value === cellValue);
@@ -154,10 +154,22 @@ export const tableColumns: TableColumnProps[] = [
     label: '库存',
     align: 'center',
     prop: 'stock',
-    minWidth: 140,
+    minWidth: 120,
     formatter: (_row, _column, cellValue) => {
       return h('b', null, cellValue);
     }
+  },
+  {
+    label: '更新时间',
+    align: 'center',
+    prop: 'updated_at',
+    minWidth: 180
+  },
+  {
+    label: '创建时间',
+    align: 'center',
+    prop: 'created_at',
+    minWidth: 180
   }
   // {
   //   label: '库存预警',

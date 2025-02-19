@@ -79,12 +79,13 @@ export function getTiktokSummary(params: GetListingDto): Promise<ResponsePageJso
   });
 }
 
-interface GetDetailListDto {
+export interface GetDetailListDto {
   created_date: string;
   shop_id: string;
   type: 'Products' | 'Prices' | 'Inventory';
   page: number;
   page_size?: number;
+  feed_id?: string;
 }
 
 export function getWlamartFeedList(
@@ -97,11 +98,12 @@ export function getWlamartFeedList(
   });
 }
 
-interface GetDetailDto {
+export interface GetDetailDto {
   page: number;
   page_size?: number;
   feed_id: string;
   ingestion_status?: IngestionStatus;
+  sku?: string;
 }
 
 export function getWalmartDetail(params: GetDetailDto): Promise<ResponsePageJson<FeedDetailProps>> {

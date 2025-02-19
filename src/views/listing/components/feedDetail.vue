@@ -42,6 +42,12 @@
                 <el-option label="DATA_ERROR" value="DATA_ERROR">DATA_ERROR</el-option>
                 <el-option label="SYSTEM_ERROR" value="SYSTEM_ERROR">SYSTEM_ERROR</el-option>
               </el-select>
+              <el-input
+                v-model="filterSku"
+                placeholder="SKU"
+                style="width: 200px; margin-right: var(--normal-padding)"
+                @keydown.enter="getFeedDetail"
+              />
               <el-button @click="handleExpand">展开 / 折叠</el-button>
             </div>
           </template>
@@ -61,7 +67,12 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core';
 import * as config from '../config';
-import { FeedDetailProps, getWalmartDetail, IngestionStatus } from '@/api/listing/index';
+import {
+  FeedDetailProps,
+  GetDetailDto,
+  getWalmartDetail,
+  IngestionStatus
+} from '@/api/listing/index';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import { ref, shallowRef, watch } from 'vue';
@@ -84,16 +95,21 @@ const detailTotal = shallowRef(0);
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const filterIngestionStatus = ref<IngestionStatus>();
+const filterSku = ref<string>('');
 const getFeedDetail = async () => {
   if (!props.feedId) return;
   try {
     detailLoading.value = true;
-    const { data } = await getWalmartDetail({
+    const searchParams: GetDetailDto = {
       page: page.value,
       page_size: pageSize.value,
       feed_id: props.feedId,
       ingestion_status: filterIngestionStatus.value
-    });
+    };
+    if (filterSku.value) {
+      searchParams.sku = filterSku.value;
+    }
+    const { data } = await getWalmartDetail(searchParams);
     detailList.value = data?.list || [];
     detailTotal.value = data?.total || 0;
   } catch (err) {

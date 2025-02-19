@@ -90,6 +90,7 @@ import {
 } from '@/api/product/walmart';
 import ProductItem from '@/components/ProductItem/index.vue';
 import { RenderCopyIcon } from '@/utils';
+import moment from 'moment-timezone';
 
 const filterValue = ref<Partial<WalmartProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
@@ -105,12 +106,12 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = (data?.list || []).map((item) => {
-      return {
-        ...item,
-        productImageUrl: item.image_url[0]
-      };
-    });
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      productImageUrl: item.image_url[0],
+      updated_at: moment(item.updated_at).format('YYYY-MM-DD HH:mm:ss'),
+      created_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
+    }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
