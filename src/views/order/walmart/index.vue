@@ -94,7 +94,7 @@
           {{ row.asin || '-' }}
         </template>
         <template #table-address="{ row }">
-          <div>{{ row.phone }}</div>
+          <TextEllipsis :text="`${row.postal_address_name} (${row.phone})`" />
           <TextEllipsis
             :text="`${row.postal_city} ${row.postal_state} ${row.postal_address1 || ''} ${row.postal_address2 || ''}`"
           />

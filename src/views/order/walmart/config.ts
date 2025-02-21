@@ -180,7 +180,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '收货地址',
     align: 'center',
-    minWidth: 200,
+    minWidth: 220,
     prop: 'address'
   },
   {
