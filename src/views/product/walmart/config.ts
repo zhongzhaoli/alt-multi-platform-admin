@@ -185,6 +185,7 @@ export const handleRightColumns: HandleRightColumnProps[] = [
     key: 'export',
     tooltip: '数据导出',
     loading: false,
-    icon: Download
+    icon: Download,
+    show: false
   }
 ];

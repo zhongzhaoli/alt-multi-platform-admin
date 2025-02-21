@@ -1,5 +1,6 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
+import { CancelToken } from 'axios';
 export enum WalmartStausEnum {
   'Created' = 'Created',
   'Acknowledged' = 'Acknowledged',
@@ -55,6 +56,10 @@ export interface GetOrderDto extends Partial<WalmartOrderFilterProps> {
   order?: string;
 }
 
+export interface OrderExportProps extends Partial<WalmartOrderFilterProps> {
+  order?: string;
+}
+
 // 列表
 export function getWalmartOrderList(
   params: GetOrderDto
@@ -81,5 +86,17 @@ export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
     url: '/walmart/order/shipping',
     method: 'post',
     data
+  });
+}
+
+// 订单导出
+export function orderExport(params: OrderExportProps, cancelToken: CancelToken): Promise<Blob> {
+  return request({
+    url: '/walmart/order/list/export',
+    method: 'get',
+    responseType: 'blob',
+    timeout: 120000,
+    params,
+    cancelToken
   });
 }

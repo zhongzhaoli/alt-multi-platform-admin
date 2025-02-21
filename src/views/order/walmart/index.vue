@@ -24,7 +24,8 @@
           loading
         }"
         :handle="{
-          show: true
+          show: true,
+          rightColumns: config.handleRightColumns
         }"
         :pagination="{
           total
@@ -33,6 +34,7 @@
         @table-refresh="getListFun"
         @page-change="getListFun"
         @sort-change="sortChange"
+        @handle-right-click="handleRightClick"
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
@@ -188,7 +190,7 @@ import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import { RenderCopyIcon } from '@/utils/index';
+import { downloadCore, RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import { carrierList } from '../carrier';
 import LinkItem from '@/components/LinkItem/index.vue';
@@ -203,10 +205,13 @@ import {
   type DeliverProductsDto,
   type WalmartOrderFilterProps,
   type GetOrderDto,
-  WalmartStausEnum
+  WalmartStausEnum,
+  orderExport
 } from '@/api/order/walmart';
 import { cloneDeep } from 'lodash-es';
 import { ElMessage } from 'element-plus';
+import { useFullLoading } from '@/hooks/useFullLoading';
+import axios, { CancelTokenSource } from 'axios';
 
 // 排序条件变化
 const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
@@ -254,6 +259,23 @@ getListFun();
 const selectionList = shallowRef<WalmartOrderProps[]>([]);
 const selectionChange = (rows: WalmartOrderProps[]) => {
   selectionList.value = cloneDeep(rows);
+};
+
+// 导出
+const fullLoading = useFullLoading();
+const cancelToken = axios.CancelToken;
+let source: CancelTokenSource;
+const handleRightClick = async () => {
+  fullLoading.open();
+  try {
+    source = cancelToken.source();
+    const data = await orderExport(filterValue.value, source.token);
+    downloadCore(data, `订单列表.xlsx`);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    fullLoading.close();
+  }
 };
 
 // 发货
