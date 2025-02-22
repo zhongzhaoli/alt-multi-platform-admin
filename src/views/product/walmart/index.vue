@@ -95,7 +95,7 @@ import moment from 'moment-timezone';
 const filterValue = ref<Partial<WalmartProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
-const tableData = shallowRef<WalmartProductProps[]>([]);
+const tableData = ref<WalmartProductProps[]>([]);
 const loading = shallowRef(false);
 const total = shallowRef(0);
 const getListFun = async () => {

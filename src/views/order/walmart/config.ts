@@ -3,9 +3,8 @@ import { FilterColumnProps } from '@/components/FilterContainer/types';
 import { h } from 'vue';
 import { WalmartOrderProps, WalmartStausEnum } from '@/api/order/walmart';
 import { Download } from '@element-plus/icons-vue';
-import { ElText } from 'element-plus';
 
-const walmartStatusMap: Array<{
+export const walmartStatusMap: Array<{
   label: string;
   value: WalmartStausEnum;
   type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
@@ -80,9 +79,10 @@ export const tableColumns: TableColumnProps[] = [
     type: 'selection',
     reserveSelection: true,
     selectable: (row: WalmartOrderProps) => {
-      return (
-        row.order_line_status === WalmartStausEnum.Created ||
-        row.order_line_status === WalmartStausEnum.Acknowledged
+      return row.children.every(
+        (row) =>
+          row.order_line_status === WalmartStausEnum.Created ||
+          row.order_line_status === WalmartStausEnum.Acknowledged
       );
     },
     prop: 'selection'
@@ -94,88 +94,25 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'orderNo'
   },
   {
-    label: '商品信息',
-    align: 'center',
-    minWidth: 300,
-    prop: 'productInfo'
-  },
-  {
     label: '店铺名称',
     align: 'center',
     width: 140,
     prop: 'shop_name'
   },
   {
-    label: '订单状态',
-    align: 'center',
-    minWidth: 110,
-    prop: 'order_line_status',
-    formatter: (_row, _column, cellValue) => {
-      const status = walmartStatusMap.find((item) => item.value === cellValue);
-      return h(ElText, { type: status?.type || 'info' }, () => status?.label || '');
-    }
-  },
-  {
-    label: '匹对ASIN',
-    align: 'center',
-    width: 160,
-    prop: 'asin'
-  },
-  {
-    label: '总金额',
-    align: 'center',
-    prop: 'charge_amount',
-    width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${(_cellValue || 0).toFixed(2)}`);
-    }
-  },
-  {
-    label: '产品金额',
-    align: 'center',
-    prop: 'charge_amount_product',
-    width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${(_cellValue || 0).toFixed(2)}`);
-    }
-  },
-  {
-    label: '运费',
-    align: 'center',
-    prop: 'charge_amount_shipping',
-    width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${(_cellValue || 0).toFixed(2)}`);
-    }
-  },
-  {
-    label: '税费',
-    align: 'center',
-    prop: 'taxFee',
-    width: 100,
-    formatter: (row) => {
-      return h(
-        'b',
-        null,
-        `$ ${(row.charge_amount_product_tax + row.charge_amount_shipping_tax).toFixed(2)}`
-      );
-    }
-  },
-  {
     label: '下单时间',
     align: 'center',
-    // sortable: 'custom',
-    // sortOrders: ['descending', 'ascending', null],
     prop: 'order_date',
     minWidth: 180
   },
   {
-    label: '更新时间',
+    label: '订单总金额',
     align: 'center',
-    // sortable: 'custom',
-    // sortOrders: ['descending', 'ascending', null],
-    prop: 'update_time',
-    minWidth: 180
+    prop: 'order_total',
+    minWidth: 140,
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, `$ ${(cellValue || 0).toFixed(2)}`);
+    }
   },
   {
     label: '收货地址',
@@ -188,6 +125,48 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     minWidth: 220,
     prop: 'logisticsInfo'
+  },
+  {
+    label: '商品信息',
+    align: 'center',
+    prop: 'productInfo',
+    minWidth: 300
+  },
+  {
+    label: '订单状态',
+    align: 'center',
+    width: 120,
+    prop: 'order_line_status'
+  },
+  {
+    label: '匹对ASIN',
+    align: 'center',
+    width: 160,
+    prop: 'asin'
+  },
+  {
+    label: '金额',
+    align: 'center',
+    prop: 'charge_amount',
+    width: 100
+  },
+  {
+    label: '产品金额',
+    align: 'center',
+    prop: 'charge_amount_product',
+    width: 100
+  },
+  {
+    label: '运费',
+    align: 'center',
+    prop: 'charge_amount_shipping',
+    width: 100
+  },
+  {
+    label: '税费',
+    align: 'center',
+    prop: 'taxFee',
+    width: 100
   },
   {
     label: '操作',

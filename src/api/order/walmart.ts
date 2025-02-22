@@ -11,6 +11,25 @@ export enum WalmartStausEnum {
 }
 
 export interface WalmartOrderProps {
+  children: WalmartOrderItemProps[];
+  customer_order_id: string;
+  order_date: string;
+  order_total: number;
+  purchase_order_id: string;
+  shop_id: string;
+  shop_name: string;
+  update_time: string;
+  carrier: string;
+  phone: string;
+  postal_address1: string;
+  postal_address2: string | null;
+  postal_city: string;
+  postal_state: string;
+  tracking_url: string;
+  tracking_number: string;
+}
+
+export interface WalmartOrderItemProps {
   id: number;
   shop_name: string;
   shop_id: string;
@@ -24,7 +43,7 @@ export interface WalmartOrderProps {
   asin: string;
   charge_amount: number;
   charge_amount_product: number;
-  charge_amount_product_tax: string;
+  charge_amount_product_tax: number;
   charge_amount_shipping: number;
   charge_amount_shipping_tax: number;
   taxAmount: number;
@@ -41,13 +60,19 @@ export interface WalmartOrderProps {
   tracking_number: string;
   order_line_number: number;
   item_id: string;
+  statusObject: {
+    label: string;
+    value: WalmartStausEnum;
+    type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
+  } | null;
+  totalTax: number;
 }
 
 export interface WalmartOrderFilterProps {
   shopId: string;
-  purchaseOrderId: string;
-  customerOrderId: string;
-  orderStatus: WalmartStausEnum;
+  purchase_order_id: string;
+  customer_order_id: string;
+  order_status: WalmartStausEnum;
 }
 
 export interface GetOrderDto extends Partial<WalmartOrderFilterProps> {
@@ -78,8 +103,8 @@ export interface DeliverProductsDto {
   carrier: string;
   tracking_number: string;
   shop_id: string;
-  order_line_number: string;
-  order_line_quantity_amount: string;
+  // order_line_number: string;
+  // order_line_quantity_amount: string;
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({

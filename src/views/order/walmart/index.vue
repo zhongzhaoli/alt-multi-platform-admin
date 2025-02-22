@@ -19,8 +19,12 @@
         :table-columns="config.tableColumns"
         :table="{
           data: tableData,
-          rowKey: 'id',
+          rowKey: (row: WalmartOrderProps) => row.purchase_order_id + row.customer_order_id,
           border: true,
+          treeProps: {
+            hasChildren: 'has_children',
+            children: 'childrens'
+          },
           loading
         }"
         :handle="{
@@ -66,34 +70,97 @@
           </div>
         </template>
         <template #table-productInfo="{ row }">
-          <div class="d-flex align-center">
-            <ProductItem
-              class="productItem"
-              :image-url="row.product_image_url"
-              :product-name="row.product_name"
-              :size="60"
-              :desc-list="[
-                {
-                  text: row.product_sku,
-                  prefix: 'SKU'
-                },
-                {
-                  text: row.item_id,
-                  prefix: 'Item ID'
-                }
-              ]"
-            />
-            <div class="quantityAmount"> x{{ row.order_line_quantity_amount || 0 }} </div>
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div class="d-flex align-center">
+                <ProductItem
+                  class="productItem"
+                  :image-url="item.product_image_url"
+                  :product-name="item.product_name"
+                  :size="40"
+                  :desc-list="[
+                    {
+                      text: item.product_sku,
+                      prefix: 'SKU'
+                    }
+                  ]"
+                />
+                <div class="quantityAmount"> x{{ item.order_line_quantity_amount || 0 }} </div>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template #table-order_line_status="{ row }">
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <el-text v-if="item.statusObject" :type="item.statusObject.type">
+                  {{ item.statusObject.label }}
+                </el-text>
+                <el-text v-else>未知</el-text>
+              </div>
+            </template>
           </div>
         </template>
         <template #table-shop_name="{ row }">
           <TextEllipsis :text="row.shop_name" :line="2" />
         </template>
         <template #table-asin="{ row }">
-          <template v-if="row.asin">
-            <RenderCopyIcon :text="row.asin" type="primary" title="ASIN" margin="r" />
-          </template>
-          {{ row.asin || '-' }}
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <template v-if="item.asin">
+                  <RenderCopyIcon :text="item.asin" type="primary" title="ASIN" margin="r" />
+                </template>
+                {{ item.asin || '-' }}
+              </div>
+            </template>
+          </div>
+        </template>
+        <template #table-product_charge_amount="{ row }">
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <b>$ {{ item.charge_amount }}</b>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template #table-charge_amount="{ row }">
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <b>$ {{ item.charge_amount }}</b>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template #table-charge_amount_product="{ row }">
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <b>$ {{ item.charge_amount_product }}</b>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template #table-charge_amount_shipping="{ row }">
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <b>$ {{ item.charge_amount_shipping.toFixed(2) }}</b>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template #table-taxFee="{ row }">
+          <div class="multipleProductBox">
+            <template v-for="item in row.children" :key="`${item.id}_${item.order_line_number}`">
+              <div>
+                <b>$ {{ item.totalTax.toFixed(2) }}</b>
+              </div>
+            </template>
+          </div>
         </template>
         <template #table-address="{ row }">
           <TextEllipsis :text="`${row.postal_address_name} (${row.phone})`" />
@@ -106,15 +173,20 @@
           <LinkItem :href="row.tracking_url" :text="row.tracking_number" />
         </template>
         <template #table-action="{ row }">
-          <template
-            v-if="
-              row.order_line_status === WalmartStausEnum.Created ||
-              row.order_line_status === WalmartStausEnum.Acknowledged
-            "
-          >
-            <el-button link type="primary" @click="singleDeliver(row)"> 发货 </el-button>
-          </template>
-          <template v-else>-</template>
+          <div>
+            <template
+              v-if="
+                row.children.every(
+                  (item: WalmartOrderItemProps) =>
+                    item.order_line_status === WalmartStausEnum.Created ||
+                    item.order_line_status === WalmartStausEnum.Acknowledged
+                )
+              "
+            >
+              <el-button link type="primary" @click="singleDeliver(row)"> 发货 </el-button>
+            </template>
+            <template v-else>-</template>
+          </div>
         </template>
       </TsxElementTable>
     </div>
@@ -206,7 +278,8 @@ import {
   type WalmartOrderFilterProps,
   type GetOrderDto,
   WalmartStausEnum,
-  orderExport
+  orderExport,
+  WalmartOrderItemProps
 } from '@/api/order/walmart';
 import { cloneDeep } from 'lodash-es';
 import { ElMessage } from 'element-plus';
@@ -245,7 +318,21 @@ const getListFun = async () => {
       searchParams.order = JSON.stringify([sortOrder.value]);
     }
     const { data } = await getWalmartOrderList(searchParams);
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => {
+      return {
+        ...item,
+        children: (item.children || []).map((child) => {
+          const statusItem = config.walmartStatusMap.find(
+            (statusItem) => statusItem.value === child.order_line_status
+          );
+          return {
+            ...child,
+            statusObject: statusItem || null,
+            totalTax: child.charge_amount_product_tax + child.charge_amount_shipping_tax
+          };
+        })
+      };
+    });
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
@@ -321,9 +408,9 @@ const dialogSubmit = async () => {
     tracking_number: row.tracking_number,
     purchase_order_id: row.purchase_order_id,
     shop_id: row.shop_id,
-    seller_order_id: row.customer_order_id,
-    order_line_number: String(row.order_line_number),
-    order_line_quantity_amount: String(row.order_line_quantity_amount)
+    seller_order_id: row.customer_order_id
+    // order_line_number: String(row.order_line_number),
+    // order_line_quantity_amount: String(row.order_line_quantity_amount)
   }));
   try {
     await deliverProducts(deliverList);
@@ -353,6 +440,17 @@ const batchSetting = () => {
   & > .tableBox {
     & .productItem {
       flex: 1;
+    }
+    & .multipleProductBox {
+      & > div {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      & > div:not(:last-child) {
+        margin-bottom: var(--normal-padding);
+      }
     }
     & .quantityAmount {
       margin-left: var(--normal-padding);
