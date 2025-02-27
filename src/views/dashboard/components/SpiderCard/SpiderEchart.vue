@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading" v-loading="loading" class="loading" style="height: 320px" />
+  <div v-if="loading" v-loading="loading" class="loading" style="height: 300px" />
   <div ref="target" class="echart" />
 </template>
 <script setup lang="ts">

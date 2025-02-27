@@ -52,4 +52,10 @@ const getListFun = async () => {
 };
 getListFun();
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.spiderBox {
+  & > .body {
+    position: relative;
+  }
+}
+</style>

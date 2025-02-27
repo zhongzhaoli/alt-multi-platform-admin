@@ -38,4 +38,13 @@ const toDetail = () => {
   router.push('/listing');
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.tiktokBox {
+  & > .body {
+    position: relative;
+    & > .tableBox {
+      height: 300px;
+    }
+  }
+}
+</style>
