@@ -1,6 +1,7 @@
 <template>
   <SelectLoadMore
     v-model="selectValue"
+    :class="{ multiple }"
     :component-key="componentKey"
     placeholder="输入查询 / 选择店铺"
     :loading="loading"
@@ -22,7 +23,7 @@
   />
 </template>
 <script setup lang="ts">
-import { GetStoreDto, getStoreListAuth, StoreProps } from '@/api/system/tiktokStore';
+import { GetStoreDto, getStoreList, StoreProps } from '@/api/system/tiktokStore';
 import SelectLoadMore from '@/components/SelectLoadMore/index.vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { useVModel } from '@vueuse/core';
@@ -51,7 +52,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   multipleLimit: 0,
   remote: true,
   filterable: true,
-  componentKey: 'selectWalmartStore'
+  componentKey: 'selectTiktokStore'
 });
 const emits = defineEmits(['update:modelValue', 'change']);
 const selectValue = useVModel(props, 'modelValue', emits);
@@ -90,9 +91,9 @@ const getListFun = async (first = false, loadMore = false) => {
       page_size: unref(pageSize)
     };
     if (shopName.value) {
-      params.shopName = shopName.value;
+      params.shop_name = shopName.value;
     }
-    const { data } = await getStoreListAuth(params);
+    const { data } = await getStoreList(params);
     if (loadMore) {
       list.value = [...unref(list), ...(data?.list || [])];
     } else {

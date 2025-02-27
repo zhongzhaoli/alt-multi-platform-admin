@@ -15,36 +15,41 @@ export enum TiktokStausEnum {
 }
 
 export interface TiktokOrderProps {
-  id: number;
+  status: TiktokStausEnum;
+  address_detail: string;
+  children: TiktokOrderItemProps[];
+  order_date: string;
   order_id: string;
-  sku_image: string;
-  product_name: string;
-  seller_sku: string;
-  shop_id: string;
-  shop_name: string;
-  asin: string;
-  order_status: TiktokStausEnum;
-  total_amount: number;
-  product_sale_price: number;
   shipping_fee: number;
+  shop_id: string;
   tax: number;
-  product_original_price: number;
-  order_create_time: string;
-  update_time: string;
-  buyer_name: string;
-  buyer_full_address: string;
-  buyer_phone_number: string;
-  buyer_message: string;
-  sku_id: string;
+  total_amount: number;
   tracking_number: string;
-  shipping_provider_id: string;
+}
+
+export interface TiktokOrderItemProps {
+  asin: string;
   order_line_item_id: string;
+  pasin: string;
+  product_name: string;
+  sku_id: string;
+  sku_image: string;
+  order_line_quantity_amount: number;
+  sale_price: number;
+  item_tax: TaxItem[];
+}
+
+export interface TaxItem {
+  tax_amount: string;
+  tax_rate: string;
 }
 
 export interface TiktokOrderFilterProps {
   shopId: string;
   order_id: string;
   order_status: TiktokStausEnum;
+  start_date: string;
+  end_date: string;
 }
 
 export interface GetOrderDto extends Partial<TiktokOrderFilterProps> {
@@ -59,7 +64,7 @@ export function getTiktokOrderList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<TiktokOrderProps>> {
   return request({
-    url: '/tk/get_all_order',
+    url: '/tiktok/order/list',
     method: 'get',
     params
   });
@@ -68,7 +73,7 @@ export function getTiktokOrderList(
 // 导出
 export function exportTiktokOrderList(params: GetOrderDto, cancelToken: CancelToken): Promise<any> {
   return request({
-    url: '/tk/get_all_order',
+    url: '/tiktok/order/list/export',
     method: 'get',
     params,
     responseType: 'blob',

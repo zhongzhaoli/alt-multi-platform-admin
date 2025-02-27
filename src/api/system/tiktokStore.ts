@@ -12,7 +12,7 @@ export interface StoreProps {
 export interface GetStoreDto {
   page: number;
   page_size?: number;
-  shopName?: string;
+  shop_name?: string;
 }
 
 // 获取店铺列表
@@ -43,14 +43,5 @@ export function userBindStore(data: TiktokBindDto): Promise<any> {
     url: '/user/authorize/tiktok/shops',
     method: 'put',
     data
-  });
-}
-
-// 获取店铺列表 - 权限限制
-export function getStoreListAuth(params?: GetStoreDto): Promise<ResponsePageJson<StoreProps>> {
-  return request({
-    url: '/tiktok/shop/user/list',
-    method: 'get',
-    params
   });
 }

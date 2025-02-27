@@ -12,43 +12,37 @@ export const tableColumns: TableColumnProps[] = [
     label: '店铺ID',
     prop: 'shop_id',
     align: 'center',
-    width: 200,
+    width: 140,
     showOverflowTooltip: true
   },
   {
     label: '店铺名称',
     prop: 'shop_name',
-    minWidth: 200,
+    minWidth: 140,
     align: 'center',
     showOverflowTooltip: true
-  },
-  {
-    label: '店铺存活状态',
-    align: 'center',
-    width: 160,
-    prop: 'shop_survival'
   },
   {
     label: 'App Key',
     prop: 'app_key',
     align: 'center',
-    width: 160
+    minWidth: 160
   },
   {
     label: 'App Secret',
     prop: 'app_secret',
     align: 'center',
-    width: 160
+    minWidth: 160
   },
   {
     label: '创建时间',
     align: 'center',
     prop: 'created_at',
-    minWidth: 160
+    width: 180
   },
   {
     label: '操作',
-    width: '120',
+    width: 120,
     align: 'center',
     fixed: 'right',
     prop: 'handle'

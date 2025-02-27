@@ -60,8 +60,11 @@ const tiktokStatusMap: Array<{
 export const filterColumns: FilterColumnProps[] = [
   {
     label: '所属店铺',
-    prop: 'shopId',
-    type: 'input'
+    type: 'select',
+    prop: 'shop_id',
+    width: 240,
+    multiple: true,
+    selectOptions: []
   },
   {
     label: '订单号',
@@ -75,6 +78,14 @@ export const filterColumns: FilterColumnProps[] = [
     multiple: true,
     prop: 'order_status',
     selectOptions: tiktokStatusMap
+  },
+  {
+    label: '创建时间',
+    type: 'dateRange',
+    startKey: 'start_date',
+    endKey: 'end_date',
+    prop: 'order_date',
+    width: 230
   }
 ];
 
@@ -86,7 +97,7 @@ export const tableColumns: TableColumnProps[] = [
     type: 'selection',
     reserveSelection: true,
     selectable: (row: TiktokOrderProps) => {
-      return row.order_status === TiktokStausEnum.AWAITING_SHIPMENT;
+      return row.status === TiktokStausEnum.AWAITING_SHIPMENT;
     },
     prop: 'selection'
   },
@@ -97,12 +108,6 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'orderSn'
   },
   {
-    label: '商品信息',
-    align: 'center',
-    minWidth: 300,
-    prop: 'productInfo'
-  },
-  {
     label: '店铺名称',
     align: 'center',
     width: 160,
@@ -110,44 +115,21 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'shop_name'
   },
   {
+    label: '下单时间',
+    align: 'center',
+    prop: 'create_time',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
+    minWidth: 180
+  },
+  {
     label: '订单状态',
     align: 'center',
     minWidth: 140,
-    prop: 'order_status',
+    prop: 'status',
     formatter: (_row, _column, cellValue) => {
       const status = tiktokStatusMap.find((item) => item.value === cellValue);
       return h(ElText, { type: status?.type || 'info' }, () => status?.label || '');
-    }
-  },
-  {
-    label: '匹对ASIN',
-    align: 'center',
-    width: 180,
-    prop: 'asin'
-  },
-  {
-    label: '总金额',
-    align: 'center',
-    prop: 'total_amount',
-    width: 100,
-    formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
-    }
-  },
-  {
-    label: '产品金额 / 原价',
-    align: 'center',
-    prop: 'product_sale_price',
-    width: 180,
-    formatter: (_row, _column, _cellValue) => {
-      return h('b', null, [
-        h('span', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)} / `),
-        h(
-          'span',
-          { style: { color: '#999' } },
-          `$ ${parseFloat(_row.product_original_price || '0').toFixed(2)}`
-        )
-      ]);
     }
   },
   {
@@ -160,36 +142,13 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '税费',
+    label: '总金额',
     align: 'center',
-    prop: 'tax',
-    width: 100,
+    prop: 'total_amount',
+    width: 140,
     formatter: (_row, _column, _cellValue) => {
       return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
     }
-  },
-  {
-    label: '下单时间',
-    align: 'center',
-    prop: 'order_create_time',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
-    minWidth: 180
-  },
-  {
-    label: '更新时间',
-    align: 'center',
-    prop: 'update_time',
-    sortable: 'custom',
-    sortOrders: ['descending', 'ascending', null],
-    minWidth: 180
-  },
-  {
-    label: '买家姓名',
-    align: 'center',
-    prop: 'buyer_name',
-    minWidth: 160,
-    showOverflowTooltip: true
   },
   {
     label: '收货地址',
@@ -198,24 +157,42 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'address'
   },
   {
-    label: '买家备注',
-    align: 'center',
-    prop: 'remark',
-    minWidth: 160
-  },
-  {
     label: '物流信息',
     align: 'center',
     minWidth: 220,
     prop: 'logisticsInfo'
   },
   {
-    label: '操作',
+    label: '商品信息',
     align: 'center',
-    width: 130,
-    fixed: 'right',
-    prop: 'action'
+    minWidth: 300,
+    prop: 'productInfo'
+  },
+  {
+    label: '产品金额',
+    align: 'center',
+    prop: 'sale_price',
+    width: 140
+  },
+  {
+    label: '税费',
+    align: 'center',
+    prop: 'item_tax',
+    width: 100
+  },
+  {
+    label: '买家备注',
+    align: 'center',
+    prop: 'remark',
+    minWidth: 160
   }
+  // {
+  //   label: '操作',
+  //   align: 'center',
+  //   width: 130,
+  //   fixed: 'right',
+  //   prop: 'action'
+  // }
 ];
 
 // 右侧导出按钮

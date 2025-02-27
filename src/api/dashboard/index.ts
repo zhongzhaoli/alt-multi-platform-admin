@@ -1,41 +1,17 @@
-import { ResponseJson, ResponsePageJson } from '@/config/request';
+import { ResponseJson } from '@/config/request';
 import { request } from '@/utils/request';
 
-interface getDashboardDataDto {
-  start_date: string;
-  end_date: string;
-  granularity: string;
+export interface WalmartListingSummaryProps {
+  download_products: number;
+  shop_id: string;
+  shop_name: string;
+  upload_products: number;
 }
 
-export interface ListItemProps {
-  desc: string;
-  value: number;
-  xText: string;
-}
-
-interface DashboardProps {
-  list: ListItemProps[];
-  history: ListItemProps[];
-}
-export function getDashboardData(
-  params: getDashboardDataDto
-): Promise<ResponseJson<DashboardProps>> {
-  return request({
-    url: '/dashboard/data',
-    method: 'get',
-    params
-  });
-}
-
-interface GetSkuDataDto {
-  page: number;
-  page_size: number;
-}
 export interface SkuDataProps {}
-export function getSkuData(params: GetSkuDataDto): Promise<ResponsePageJson<SkuDataProps>> {
+export function getWalmartListingSummary(): Promise<ResponseJson<WalmartListingSummaryProps[]>> {
   return request({
-    url: '/dashboard/sku',
-    method: 'get',
-    params
+    url: '/walmart/products/summary',
+    method: 'get'
   });
 }

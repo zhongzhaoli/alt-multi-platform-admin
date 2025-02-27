@@ -5,13 +5,13 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: 'ID',
     align: 'center',
-    width: '140',
+    width: 140,
     prop: 'id'
   },
   {
     label: '店铺ID',
     align: 'center',
-    width: '140',
+    width: 140,
     prop: 'shop_id'
   },
   {
@@ -40,7 +40,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '操作',
-    width: '120',
+    width: 120,
     align: 'center',
     fixed: 'right',
     prop: 'handle'
