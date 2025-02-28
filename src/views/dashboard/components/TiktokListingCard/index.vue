@@ -1,5 +1,5 @@
 <template>
-  <div class="tikokBox cardBox">
+  <div class="tiktokBox cardBox">
     <div class="titleBox">
       <div class="title flex-center">Tiktok 上架看板</div>
       <el-button link type="primary" @click="toDetail">查看详情</el-button>
@@ -43,7 +43,7 @@ const toDetail = () => {
   & > .body {
     position: relative;
     & > .tableBox {
-      height: 300px;
+      height: 400px;
     }
   }
 }

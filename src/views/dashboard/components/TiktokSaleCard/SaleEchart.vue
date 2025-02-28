@@ -12,8 +12,7 @@ const target = ref<HTMLElement>();
 interface ComponentProps {
   loading: boolean;
   xData: string[];
-  listingData: number[];
-  removeData: number[];
+  saleData: number[];
 }
 
 const props = defineProps<ComponentProps>();
@@ -48,12 +47,12 @@ const renderChart = () => {
         show: false
       },
       splitLine: {
-        show: false
+        show: true
       },
       data: props.xData.map((item) => moment(item).format('MM-DD'))
     },
     grid: {
-      top: '0px',
+      top: '18px',
       left: '18px',
       right: '18px',
       bottom: '0%',
@@ -61,7 +60,7 @@ const renderChart = () => {
     },
     yAxis: {
       type: 'value',
-      min: Math.min(...[...props.listingData, ...props.removeData]),
+      min: Math.min(...props.saleData),
       axisLabel: {
         show: false
       },
@@ -71,10 +70,10 @@ const renderChart = () => {
     },
     series: [
       {
-        name: '上架总数',
-        data: props.listingData,
+        name: '销量',
+        data: props.saleData,
         type: 'line',
-        symbolSize: 0,
+        symbolSize: 5,
         smooth: true,
         emphasis: {
           disabled: true
@@ -85,26 +84,13 @@ const renderChart = () => {
         areaStyle: {
           color: '#409EFF',
           opacity: 0.05
-        }
-      },
-      {
-        name: '下架总数',
-        data: props.removeData,
-        type: 'line',
-        symbolSize: 0,
-        smooth: true,
-        emphasis: {
-          disabled: true
         },
-        lineStyle: {
-          color: '#eaeaea'
-        },
-        itemStyle: {
-          color: '#eaeaea'
-        },
-        areaStyle: {
-          color: '#dadbe0',
-          opacity: 0.2
+        label: {
+          show: true,
+          position: 'top',
+          color: '#999',
+          fontSize: 12,
+          formatter: '{c}'
         }
       }
     ]
@@ -113,7 +99,7 @@ const renderChart = () => {
 };
 
 watch(
-  () => props.listingData,
+  () => props.saleData,
   (nV) => {
     if (nV && nV.length) {
       nextTick(() => {
@@ -136,8 +122,8 @@ watch(
 }
 .echart {
   width: 100%;
-  height: 160px;
-  padding: 0 16px 16px 16px;
+  height: 300px;
+  padding: 0 16px;
   box-sizing: border-box;
 }
 </style>

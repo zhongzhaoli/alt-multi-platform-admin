@@ -12,12 +12,7 @@
     :filterable="filterable"
     :remote-method="remoteMethod"
     :clearable="clearable"
-    :list="
-      list.map((item) => ({
-        label: item.shop_name,
-        value: item.shop_id
-      }))
-    "
+    :list="realList"
     @change="selectChange"
     @load-more="loadMoreFun"
   />
@@ -27,13 +22,15 @@ import { GetStoreDto, getStoreList, StoreProps } from '@/api/system/tiktokStore'
 import SelectLoadMore from '@/components/SelectLoadMore/index.vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { useVModel } from '@vueuse/core';
-import { ref, watch, unref, nextTick } from 'vue';
+import { ref, watch, unref, nextTick, computed } from 'vue';
 
 interface ComponentProps {
   modelValue: idType | idType[] | undefined;
   clearable?: boolean;
   // 默认选中第一个
   defaultFirst?: boolean;
+  // 默认选项
+  defaultOptions?: StoreProps[];
   // 多选
   multiple?: boolean;
   // 多选个数
@@ -52,6 +49,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   multipleLimit: 0,
   remote: true,
   filterable: true,
+  defaultOptions: () => [],
   componentKey: 'selectTiktokStore'
 });
 const emits = defineEmits(['update:modelValue', 'change']);
@@ -65,6 +63,13 @@ const loading = ref(true);
 const loadingMore = ref(false);
 
 const shopName = ref('');
+
+const realList = computed(() => {
+  return [...props.defaultOptions, ...unref(list)].map((v) => ({
+    label: v.shop_name,
+    value: v.shop_id
+  }));
+});
 
 watch(
   () => props.modelValue,

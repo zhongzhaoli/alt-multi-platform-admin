@@ -6,6 +6,7 @@
 import { ref, watch, nextTick } from 'vue';
 import { EChartsOption } from 'echarts';
 import { useEcharts } from '@/hooks/useEcharts';
+import moment from 'moment-timezone';
 const target = ref<HTMLElement>();
 
 interface ComponentProps {
@@ -47,9 +48,9 @@ const renderChart = () => {
         show: false
       },
       splitLine: {
-        show: false
+        show: true
       },
-      data: props.xData
+      data: props.xData.map((item) => moment(item).format('MM-DD'))
     },
     grid: {
       top: '0px',
@@ -136,7 +137,7 @@ watch(
 .echart {
   width: 100%;
   height: 160px;
-  padding: 0 16px 16px 16px;
+  padding: 16px;
   box-sizing: border-box;
 }
 </style>

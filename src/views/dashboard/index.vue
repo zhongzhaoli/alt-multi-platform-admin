@@ -1,22 +1,34 @@
 <template>
   <div class="scrollContainer">
-    <SpiderCard />
+    <el-row :gutter="normalPadding">
+      <el-col :span="12">
+        <WalmartSaleCard />
+      </el-col>
+      <el-col :span="12">
+        <TiktokSaleCard />
+      </el-col>
+    </el-row>
     <div class="marginTop">
       <el-row :gutter="normalPadding">
         <el-col :span="12">
-          <WalmartCard />
+          <WalmartListingCard />
         </el-col>
         <el-col :span="12">
-          <TiktokCard />
+          <TiktokListingCard />
         </el-col>
       </el-row>
+    </div>
+    <div class="marginTop">
+      <SpiderCard />
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import SpiderCard from './components/SpiderCard/index.vue';
-import WalmartCard from './components/WalmartCard/index.vue';
-import TiktokCard from './components/TiktokCard/index.vue';
+import WalmartListingCard from './components/WalmartLisitingCard/index.vue';
+import TiktokListingCard from './components/TiktokListingCard/index.vue';
+import WalmartSaleCard from './components/WalmartSaleCard/index.vue';
+import TiktokSaleCard from './components/TiktokSaleCard/index.vue';
 import { getCssVariableValue } from '@/utils/css';
 
 let normalPadding: string | number = getCssVariableValue('--normal-padding');
@@ -34,6 +46,7 @@ normalPadding = parseFloat((normalPadding as string).replace('px', ''));
       display: flex;
       align-items: center;
       justify-content: space-between;
+      height: 32px;
       & > .title {
         font-size: 16px;
         font-weight: bold;

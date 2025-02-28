@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading" v-loading="loading" class="loading" style="height: 300px" />
+  <div v-if="loading" v-loading="loading" class="loading" style="height: 160px" />
   <div ref="target" class="echart" />
 </template>
 <script setup lang="ts">
@@ -11,7 +11,8 @@ const target = ref<HTMLElement>();
 interface ComponentProps {
   loading: boolean;
   xData: string[];
-  tableData: number[];
+  listingData: number[];
+  removeData: number[];
 }
 
 const props = defineProps<ComponentProps>();
@@ -23,66 +24,86 @@ const renderChart = () => {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
+        show: false,
         lineStyle: {
-          color: '#eaeaea'
+          color: '#eaeaea',
+          width: 0
         }
       }
     },
     xAxis: {
       type: 'category',
+      boundaryGap: false,
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#999',
-          width: 0.2
+          color: '#eaeaea'
         }
+      },
+      axisLabel: {
+        color: '#999'
       },
       axisTick: {
-        show: false,
-        lineStyle: {
-          color: '#999',
-          width: 0.2
-        }
+        show: false
       },
       splitLine: {
-        show: true,
-        lineStyle: {
-          color: '#999',
-          width: 0.2
-        }
+        show: true
       },
       data: props.xData
     },
     grid: {
-      top: '20px',
-      left: '0px',
-      right: '1px',
+      top: '0px',
+      left: '18px',
+      right: '18px',
       bottom: '0%',
       containLabel: true
     },
     yAxis: {
       type: 'value',
-      scale: true,
-      minInterval: 1,
+      min: Math.min(...[...props.listingData, ...props.removeData]),
       axisLabel: {
-        show: true
+        show: false
+      },
+      splitLine: {
+        show: false
       }
     },
     series: [
       {
-        name: '成功次数',
-        data: props.tableData,
+        name: '上架总数',
+        data: props.listingData,
         type: 'line',
-        symbolSize: 6,
+        symbolSize: 0,
+        smooth: true,
+        emphasis: {
+          disabled: true
+        },
         lineStyle: {
           color: '#409EFF'
         },
-        label: {
-          show: true,
-          position: 'top',
-          color: '#999',
-          fontSize: 12,
-          formatter: '{c}'
+        areaStyle: {
+          color: '#409EFF',
+          opacity: 0.05
+        }
+      },
+      {
+        name: '下架总数',
+        data: props.removeData,
+        type: 'line',
+        symbolSize: 0,
+        smooth: true,
+        emphasis: {
+          disabled: true
+        },
+        lineStyle: {
+          color: '#eaeaea'
+        },
+        itemStyle: {
+          color: '#eaeaea'
+        },
+        areaStyle: {
+          color: '#dadbe0',
+          opacity: 0.2
         }
       }
     ]
@@ -91,7 +112,7 @@ const renderChart = () => {
 };
 
 watch(
-  () => props.tableData,
+  () => props.listingData,
   (nV) => {
     if (nV && nV.length) {
       nextTick(() => {
@@ -114,8 +135,8 @@ watch(
 }
 .echart {
   width: 100%;
-  height: 300px;
-  padding: 0 16px 16px 16px;
+  height: 160px;
+  padding: 16px;
   box-sizing: border-box;
 }
 </style>

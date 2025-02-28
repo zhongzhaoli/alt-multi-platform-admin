@@ -10,7 +10,13 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
-    label: '上架总数',
+    label: '在售链接总数',
+    prop: 'in_sale',
+    minWidth: 160,
+    align: 'center'
+  },
+  {
+    label: '今日上架总数',
     prop: 'upload_products',
     minWidth: 160,
     align: 'center',
@@ -19,7 +25,7 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '下架总数',
+    label: '今日下架总数',
     prop: 'download_products',
     minWidth: 160,
     align: 'center',
