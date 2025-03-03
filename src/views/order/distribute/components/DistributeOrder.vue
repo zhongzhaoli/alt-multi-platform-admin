@@ -14,6 +14,7 @@
       :pagination="{ total }"
       @table-refresh="getListFun"
       @page-change="getListFun"
+      @selection-change="tableSelection"
     >
       <template #handle-left>
         <div class="d-flex align-center">
@@ -36,7 +37,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { DeliveryOrderProps, getDeliveryOrder, GetDeliveryOrderDto } from '@/api/order/purchaser';
+import { DeliveryOrderProps, getDeliveryOrder, GetDeliveryOrderDto } from '@/api/order/distribute';
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
@@ -50,6 +51,7 @@ export interface ComponentInstance {
   refresh: () => void;
 }
 const props = defineProps<ComponentProps>();
+const emits = defineEmits(['selection-change']);
 
 const total = shallowRef(0);
 const tableData = shallowRef<DeliveryOrderProps[]>([]);
@@ -79,6 +81,11 @@ const getListFun = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+// 表格选择
+const tableSelection = (rows: DeliveryOrderProps[]) => {
+  emits('selection-change', rows);
 };
 
 watch(

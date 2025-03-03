@@ -30,8 +30,8 @@
       >
         <template #handle-left>
           <div v-loading="totalLoading" class="d-flex align-center">
-            <el-dropdown @command="deliverFun">
-              <el-button type="primary">
+            <el-dropdown trigger="click" @command="deliverFun">
+              <el-button type="primary" :disabled="orderTotal === 0">
                 一键自动分发
                 <el-icon class="el-icon--right"><ArrowDown /></el-icon>
               </el-button>
@@ -57,11 +57,18 @@
         </template>
       </TsxElementTable>
     </div>
-    <ConfirmDialog v-model="purchaserListVisible" class="purchaserOrderDialog" title="手动分发">
-      <template v-if="tempPurchaserUser">
-        <PurchaserOrder
-          :role-name="tempPurchaserUser.role_name"
-          :role-id="tempPurchaserUser.role_id"
+    <ConfirmDialog
+      v-model="distributeListVisible"
+      class="distributeOrderDialog"
+      title="手动分发"
+      @submit="handerHandDelivery"
+      @closed="tempDistributeUser = null"
+    >
+      <template v-if="tempDistributeUser">
+        <DistributeOrder
+          :role-name="tempDistributeUser.role_name"
+          :role-id="tempDistributeUser.role_id"
+          @selection-change="tableSelection"
         />
       </template>
     </ConfirmDialog>
@@ -70,9 +77,9 @@
       title="等待分发确认"
       width="450px"
       @closed="tempDeliverDialogClosed"
-      @confirm="deliverOrderFun"
+      @submit="deliverOrderFun"
     >
-      <el-table size="small" :data="deliverSuccessList" border :loading="tempDeliverLoading">
+      <el-table v-loading="tempDeliverLoading" size="small" :data="deliverSuccessList" border>
         <el-table-column align="center" label="用户名" prop="username" />
         <el-table-column align="center" label="角色名" prop="role_name" />
         <el-table-column align="center" label="分发订单数量" prop="number">
@@ -85,13 +92,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getPurchaserUserList, getDeliveryOrder, deliveryOrder } from '@/api/order/purchaser';
-import type { DeliveryOrderSuccessProps, PurchaserUserProps } from '@/api/order/purchaser';
+import {
+  getDistributeUserList,
+  getDeliveryOrder,
+  autoDeliveryNumber,
+  handDeliveryOrder,
+  autoDeliveryOrder
+} from '@/api/order/distribute';
+import type {
+  DeliveryOrderProps,
+  DeliveryOrderSuccessProps,
+  DistributeUserProps
+} from '@/api/order/distribute';
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { Refresh, ArrowDown } from '@element-plus/icons-vue';
-import PurchaserOrder from './components/PurchaserOrder.vue';
+import DistributeOrder from './components/DistributeOrder.vue';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ref, shallowRef, unref } from 'vue';
@@ -101,7 +118,7 @@ import { useMessageBox } from '@/hooks/useMessageBox';
 
 // 获取用户列表
 const loading = shallowRef(true);
-const tableData = shallowRef<PurchaserUserProps[]>([]);
+const tableData = shallowRef<DistributeUserProps[]>([]);
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
@@ -109,7 +126,7 @@ const filterValue = ref<Partial<config.FilterDto>>({});
 const getUserList = async () => {
   loading.value = true;
   try {
-    const { data } = await getPurchaserUserList({
+    const { data } = await getDistributeUserList({
       page: unref(page),
       page_size: unref(pageSize),
       ...unref(filterValue)
@@ -124,11 +141,38 @@ const getUserList = async () => {
 };
 
 // 手动分发
-const purchaserListVisible = shallowRef(false);
-const tempPurchaserUser = shallowRef<PurchaserUserProps | null>(null);
-const handerDistribution = (row: PurchaserUserProps) => {
-  tempPurchaserUser.value = row;
-  purchaserListVisible.value = true;
+const distributeListVisible = shallowRef(false);
+const tempDistributeUser = shallowRef<DistributeUserProps | null>(null);
+const selectionOrderList = ref<DeliveryOrderProps[]>([]);
+const handerDistribution = (row: DistributeUserProps) => {
+  tempDistributeUser.value = row;
+  distributeListVisible.value = true;
+};
+const tableSelection = (rows: DeliveryOrderProps[]) => {
+  selectionOrderList.value = rows;
+};
+const handerHandDelivery = async () => {
+  useMessageBox(`确认分发这${unref(selectionOrderList).length}笔订单吗？`, async () => {
+    if (!tempDistributeUser.value) return ElMessage.error('请选择分发人员');
+    try {
+      await handDeliveryOrder({
+        order_list: unref(selectionOrderList).map((item) => ({
+          shop_id: item.shop_id,
+          platform: item.platform,
+          platform_order_id: item.platform_order_id,
+          customer_order_id: item.customer_order_id
+        })),
+        user_id: tempDistributeUser.value.user_id
+      });
+      ElMessage.success('分发成功');
+      selectionOrderList.value = [];
+      distributeListVisible.value = false;
+      getUserList();
+      getOrderList();
+    } catch (err) {
+      console.log(err);
+    }
+  });
 };
 
 // 获取订单数量
@@ -157,7 +201,7 @@ const deliverFun = async (key: 'fail' | 'new') => {
   tempKey.value = key;
   tempDeliverLoading.value = true;
   try {
-    const { data } = await deliveryOrder({ type: key });
+    const { data } = await autoDeliveryNumber({ type: key });
     deliverSuccessList.value = data || [];
   } catch (err) {
     console.log(err);
@@ -171,7 +215,20 @@ const tempDeliverDialogClosed = () => {
   tempDeliverLoading.value = false;
 };
 const deliverOrderFun = () => {
-  useMessageBox(`是否确认分发这些订单？`, async () => {});
+  useMessageBox(`是否确认分发这些订单？`, async () => {
+    if (!tempKey.value) return ElMessage.error('请选择分发类型');
+    if (!deliverSuccessList.value.length) return ElMessage.error('没有订单可分发');
+    try {
+      await autoDeliveryOrder({ user_list: deliverSuccessList.value, type: tempKey.value });
+      ElMessage.success('分发成功');
+      deliverSuccessVisible.value = false;
+      getUserList();
+      getOrderList();
+    } catch (err) {
+      ElMessage.error('分发失败');
+      console.log(err);
+    }
+  });
 };
 
 // 刷新订单数量 - 防抖
@@ -215,7 +272,7 @@ getOrderList();
 }
 </style>
 <style lang="scss">
-.purchaserOrderDialog {
+.distributeOrderDialog {
   width: calc(100% - 300px);
   height: calc(100vh - 100px);
   margin: 50px 0 0 150px;

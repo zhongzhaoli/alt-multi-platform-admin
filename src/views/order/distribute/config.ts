@@ -19,12 +19,12 @@ export const filterColumns: FilterColumnProps[] = [
     label: '角色',
     selectOptions: [
       {
-        label: '新下单员',
-        value: '新下单员'
+        label: '新号下单员',
+        value: '新号下单员'
       },
       {
-        label: '老下单员',
-        value: '老下单员'
+        label: '老号下单员',
+        value: '老号下单员'
       }
     ]
   }
@@ -58,7 +58,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '总订单数量',
-    prop: 'total_order_count',
+    prop: 'total_orders',
     minWidth: 160,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
@@ -67,7 +67,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '待处理订单数量',
-    prop: 'handle_order_count',
+    prop: 'total_untreated',
     minWidth: 160,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
@@ -76,7 +76,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '已处理订单数量',
-    prop: 'handled_order_count',
+    prop: 'total_processed',
     minWidth: 160,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
