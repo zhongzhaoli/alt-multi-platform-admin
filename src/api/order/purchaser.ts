@@ -1,4 +1,4 @@
-import { ResponsePageJson } from '@/config/request';
+import { ResponseJson, ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 interface GetPurchaseUserDto {
@@ -21,6 +21,53 @@ export function getPurchaserUserList(
 ): Promise<ResponsePageJson<PurchaserUserProps>> {
   return request({
     url: '/card/purchaser/user/list',
+    method: 'get',
+    params
+  });
+}
+
+export interface GetDeliveryOrderDto {
+  page: number;
+  page_size?: number;
+  role_name?: string;
+  role_id?: string;
+  price_type?: '>70' | '<=70';
+  status?: 'fail' | 'new';
+}
+export interface DeliveryOrderProps {
+  shop_id: string;
+  shop_name: string;
+  platform_order_id: string;
+  customer_order_id: string;
+  platform: 'walmart' | 'tiktok';
+  total_product_amount: number;
+  buyer_full_address: string;
+}
+
+export function getDeliveryOrder(
+  params: GetDeliveryOrderDto
+): Promise<ResponsePageJson<DeliveryOrderProps>> {
+  return request({
+    url: '/card/purchaser/delivery/orders',
+    method: 'get',
+    params
+  });
+}
+
+export interface DeliveryOrderSuccessProps {
+  number: number;
+  role_id: string;
+  role_name: string;
+  user_id: string;
+  username: string;
+  workwx_user_id: string;
+}
+
+export function deliveryOrder(params: {
+  type: 'fail' | 'new';
+}): Promise<ResponseJson<DeliveryOrderSuccessProps[]>> {
+  return request({
+    url: '/card/purchaser/delivery/numbers',
     method: 'get',
     params
   });

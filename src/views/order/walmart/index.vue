@@ -165,7 +165,7 @@
         <template #table-address="{ row }">
           <TextEllipsis :text="`${row.postal_address_name} (${row.phone})`" />
           <TextEllipsis
-            :text="`${row.postal_city} ${row.postal_state} ${row.postal_address1 || ''} ${row.postal_address2 || ''}`"
+            :text="`${row.postal_code} - ${row.postal_city} ${row.postal_state} ${row.postal_address1 || ''} ${row.postal_address2 || ''}`"
           />
         </template>
         <template #table-logisticsInfo="{ row }">

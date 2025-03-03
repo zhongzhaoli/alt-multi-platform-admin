@@ -51,6 +51,12 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
+    label: '企业微信ID',
+    prop: 'workwx_user_id',
+    minWidth: 160,
+    align: 'center'
+  },
+  {
     label: '总订单数量',
     prop: 'total_order_count',
     minWidth: 160,
@@ -76,12 +82,6 @@ export const tableColumns: TableColumnProps[] = [
     formatter: (_row, _column, cellValue) => {
       return h('b', null, cellValue || 0);
     }
-  },
-  {
-    label: '企业微信ID',
-    prop: 'workwx_user_id',
-    minWidth: 160,
-    align: 'center'
   },
   {
     label: '操作',

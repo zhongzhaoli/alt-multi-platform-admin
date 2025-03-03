@@ -99,7 +99,7 @@
         </template>
         <template #table-address="{ row }">
           <TextEllipsis :text="`${row.buyer_name} (${row.buyer_phone_number})`" />
-          <TextEllipsis :text="`${row.buyer_full_address}`" />
+          <TextEllipsis :text="`${row.postal_code} - ${row.buyer_full_address}`" />
         </template>
         <template #table-logisticsInfo="{ row }">
           <div>{{ row.shipping_provider || '-' }}</div>

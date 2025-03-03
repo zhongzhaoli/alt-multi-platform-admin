@@ -133,19 +133,19 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '运费',
+    label: '总金额',
     align: 'center',
-    prop: 'shipping_fee',
-    width: 100,
+    prop: 'total_amount',
+    width: 140,
     formatter: (_row, _column, _cellValue) => {
       return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
     }
   },
   {
-    label: '总金额',
+    label: '运费',
     align: 'center',
-    prop: 'total_amount',
-    width: 140,
+    prop: 'shipping_fee',
+    width: 100,
     formatter: (_row, _column, _cellValue) => {
       return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
     }
