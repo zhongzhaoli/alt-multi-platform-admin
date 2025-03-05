@@ -44,6 +44,11 @@ export interface OrderProps {
 export interface GetOrderDto {
   page: number;
   page_size?: number;
+  role_id: string;
+  status?: string;
+  platform?: 'walmart' | 'tiktok';
+  platform_order_id?: string;
+  customer_order_id?: string;
 }
 
 export function getOrderList(params: GetOrderDto): Promise<ResponsePageJson<OrderProps>> {
@@ -54,14 +59,44 @@ export function getOrderList(params: GetOrderDto): Promise<ResponsePageJson<Orde
   });
 }
 
-export interface OrderHanderDto {
+export interface OrderHanderBaseDto {
   shop_id: string;
   platform: string;
   platform_order_id: string;
   customer_order_id: string;
   status: OrderStatusEnum;
 }
-export function orderHander(data: OrderHanderDto): Promise<any> {
+export interface OrderInconsistentDto extends OrderHanderBaseDto {
+  status: OrderStatusEnum.不符合条件;
+  fail_remark: OrderInconsistentResonEnum;
+}
+export interface ApplyCreditCardDto extends OrderHanderBaseDto {
+  status: OrderStatusEnum.开卡中;
+}
+export interface HandleCardProps {
+  card_number: string;
+  card_email: string;
+  email_pwd: string;
+  card_phone: string;
+  cvv: string;
+  card_path: string;
+  card_lifespan: string;
+  img: File | null;
+}
+export interface HanderCardDto extends OrderHanderBaseDto, HandleCardProps {
+  status: OrderStatusEnum.处理中;
+}
+export function orderHander(
+  data: OrderInconsistentDto | ApplyCreditCardDto | HanderCardDto
+): Promise<any> {
+  return request({
+    url: '/card/purchaser/delivery/card/up',
+    method: 'post',
+    data
+  });
+}
+
+export function orderHanderForHandleCard(data: FormData): Promise<any> {
   return request({
     url: '/card/purchaser/delivery/card/up',
     method: 'post',

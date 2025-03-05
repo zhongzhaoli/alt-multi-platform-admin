@@ -70,7 +70,7 @@ const renderChart = () => {
     },
     series: [
       {
-        name: '成功次数',
+        name: '监控次数',
         data: props.tableData,
         type: 'line',
         symbolSize: 6,

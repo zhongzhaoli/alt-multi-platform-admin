@@ -51,18 +51,66 @@
           <TextEllipsis :text="`${row.postal_code} - ${row.full_address}`" />
         </template>
         <template #table-action="{ row }">
-          <template v-if="row.status === '未处理'">
-            <el-button link type="primary" @click="applyCreditCard(row)">申请信用卡</el-button>
-            <el-button link type="primary" @click="openInconsistent(row)">不符合条件</el-button>
+          <template v-if="row.status === OrderStatusEnum.未处理">
+            <el-button
+              v-permission="{ type: 'some', value: 'order:purchase:applyCard' }"
+              link
+              type="primary"
+              @click="applyCreditCard(row)"
+            >
+              申请信用卡
+            </el-button>
+            <el-button
+              v-permission="{ type: 'some', value: 'order:purchase:inconsistent' }"
+              link
+              type="primary"
+              @click="openInconsistent(row)"
+            >
+              不符合条件
+            </el-button>
+            <span
+              v-permission="{
+                type: 'noSome',
+                value: ['order:purchase:applyCard', 'order:purchase:inconsistent']
+              }"
+            >
+              -
+            </span>
           </template>
-          <template v-if="row.status === '处理中'">
-            <el-button link type="primary" @click="openOrderInfo">填写订单信息</el-button>
+          <template v-else-if="row.status === OrderStatusEnum.处理中">
+            <el-button
+              v-permission="{ type: 'some', value: 'order:purchase:orderInfoUp' }"
+              link
+              type="primary"
+              @click="openOrderInfo"
+            >
+              填写订单信息
+            </el-button>
+            <span v-permission="{ type: 'noSome', value: 'order:purchase:orderInfoUp' }">-</span>
           </template>
+          <template v-else-if="row.status === OrderStatusEnum.开卡中">
+            <el-button
+              v-permission="{ type: 'some', value: 'order:purchase:cardUp' }"
+              link
+              type="primary"
+              @click="handerCard(row)"
+            >
+              开卡
+            </el-button>
+            <span v-permission="{ type: 'noSome', value: 'order:purchase:cardUp' }">-</span>
+          </template>
+          <template v-else>-</template>
         </template>
       </TsxElementTable>
     </div>
     <OrderInfo v-model="orderInfoVisible" />
-    <ConfirmDialog v-model="inconsistentVisible" title="订单不符合条件" width="400px">
+    <CreditCard v-model="cardVisible" @submit="handerCardSubmit" />
+    <ConfirmDialog
+      v-model="inconsistentVisible"
+      title="订单不符合条件"
+      width="400px"
+      @submit="inconsistentFun"
+    >
       <el-form label-position="top">
         <el-form-item label="">
           <el-select v-model="inconReason">
@@ -88,13 +136,18 @@ import {
   OrderStatusEnum,
   OrderInconsistentResonEnum,
   getOrderList,
-  orderHander
+  orderHander,
+  HandleCardProps,
+  orderHanderForHandleCard
 } from '@/api/order/purchase';
 import ProductItem from '@/components/ProductItem/index.vue';
 import OrderInfo from './components/OrderInfo.vue';
 import { useMessageBox } from '@/hooks/useMessageBox';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { ElMessage } from 'element-plus';
+import { useUserStore } from '@/store/modules/user';
+import CreditCard from './components/CreditCard.vue';
+const userStore = useUserStore();
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = ref<OrderProps[]>([]);
@@ -108,15 +161,14 @@ const tempOrder = ref<OrderProps | null>(null);
 const applyCreditCard = (row: OrderProps) => {
   tempOrder.value = row;
   useMessageBox('确认申请信用卡？', async () => {
-    const formData = {
-      shop_id: row.shop_id,
-      platform: row.platform,
-      platform_order_id: row.platform_order_id,
-      customer_order_id: row.customer_order_id,
-      status: OrderStatusEnum.开卡中
-    };
     try {
-      await orderHander(formData);
+      await orderHander({
+        shop_id: row.shop_id,
+        platform: row.platform,
+        platform_order_id: row.platform_order_id,
+        customer_order_id: row.customer_order_id,
+        status: OrderStatusEnum.开卡中
+      });
       ElMessage.success('申请信用卡成功');
       getListFun();
     } catch (err) {
@@ -133,6 +185,56 @@ const openInconsistent = (row: OrderProps) => {
   tempOrder.value = row;
   inconsistentVisible.value = true;
 };
+const inconsistentFun = () => {
+  useMessageBox('确认订单不符合条件？', async () => {
+    try {
+      await orderHander({
+        shop_id: tempOrder.value!.shop_id,
+        platform: tempOrder.value!.platform,
+        platform_order_id: tempOrder.value!.platform_order_id,
+        customer_order_id: tempOrder.value!.customer_order_id,
+        status: OrderStatusEnum.不符合条件,
+        fail_remark: inconReason.value
+      });
+      ElMessage.success('订单不符合条件成功');
+      inconsistentVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
+      ElMessage.error('订单不符合条件失败');
+    }
+  });
+};
+
+// 办卡
+const cardVisible = shallowRef(false);
+const handerCard = (card: OrderProps) => {
+  tempOrder.value = card;
+  cardVisible.value = true;
+};
+const handerCardSubmit = (formValue: HandleCardProps) => {
+  useMessageBox('确认开卡？', async () => {
+    if (tempOrder.value === null) return;
+    const formData = new FormData();
+    formData.append('shop_id', tempOrder.value.shop_id);
+    formData.append('platform', tempOrder.value.platform);
+    formData.append('platform_order_id', tempOrder.value.platform_order_id);
+    formData.append('customer_order_id', tempOrder.value.customer_order_id);
+    formData.append('status', OrderStatusEnum.处理中);
+    Object.entries(formValue).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    try {
+      await orderHanderForHandleCard(formData);
+      ElMessage.success('开卡成功');
+      cardVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
+      ElMessage.error('开卡失败');
+    }
+  });
+};
 
 // 订单信息
 const orderInfoVisible = shallowRef(false);
@@ -146,6 +248,7 @@ const getListFun = async () => {
     const { data } = await getOrderList({
       page: page.value,
       page_size: pageSize.value,
+      role_id: userStore.userInfo?.role_id || '',
       ...filterValue.value
     });
     tableData.value = data?.list || [];

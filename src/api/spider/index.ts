@@ -6,6 +6,7 @@ export interface GetSpiderDto {
   page_size?: number;
   start_date?: string;
   end_date?: string;
+  spider_type: 'asin' | 'monitor';
 }
 
 export interface SpiderProps {

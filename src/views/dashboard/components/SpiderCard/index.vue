@@ -32,7 +32,8 @@ const getListFun = async () => {
       page: 1,
       page_size: 100,
       end_date: last7Days[last7Days.length - 1],
-      start_date: last7Days[0]
+      start_date: last7Days[0],
+      spider_type: 'asin'
     });
     const uList: number[] = [];
     last7Days.forEach((item, index) => {

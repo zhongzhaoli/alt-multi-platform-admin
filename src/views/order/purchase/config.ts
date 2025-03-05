@@ -6,7 +6,7 @@ import { h } from 'vue';
 export interface FilterDto {
   platform_order_id: string;
   customer_order_id: string;
-  platform: string;
+  platform: 'walmart' | 'tiktok';
   status: string;
 }
 
@@ -75,7 +75,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '平台',
-    width: 140,
+    width: 130,
     align: 'center',
     prop: 'platform'
   },
@@ -99,7 +99,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '订单状态',
     prop: 'status',
-    minWidth: 120,
+    width: 160,
     align: 'center'
   },
   {
