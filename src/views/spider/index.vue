@@ -65,7 +65,8 @@ const getListFun = async () => {
   try {
     let searchParams: GetSpiderDto = {
       page: currentPage.value,
-      page_size: pageSize.value
+      page_size: pageSize.value,
+      spider_type: 'asin'
     };
     if (dateRange.value && dateRange.value.length) {
       searchParams = {
