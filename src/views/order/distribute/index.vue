@@ -30,18 +30,9 @@
       >
         <template #handle-left>
           <div v-loading="totalLoading" class="d-flex align-center">
-            <el-dropdown trigger="click" @command="deliverFun">
-              <el-button type="primary" :disabled="orderTotal === 0">
-                一键自动分发
-                <el-icon class="el-icon--right"><ArrowDown /></el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item command="new">新订单</el-dropdown-item>
-                  <el-dropdown-item command="fail">老订单</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+            <el-button :disabled="orderTotal === 0" type="primary" @click="deliverFun('new')">
+              一键自动分发
+            </el-button>
             <div class="orderTotal">
               <span class="refresh" @click="refreshOrderTotal">
                 <el-icon size="13"><Refresh /></el-icon>
@@ -107,7 +98,7 @@ import type {
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import { Refresh, ArrowDown } from '@element-plus/icons-vue';
+import { Refresh } from '@element-plus/icons-vue';
 import DistributeOrder from './components/DistributeOrder.vue';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';

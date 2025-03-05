@@ -19,8 +19,17 @@
       </el-row>
     </div>
     <div class="marginTop">
-      <SpiderCard />
+      <el-row :gutter="normalPadding">
+        <el-col :span="12">
+          <SpiderCard />
+        </el-col>
+        <el-col :span="12">
+          <MonitorCard />
+        </el-col>
+      </el-row>
     </div>
+    <!-- <div class="marginTop">
+    </div> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -29,6 +38,7 @@ import WalmartListingCard from './components/WalmartLisitingCard/index.vue';
 import TiktokListingCard from './components/TiktokListingCard/index.vue';
 import WalmartSaleCard from './components/WalmartSaleCard/index.vue';
 import TiktokSaleCard from './components/TiktokSaleCard/index.vue';
+import MonitorCard from './components/MonitorCard/index.vue';
 import { getCssVariableValue } from '@/utils/css';
 
 let normalPadding: string | number = getCssVariableValue('--normal-padding');
@@ -63,7 +73,7 @@ normalPadding = parseFloat((normalPadding as string).replace('px', ''));
     }
     & > .body {
       width: 100%;
-      margin-top: var(--normal-padding);
+      margin-top: 16px;
     }
   }
   & > .marginTop {

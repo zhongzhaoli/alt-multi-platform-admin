@@ -1,18 +1,17 @@
 <template>
-  <div v-if="loading" v-loading="loading" class="loading" style="height: 160px" />
+  <div v-if="loading" v-loading="loading" class="loading" style="height: 300px" />
   <div ref="target" class="echart" />
 </template>
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
 import { EChartsOption } from 'echarts';
 import { useEcharts } from '@/hooks/useEcharts';
-import moment from 'moment-timezone';
 const target = ref<HTMLElement>();
 
 interface ComponentProps {
   loading: boolean;
   xData: string[];
-  saleData: number[];
+  tableData: number[];
 }
 
 const props = defineProps<ComponentProps>();
@@ -24,66 +23,59 @@ const renderChart = () => {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        show: false,
         lineStyle: {
-          color: '#eaeaea',
-          width: 0
+          color: '#eaeaea'
         }
       }
     },
     xAxis: {
       type: 'category',
-      boundaryGap: false,
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#eaeaea'
+          color: '#999',
+          width: 0.2
         }
       },
-      axisLabel: {
-        color: '#999'
-      },
       axisTick: {
-        show: false
+        show: false,
+        lineStyle: {
+          color: '#999',
+          width: 0.2
+        }
       },
       splitLine: {
-        show: true
+        show: true,
+        lineStyle: {
+          color: '#999',
+          width: 0.2
+        }
       },
-      data: props.xData.map((item) => moment(item).format('MM-DD'))
+      data: props.xData
     },
     grid: {
-      top: '18px',
-      left: '18px',
-      right: '18px',
+      top: '20px',
+      left: '0px',
+      right: '1px',
       bottom: '0%',
       containLabel: true
     },
     yAxis: {
       type: 'value',
-      min: Math.min(...props.saleData),
+      scale: true,
+      minInterval: 1,
       axisLabel: {
-        show: false
-      },
-      splitLine: {
-        show: false
+        show: true
       }
     },
     series: [
       {
-        name: '销量',
-        data: props.saleData,
+        name: '成功次数',
+        data: props.tableData,
         type: 'line',
-        symbolSize: 5,
-        smooth: true,
-        emphasis: {
-          disabled: true
-        },
+        symbolSize: 6,
         lineStyle: {
           color: '#409EFF'
-        },
-        areaStyle: {
-          color: '#409EFF',
-          opacity: 0.05
         },
         label: {
           show: true,
@@ -99,7 +91,7 @@ const renderChart = () => {
 };
 
 watch(
-  () => props.saleData,
+  () => props.tableData,
   (nV) => {
     if (nV && nV.length) {
       nextTick(() => {
@@ -123,7 +115,7 @@ watch(
 .echart {
   width: 100%;
   height: 300px;
-  padding: 0 16px;
+  padding: 0 16px 16px 16px;
   box-sizing: border-box;
 }
 </style>

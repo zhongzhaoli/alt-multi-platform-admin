@@ -1,4 +1,4 @@
-import { TableColumnProps } from 'tsx-element-table';
+import type { TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
 export const tableColumns: TableColumnProps[] = [
@@ -10,8 +10,8 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
-    label: '今日上架总数',
-    prop: 'upload_products',
+    label: '在售链接总数',
+    prop: 'in_sale_product',
     minWidth: 120,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
@@ -19,8 +19,8 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '今日下架总数',
-    prop: 'download_products',
+    label: '今日销量',
+    prop: 'sale',
     minWidth: 120,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
@@ -28,12 +28,12 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '今日重新上架',
-    prop: 'reupload_products',
+    label: '今日销售额',
+    prop: 'in_sale',
     minWidth: 120,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue || 0);
+      return h('b', null, `$ ${(cellValue || 0).toFixed(2)}`);
     }
   }
 ];

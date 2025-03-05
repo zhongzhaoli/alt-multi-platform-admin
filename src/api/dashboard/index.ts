@@ -6,6 +6,7 @@ export interface WalmartListingSummaryProps {
   shop_id: string;
   shop_name: string;
   upload_products: number;
+  reupload_products: number;
 }
 
 export interface WalmartSevenDaysSummaryProps {

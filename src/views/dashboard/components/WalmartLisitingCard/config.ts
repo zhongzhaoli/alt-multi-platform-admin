@@ -10,15 +10,6 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
-    label: '在售链接总数',
-    prop: 'in_sale',
-    minWidth: 120,
-    align: 'center',
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue || 0);
-    }
-  },
-  {
     label: '今日上架总数',
     prop: 'upload_products',
     minWidth: 120,

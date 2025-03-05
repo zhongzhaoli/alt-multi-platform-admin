@@ -1,57 +1,92 @@
 <template>
-  <div class="tiktokBox cardBox">
+  <div class="walmartBox cardBox">
     <div class="titleBox">
-      <div class="title flex-center">Tiktok 销量看板</div>
-      <div class="selectBox">
-        <div class="shopSelect">
-          <SelectTiktokStore
-            v-model="shopId"
-            :multiple="false"
-            :disabled="false"
-            :default-options="getTiktokAllStore()"
-          />
-        </div>
-        <div class="typeSelect">
-          <el-select v-model="type" placeholder="选择类型">
-            <el-option label="销量" value="sale" />
-            <el-option label="销售额" value="salePrice" />
-          </el-select>
-        </div>
-      </div>
+      <div class="title flex-center">TikTok 销量看板</div>
+      <el-button type="primary" link>刷新数据</el-button>
     </div>
     <div class="body">
-      <SaleEchart
-        :x-data="last7Days"
-        :sale-data="[222, 291, 192, 203, 222, 183, 311]"
-        :loading="false"
-      />
+      <div class="tableBox">
+        <TsxElementTable
+          :table-columns="tableColumns"
+          :table="{
+            data: tableData,
+            border: true,
+            loading,
+            showSummary: true,
+            summaryMethod: getSummaries
+          }"
+          :pagination="{ show: false }"
+        />
+      </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
-import { getLastSeventDays, getTiktokAllStore } from '../../utils';
-import SaleEchart from './SaleEchart.vue';
-import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
+import TsxElementTable from 'tsx-element-table';
+import { tableColumns } from './config';
+import { ref, shallowRef } from 'vue';
+import { TableColumnCtx } from 'element-plus';
+import { sum } from 'lodash-es';
 
-const shopId = ref<string>('ALL');
-const type = ref<'sale' | 'salePrice'>('sale');
+interface SaleProps {
+  shop_id: string;
+  shop_name: string;
+  sale: number;
+  in_sale: number;
+  in_sale_product: number;
+}
 
-const last7Days = getLastSeventDays();
+const tableData = ref<SaleProps[]>([
+  {
+    shop_id: '101637284',
+    shop_name: 'Wuxiaoyan',
+    sale: 67,
+    in_sale: 631.29,
+    in_sale_product: 76
+  },
+  {
+    shop_id: '102692328',
+    shop_name: 'Zhangaihe',
+    sale: 62,
+    in_sale: 636.11,
+    in_sale_product: 35
+  },
+  {
+    shop_id: '101662134',
+    shop_name: 'junfang',
+    sale: 42,
+    in_sale: 367.84,
+    in_sale_product: 21
+  },
+  {
+    shop_id: '102692244',
+    shop_name: 'Pengchengming',
+    sale: 41,
+    in_sale: 200.21,
+    in_sale_product: 2
+  }
+]);
+const loading = shallowRef(false);
+
+interface SummaryMethodProps<T = SaleProps> {
+  columns: TableColumnCtx<T>[];
+  data: T[];
+}
+const getSummaries = (param: SummaryMethodProps) => {
+  const { data } = param;
+  return [
+    '汇总',
+    sum(data.map((v) => v.in_sale_product)),
+    sum(data.map((v) => v.sale)),
+    `$ ${parseFloat(sum(data.map((v) => v.in_sale)).toFixed(2))}`
+  ];
+};
 </script>
 <style lang="scss" scoped>
-.tiktokBox {
-  & > .titleBox {
-    & > .selectBox {
-      display: flex;
-      align-items: center;
-      & > .shopSelect {
-        margin-right: var(--normal-padding);
-        width: 160px;
-      }
-      & > .typeSelect {
-        width: 100px;
-      }
+.walmartBox {
+  & > .body {
+    & > .tableBox {
+      height: 400px;
     }
   }
 }

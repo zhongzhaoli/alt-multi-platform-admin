@@ -17,7 +17,9 @@
           :table="{
             data: summaryList,
             border: true,
-            loading
+            loading,
+            showSummary: true,
+            summaryMethod: getSummaries
           }"
           :pagination="{
             show: false
@@ -38,8 +40,9 @@ import {
 } from '@/api/dashboard/index';
 import { tableColumns } from './config';
 import { shallowRef } from 'vue';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, sum } from 'lodash-es';
 import { getLastSeventDays } from '../../utils';
+import { TableColumnCtx } from 'element-plus';
 const router = useRouter();
 
 const toDetail = () => {
@@ -95,11 +98,24 @@ const getSeventSummaryFun = async () => {
 
 getSeventSummaryFun();
 getSummaryFun();
+
+interface SummaryMethodProps<T = WalmartListingSummaryProps> {
+  columns: TableColumnCtx<T>[];
+  data: T[];
+}
+const getSummaries = (param: SummaryMethodProps) => {
+  const { data } = param;
+  return [
+    '汇总',
+    sum(data.map((v) => v.upload_products)),
+    sum(data.map((v) => v.download_products)),
+    sum(data.map((v) => v.reupload_products || 0))
+  ];
+};
 </script>
 <style lang="scss" scoped>
 .walmartBox {
   & > .body {
-    position: relative;
     & > .tableBox {
       height: 400px;
     }
