@@ -34,7 +34,16 @@ const getListFun = async () => {
       end_date: last7Days[last7Days.length - 1],
       start_date: last7Days[0]
     });
-    tableData.value = (data?.list || []).map((item) => item.req_200).reverse();
+    const uList: number[] = [];
+    last7Days.forEach((item, index) => {
+      const currentIndex = (data?.list || []).findIndex((i) => i.crawl_date === item);
+      if (currentIndex !== -1) {
+        uList[index] = data!.list[currentIndex].req_200;
+      } else {
+        uList[index] = 0;
+      }
+    });
+    tableData.value = uList;
   } catch (err) {
     console.log(err);
   } finally {
