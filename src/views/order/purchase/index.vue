@@ -177,10 +177,8 @@ import OrderInfo from './components/OrderInfo.vue';
 import { useMessageBox } from '@/hooks/useMessageBox';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { ElMessage } from 'element-plus';
-import { useUserStore } from '@/store/modules/user';
 import CreditCard from './components/CreditCard.vue';
 import CreditCardInfo from './components/CreditCardInfo.vue';
-const userStore = useUserStore();
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = ref<OrderProps[]>([]);
@@ -352,7 +350,6 @@ const getListFun = async () => {
     const { data } = await getOrderList({
       page: page.value,
       page_size: pageSize.value,
-      role_id: userStore.userInfo?.role_id || '',
       ...filterValue.value
     });
     tableData.value = data?.list || [];

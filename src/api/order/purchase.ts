@@ -52,7 +52,6 @@ export interface OrderProps {
 export interface GetOrderDto {
   page: number;
   page_size?: number;
-  role_id: string;
   status?: string;
   platform?: 'walmart' | 'tiktok';
   platform_order_id?: string;
