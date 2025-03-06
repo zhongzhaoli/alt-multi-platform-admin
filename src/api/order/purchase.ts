@@ -151,7 +151,11 @@ export function orderHanderForHandleCard(data: FormData): Promise<any> {
   });
 }
 
-export type CardStatus = '使用中' | '死亡' | '存活';
+export enum CardStatus {
+  '使用中' = '使用中',
+  '死亡' = '死亡',
+  '存活' = '存活'
+}
 export interface GetCardInfoDto {
   page: number;
   page_size?: number;

@@ -22,7 +22,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="信用卡有效期：" prop="card_lifespan">
-            <el-input v-model="formValue.card_lifespan" placeholder="信用卡有效期，例如：10/2024" />
+            <el-input v-model="formValue.card_lifespan" placeholder="信用卡有效期，例如：10/24" />
           </el-form-item>
         </el-col>
       </el-row>

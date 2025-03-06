@@ -17,7 +17,18 @@
         @table-refresh="getListFun"
       >
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="twoStepHander(row)">二步验证</el-button>
+          <template v-if="row.status === CardStatus.存活">
+            <el-button
+              v-permission="{ type: 'some', value: 'order:creditCard:twoStepVerify' }"
+              link
+              type="primary"
+              @click="twoStepHander(row)"
+            >
+              二步验证
+            </el-button>
+            <div v-permission="{ type: 'noSome', value: 'order:creditCard:twoStepVerify' }">-</div>
+          </template>
+          <template v-else>-</template>
         </template>
       </TsxElementTable>
     </div>
@@ -50,7 +61,7 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import ImageUpload from './components/ImageUpload.vue';
 import { ref, shallowRef, unref } from 'vue';
-import { getCardInfo, CardInfoProps } from '@/api/order/purchase';
+import { getCardInfo, CardInfoProps, CardStatus } from '@/api/order/purchase';
 import { SaveTwoStepDto, saveCreditCardTwoStep } from '@/api/order/creditCard';
 import { ElMessage } from 'element-plus';
 import moment from 'moment-timezone';

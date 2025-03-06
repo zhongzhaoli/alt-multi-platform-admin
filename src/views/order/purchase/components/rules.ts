@@ -32,7 +32,7 @@ export const creditCardRules: FormRules = {
       trigger: 'blur'
     },
     {
-      pattern: /^\d{2}\/\d{4}$/,
+      pattern: /^\d{2}\/\d{2}$/,
       message: '请输入正确的信用卡有效期',
       trigger: 'blur'
     }
