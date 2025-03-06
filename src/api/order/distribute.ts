@@ -82,6 +82,7 @@ export interface HandleDeliveryProps {
 export interface HandDeliveryOrderDto {
   user_id: string;
   order_list: HandleDeliveryProps[];
+  status: 'fail' | 'new';
 }
 export function handDeliveryOrder(data: HandDeliveryOrderDto): Promise<any> {
   return request({

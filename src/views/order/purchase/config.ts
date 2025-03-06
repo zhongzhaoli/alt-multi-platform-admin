@@ -11,10 +11,11 @@ export interface FilterDto {
 }
 
 export const orderStatusMap: {
-  [key in OrderStatusEnum]: 'info' | 'warning' | 'success' | 'danger';
+  [key in OrderStatusEnum]: 'info' | 'warning' | 'success' | 'danger' | 'primary';
 } = {
   [OrderStatusEnum.未处理]: 'info',
-  [OrderStatusEnum.开卡中]: 'info',
+  [OrderStatusEnum.开卡中]: 'primary',
+  [OrderStatusEnum.待绑定]: 'warning',
   [OrderStatusEnum.处理中]: 'warning',
   [OrderStatusEnum.成功]: 'success',
   [OrderStatusEnum.不符合条件]: 'danger',

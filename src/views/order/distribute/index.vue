@@ -135,12 +135,14 @@ const getUserList = async () => {
 const distributeListVisible = shallowRef(false);
 const tempDistributeUser = shallowRef<DistributeUserProps | null>(null);
 const selectionOrderList = ref<DeliveryOrderProps[]>([]);
+const tempOrderType = shallowRef<'fail' | 'new'>('new');
 const handerDistribution = (row: DistributeUserProps) => {
   tempDistributeUser.value = row;
   distributeListVisible.value = true;
 };
-const tableSelection = (rows: DeliveryOrderProps[]) => {
-  selectionOrderList.value = rows;
+const tableSelection = (obj: { rows: DeliveryOrderProps[]; orderType: 'fail' | 'new' }) => {
+  selectionOrderList.value = obj.rows;
+  tempOrderType.value = obj.orderType;
 };
 const handerHandDelivery = async () => {
   useMessageBox(`确认分发这${unref(selectionOrderList).length}笔订单吗？`, async () => {
@@ -153,7 +155,8 @@ const handerHandDelivery = async () => {
           platform_order_id: item.platform_order_id,
           customer_order_id: item.customer_order_id
         })),
-        user_id: tempDistributeUser.value.user_id
+        user_id: tempDistributeUser.value.user_id,
+        status: tempOrderType.value
       });
       ElMessage.success('分发成功');
       selectionOrderList.value = [];

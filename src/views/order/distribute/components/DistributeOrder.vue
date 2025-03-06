@@ -85,7 +85,7 @@ const getListFun = async () => {
 
 // 表格选择
 const tableSelection = (rows: DeliveryOrderProps[]) => {
-  emits('selection-change', rows);
+  emits('selection-change', { rows, orderType: orderType.value });
 };
 
 watch(

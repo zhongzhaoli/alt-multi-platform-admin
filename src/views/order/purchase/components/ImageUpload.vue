@@ -24,13 +24,18 @@
 </template>
 <script setup lang="ts">
 import { Plus } from '@element-plus/icons-vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-const inputFileRef = ref<HTMLInputElement | undefined>(undefined);
+interface ComponentProps {
+  defaultImage?: string | null | File;
+}
+
+const props = defineProps<ComponentProps>();
 const emits = defineEmits(['success']);
 
 type UploadStatus = 'pending' | 'loading' | 'success' | 'error';
 
+const inputFileRef = ref<HTMLInputElement | undefined>(undefined);
 const uploadStatus = ref<UploadStatus>('pending');
 const localUrl = ref<string | undefined>(undefined);
 
@@ -40,6 +45,7 @@ const selectImage = () => {
 
 const inputFileChange = () => {
   const file = inputFileRef.value?.files?.[0];
+  console.log(typeof file);
   uploadStatus.value = 'loading';
   if (file) {
     const reader = new FileReader();
@@ -58,6 +64,21 @@ const inputFileChange = () => {
     emits('success', file);
   }
 };
+
+watch(
+  () => props.defaultImage,
+  (nV) => {
+    if (!nV) {
+      uploadStatus.value = 'pending';
+      localUrl.value = undefined;
+    } else {
+      uploadStatus.value = 'loading';
+      if (typeof nV === 'string') {
+        localUrl.value = nV;
+      }
+    }
+  }
+);
 </script>
 <style lang="scss" scoped>
 .imageUploadComponent {

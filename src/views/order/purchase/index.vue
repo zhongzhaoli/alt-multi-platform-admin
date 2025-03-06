@@ -77,12 +77,15 @@
               -
             </span>
           </template>
+          <template v-else-if="row.status === OrderStatusEnum.待绑定">
+            <el-button link type="primary" @click="BindAccountFun(row)">绑定账号</el-button>
+          </template>
           <template v-else-if="row.status === OrderStatusEnum.处理中">
             <el-button
               v-permission="{ type: 'some', value: 'order:purchase:orderInfoUp' }"
               link
               type="primary"
-              @click="openOrderInfo"
+              @click="openOrderInfo(row)"
             >
               填写订单信息
             </el-button>
@@ -103,8 +106,19 @@
         </template>
       </TsxElementTable>
     </div>
-    <OrderInfo v-model="orderInfoVisible" />
+    <OrderInfo
+      v-model="orderInfoVisible"
+      :card-number="tempOrder?.card_number"
+      :creator-type="tempOrder?.creator_type"
+      @submit="orderInfoSubmit"
+    />
     <CreditCard v-model="cardVisible" @submit="handerCardSubmit" />
+    <BindAccount v-model="bindAccountVisible" @submit="bindAccountSubmit" />
+    <CreditCardInfo
+      v-model="cardInfoVisible"
+      :card-number="tempOrder?.card_number"
+      @submit="cardInfoSubmit"
+    />
     <ConfirmDialog
       v-model="inconsistentVisible"
       title="订单不符合条件"
@@ -131,6 +145,7 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import BindAccount from './components/BindAccount.vue';
 import {
   OrderProps,
   OrderStatusEnum,
@@ -138,7 +153,9 @@ import {
   getOrderList,
   orderHander,
   HandleCardProps,
-  orderHanderForHandleCard
+  OrderInfoSuccessProps,
+  OrderInfoFailProps,
+  BindAccountProps
 } from '@/api/order/purchase';
 import ProductItem from '@/components/ProductItem/index.vue';
 import OrderInfo from './components/OrderInfo.vue';
@@ -147,6 +164,7 @@ import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { ElMessage } from 'element-plus';
 import { useUserStore } from '@/store/modules/user';
 import CreditCard from './components/CreditCard.vue';
+import CreditCardInfo from './components/CreditCardInfo.vue';
 const userStore = useUserStore();
 
 const filterValue = ref<Partial<config.FilterDto>>({});
@@ -173,7 +191,6 @@ const applyCreditCard = (row: OrderProps) => {
       getListFun();
     } catch (err) {
       console.log(err);
-      ElMessage.error('申请信用卡失败');
     }
   });
 };
@@ -187,12 +204,13 @@ const openInconsistent = (row: OrderProps) => {
 };
 const inconsistentFun = () => {
   useMessageBox('确认订单不符合条件？', async () => {
+    if (tempOrder.value === null) return;
     try {
       await orderHander({
-        shop_id: tempOrder.value!.shop_id,
-        platform: tempOrder.value!.platform,
-        platform_order_id: tempOrder.value!.platform_order_id,
-        customer_order_id: tempOrder.value!.customer_order_id,
+        shop_id: tempOrder.value.shop_id,
+        platform: tempOrder.value.platform,
+        platform_order_id: tempOrder.value.platform_order_id,
+        customer_order_id: tempOrder.value.customer_order_id,
         status: OrderStatusEnum.不符合条件,
         fail_remark: inconReason.value
       });
@@ -201,45 +219,115 @@ const inconsistentFun = () => {
       getListFun();
     } catch (err) {
       console.log(err);
-      ElMessage.error('订单不符合条件失败');
     }
   });
 };
 
 // 办卡
 const cardVisible = shallowRef(false);
-const handerCard = (card: OrderProps) => {
-  tempOrder.value = card;
-  cardVisible.value = true;
+const handerCard = (row: OrderProps) => {
+  tempOrder.value = row;
+  if (row.creator_type === 'new') {
+    cardVisible.value = true;
+  } else {
+    cardInfoVisible.value = true;
+  }
 };
 const handerCardSubmit = (formValue: HandleCardProps) => {
   useMessageBox('确认开卡？', async () => {
     if (tempOrder.value === null) return;
-    const formData = new FormData();
-    formData.append('shop_id', tempOrder.value.shop_id);
-    formData.append('platform', tempOrder.value.platform);
-    formData.append('platform_order_id', tempOrder.value.platform_order_id);
-    formData.append('customer_order_id', tempOrder.value.customer_order_id);
-    formData.append('status', OrderStatusEnum.处理中);
-    Object.entries(formValue).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
     try {
-      await orderHanderForHandleCard(formData);
+      await orderHander({
+        shop_id: tempOrder.value.shop_id,
+        platform: tempOrder.value.platform,
+        platform_order_id: tempOrder.value.platform_order_id,
+        customer_order_id: tempOrder.value.customer_order_id,
+        status: OrderStatusEnum.待绑定,
+        ...formValue
+      });
       ElMessage.success('开卡成功');
       cardVisible.value = false;
       getListFun();
     } catch (err) {
       console.log(err);
-      ElMessage.error('开卡失败');
+    }
+  });
+};
+
+// 绑定账号
+const bindAccountVisible = shallowRef(false);
+const BindAccountFun = (row: OrderProps) => {
+  tempOrder.value = row;
+  bindAccountVisible.value = true;
+};
+const bindAccountSubmit = (formValue: BindAccountProps) => {
+  useMessageBox('确认绑定账号？', async () => {
+    if (tempOrder.value === null) return;
+    try {
+      await orderHander({
+        shop_id: tempOrder.value.shop_id,
+        platform: tempOrder.value.platform,
+        platform_order_id: tempOrder.value.platform_order_id,
+        customer_order_id: tempOrder.value.customer_order_id,
+        status: OrderStatusEnum.处理中,
+        ...formValue
+      });
+      ElMessage.success('绑定账号成功');
+      bindAccountVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+// 办卡信用卡信息展示和确认
+const cardInfoVisible = shallowRef(false);
+const cardInfoSubmit = async () => {
+  useMessageBox('确认信用卡信息无误？', async () => {
+    if (tempOrder.value === null) return;
+    try {
+      await orderHander({
+        shop_id: tempOrder.value.shop_id,
+        platform: tempOrder.value.platform,
+        platform_order_id: tempOrder.value.platform_order_id,
+        customer_order_id: tempOrder.value.customer_order_id,
+        status: OrderStatusEnum.处理中
+      });
+      ElMessage.success('确认信用卡信息成功');
+      cardInfoVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
     }
   });
 };
 
 // 订单信息
 const orderInfoVisible = shallowRef(false);
-const openOrderInfo = () => {
+const openOrderInfo = (row: OrderProps) => {
+  tempOrder.value = row;
   orderInfoVisible.value = true;
+};
+const orderInfoSubmit = (formValue: OrderInfoSuccessProps | OrderInfoFailProps) => {
+  useMessageBox('确认提交订单信息？', async () => {
+    if (tempOrder.value === null) return;
+    try {
+      await orderHander({
+        shop_id: tempOrder.value.shop_id,
+        platform: tempOrder.value.platform,
+        platform_order_id: tempOrder.value.platform_order_id,
+        customer_order_id: tempOrder.value.customer_order_id,
+        card_number: tempOrder.value.card_number,
+        ...formValue
+      });
+      ElMessage.success('提交订单信息成功');
+      orderInfoVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
+    }
+  });
 };
 
 const getListFun = async () => {

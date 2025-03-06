@@ -1,5 +1,11 @@
 <template>
-  <ConfirmDialog v-model="visible" title="填写订单信息" width="500px" top="100px" @submit="submit">
+  <ConfirmDialog
+    v-model="visible"
+    title="确认信用卡信息"
+    width="500px"
+    top="100px"
+    @submit="submit"
+  >
     <div v-loading="loading">
       <div v-if="!loading && (!cardNumber || (noData && !cardInfo))" class="noData flex-center">
         暂无卡信息
@@ -40,85 +46,25 @@
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="订单金额：">
-              <div class="d-flex justify-end w-100">
-                <el-input-number v-model="formValue.pay_amount" :precision="2" />
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="信用卡存活状态：">
-              <div class="d-flex justify-end w-100">
-                <el-radio-group v-model="formValue.card_status">
-                  <el-radio-button label="存活" value="存活" />
-                  <el-radio-button label="死亡" value="死亡" />
-                </el-radio-group>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="订单状态：">
-              <div class="d-flex justify-end w-100">
-                <el-radio-group v-model="formValue.status">
-                  <el-radio-button label="成功" :value="OrderStatusEnum.成功" />
-                  <el-radio-button label="失败" :value="OrderStatusEnum.失败" />
-                </el-radio-group>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col v-if="formValue.status === OrderStatusEnum.失败" :span="24">
-            <el-form-item label="失败原因">
-              <div class="d-flex justify-end w-100">
-                <el-select v-model="formValue.fail_remark" placeholder="请选择失败原因">
-                  <el-option label="价格不符" :value="OrderInconsistentResonEnum.价格不符" />
-                  <el-option
-                    label="配送时效不符"
-                    :value="OrderInconsistentResonEnum.配送时效不符"
-                  />
-                  <el-option label="库存不符" :value="OrderInconsistentResonEnum.库存不符" />
-                  <el-option label="Rating不符" :value="OrderInconsistentResonEnum.Rating不符" />
-                </el-select>
-              </div>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-form>
     </div>
   </ConfirmDialog>
 </template>
 <script setup lang="ts">
-import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import {
-  OrderStatusEnum,
-  OrderInfoSuccessProps,
-  OrderInfoFailProps,
-  OrderInconsistentResonEnum,
-  CardInfoProps,
-  getCardInfo
-} from '@/api/order/purchase';
 import { useVModel } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import { CardInfoProps, getCardInfo } from '@/api/order/purchase';
 
 interface ComponentProps {
   modelValue: boolean;
   cardNumber?: string;
-  creatorType?: 'new' | 'old';
 }
+
 const props = defineProps<ComponentProps>();
 const emits = defineEmits(['update:modelValue', 'submit']);
-
 const visible = useVModel(props, 'modelValue', emits);
-
-const formValue = ref<OrderInfoSuccessProps | OrderInfoFailProps>({
-  card_status: '存活',
-  pay_amount: 0,
-  status: OrderStatusEnum.成功,
-  card_email: '',
-  card_phone: '',
-  email_pwd: ''
-});
-
 const loading = shallowRef(true);
 const noData = shallowRef(false);
 const cardInfo = ref<CardInfoProps | null>(null);
@@ -145,15 +91,15 @@ const getCardInfoFun = async () => {
   }
 };
 
+const submit = () => {
+  emits('submit');
+};
+
 watch([() => props.modelValue, () => props.cardNumber], ([nV1, nV2]) => {
   if (nV1 && nV2) {
     getCardInfoFun();
   }
 });
-
-const submit = () => {
-  emits('submit', formValue.value);
-};
 </script>
 <style lang="scss" scoped>
 .noData {
