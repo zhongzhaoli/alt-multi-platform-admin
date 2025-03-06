@@ -1,0 +1,143 @@
+<template>
+  <div class="container">
+    <div class="filterBox">
+      <FilterContainer v-model="filterValue" :columns="config.filterColumns" @submit="getListFun" />
+    </div>
+    <div class="tableBox">
+      <TsxElementTable
+        v-model:current-page="page"
+        v-model:page-size="pageSize"
+        :table-columns="config.tableColumns"
+        :table="{ data: tableData, loading, border: true }"
+        :handle="{
+          show: false
+        }"
+        :pagination="{ total }"
+        @page-change="getListFun"
+        @table-refresh="getListFun"
+      >
+        <template #table-action="{ row }">
+          <el-button link type="primary" @click="twoStepHander(row)">二步验证</el-button>
+        </template>
+      </TsxElementTable>
+    </div>
+    <ConfirmDialog
+      v-model="twoStepVisible"
+      :submit-loading="submitLoading"
+      title="二步验证"
+      width="500px"
+      top="100px"
+      @submit="submitFun"
+    >
+      <el-form label-position="left" label-width="100px">
+        <el-form-item label="验证Token：">
+          <el-input v-model="formValue.two_step_token" placeholder="请输入二步验证Token" />
+        </el-form-item>
+        <el-form-item label="验证图片：">
+          <div class="imageUploadBox">
+            <ImageUpload :default-image="defaultImage" @success="imgHander" />
+          </div>
+        </el-form-item>
+      </el-form>
+    </ConfirmDialog>
+  </div>
+</template>
+<script setup lang="ts">
+import { PAGE, PAGE_SIZE } from '@/constants/app';
+import * as config from './config';
+import TsxElementTable from 'tsx-element-table';
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import ImageUpload from './components/ImageUpload.vue';
+import { ref, shallowRef, unref } from 'vue';
+import { getCardInfo, CardInfoProps } from '@/api/order/purchase';
+import { SaveTwoStepDto, saveCreditCardTwoStep } from '@/api/order/creditCard';
+import { ElMessage } from 'element-plus';
+import moment from 'moment-timezone';
+
+const page = shallowRef(PAGE);
+const pageSize = shallowRef(PAGE_SIZE);
+const tableData = ref<CardInfoProps[]>([]);
+const total = shallowRef(0);
+const loading = shallowRef(false);
+const filterValue = ref<Partial<config.FilterDto>>({});
+const submitLoading = shallowRef(false);
+
+const getListFun = async () => {
+  loading.value = true;
+  try {
+    const { data } = await getCardInfo({
+      page: page.value,
+      page_size: pageSize.value,
+      ...filterValue.value
+    });
+    total.value = data?.total || 0;
+    tableData.value = (data?.list || []).map((item) => {
+      return {
+        ...item,
+        last_operated_time: item.last_operated_time
+          ? moment(item.last_operated_time).format('YYYY-MM-DD HH:mm:ss')
+          : '-'
+      };
+    });
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const twoStepVisible = shallowRef(false);
+const tempCardInfo = shallowRef<CardInfoProps | null>(null);
+const defaultImage = shallowRef('');
+const formValue = ref<SaveTwoStepDto>({
+  two_step_token: undefined,
+  two_step_img: undefined,
+  card_number: ''
+});
+const twoStepHander = (row: CardInfoProps) => {
+  tempCardInfo.value = row;
+  formValue.value.two_step_token = row.two_step_token;
+  defaultImage.value = row.two_step;
+  twoStepVisible.value = true;
+};
+
+const imgHander = (file: File) => {
+  formValue.value.two_step_img = file;
+};
+
+const submitFun = async () => {
+  if (!unref(formValue).two_step_token && !unref(formValue).two_step_img) {
+    ElMessage.error('请输入二步验证Token或上传验证图片');
+    return;
+  }
+  submitLoading.value = true;
+  try {
+    formValue.value.card_number = unref(tempCardInfo)?.card_number || '';
+    const formData = new FormData();
+    Object.entries(unref(formValue)).forEach(([key, value]) => {
+      if (value) {
+        formData.append(key, value as string | Blob);
+      }
+    });
+    await saveCreditCardTwoStep(formData);
+    ElMessage.success('二步验证成功');
+    twoStepVisible.value = false;
+    getListFun();
+  } catch (err) {
+    console.log(err);
+  } finally {
+    submitLoading.value = false;
+  }
+};
+
+getListFun();
+</script>
+<style lang="scss" scoped>
+.container {
+  & .imageUploadBox {
+    width: 130px;
+    height: 130px;
+  }
+}
+</style>

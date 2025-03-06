@@ -37,8 +37,10 @@
 </template>
 <script setup lang="ts">
 import { onBeforeUnmount, watch, nextTick, shallowRef } from 'vue';
-import axios, { CancelTokenSource } from 'axios';
+import axios, { AxiosRequestConfig, CancelTokenSource } from 'axios';
+import { useUserStore } from '@/store/modules/user';
 const cancelToken = axios.CancelToken;
+const userStore = useUserStore();
 
 interface ComponentProps {
   src: string | null;
@@ -46,12 +48,14 @@ interface ComponentProps {
   height?: string;
   preview?: boolean;
   params?: object;
+  token?: boolean;
 }
 
 const props = withDefaults(defineProps<ComponentProps>(), {
   width: '60px',
   height: '60px',
-  preview: true
+  preview: true,
+  token: false
 });
 
 const blob = shallowRef('');
@@ -84,11 +88,17 @@ const startLoad = async () => {
       url.search = '';
       originSrc.value = url.toString();
     }
-    const { data } = await axios.get(originSrc.value, {
+    const params: AxiosRequestConfig = {
       params: props.params || {},
       responseType: 'blob',
       cancelToken: source.token
-    });
+    };
+    if (props.token && userStore.token) {
+      params.headers = {
+        Authorization: userStore.token
+      };
+    }
+    const { data } = await axios.get(originSrc.value, params);
     blob.value = URL.createObjectURL(data);
     success.value = true;
     imageOnLoad.value = true;

@@ -20,7 +20,7 @@
         <div class="d-flex align-center">
           <el-radio-group v-model="orderType" @change="getListFun">
             <el-radio-button label="未下单" value="new" />
-            <el-radio-button label="下单失败" value="fail" />
+            <el-radio-button v-if="showFailOrder" label="下单失败" value="fail" />
           </el-radio-group>
           <el-select
             v-model="priceType"
@@ -41,7 +41,7 @@ import { DeliveryOrderProps, getDeliveryOrder, GetDeliveryOrderDto } from '@/api
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { ref, shallowRef, watch } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 
 interface ComponentProps {
   roleName: string;
@@ -82,6 +82,10 @@ const getListFun = async () => {
     loading.value = false;
   }
 };
+
+const showFailOrder = computed(() => {
+  return props.roleName.indexOf('老号下单员') > -1;
+});
 
 // 表格选择
 const tableSelection = (rows: DeliveryOrderProps[]) => {

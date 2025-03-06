@@ -78,7 +78,14 @@
             </span>
           </template>
           <template v-else-if="row.status === OrderStatusEnum.待绑定">
-            <el-button link type="primary" @click="BindAccountFun(row)">绑定账号</el-button>
+            <el-button
+              v-permission="{ type: 'some', value: 'order:purchase:bindingAccount' }"
+              link
+              type="primary"
+              @click="BindAccountFun(row)"
+            >
+              绑定账号
+            </el-button>
           </template>
           <template v-else-if="row.status === OrderStatusEnum.处理中">
             <el-button
@@ -270,6 +277,7 @@ const bindAccountSubmit = (formValue: BindAccountProps) => {
         platform_order_id: tempOrder.value.platform_order_id,
         customer_order_id: tempOrder.value.customer_order_id,
         status: OrderStatusEnum.处理中,
+        card_number: tempOrder.value.card_number,
         ...formValue
       });
       ElMessage.success('绑定账号成功');

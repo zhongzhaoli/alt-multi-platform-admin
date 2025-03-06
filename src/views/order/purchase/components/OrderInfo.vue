@@ -41,6 +41,25 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
+            <el-form-item label="二步验证Token：">
+              <div class="d-flex justify-end w-100">
+                <div v-if="cardInfo && cardInfo.two_step_token">{{ cardInfo.two_step_token }}</div>
+                <div v-else>暂无</div>
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="二步验证图片：">
+              <div class="d-flex justify-end w-100">
+                <div v-if="cardInfo && cardInfo.two_step">
+                  <ImageLoad :token="true" :src="twoStepImageUrl(cardInfo.two_step)" />
+                </div>
+                <div v-else>暂无</div>
+              </div>
+            </el-form-item>
+          </el-col>
+          <div class="hr" />
+          <el-col :span="24">
             <el-form-item label="订单金额：">
               <div class="d-flex justify-end w-100">
                 <el-input-number v-model="formValue.pay_amount" :precision="2" />
@@ -71,13 +90,8 @@
             <el-form-item label="失败原因">
               <div class="d-flex justify-end w-100">
                 <el-select v-model="formValue.fail_remark" placeholder="请选择失败原因">
-                  <el-option label="价格不符" :value="OrderInconsistentResonEnum.价格不符" />
-                  <el-option
-                    label="配送时效不符"
-                    :value="OrderInconsistentResonEnum.配送时效不符"
-                  />
-                  <el-option label="库存不符" :value="OrderInconsistentResonEnum.库存不符" />
-                  <el-option label="Rating不符" :value="OrderInconsistentResonEnum.Rating不符" />
+                  <el-option label="行为异常" :value="OrderFailResonEnum.行为异常" />
+                  <el-option label="其他" :value="OrderFailResonEnum.其他" />
                 </el-select>
               </div>
             </el-form-item>
@@ -93,12 +107,14 @@ import {
   OrderStatusEnum,
   OrderInfoSuccessProps,
   OrderInfoFailProps,
-  OrderInconsistentResonEnum,
+  OrderFailResonEnum,
   CardInfoProps,
   getCardInfo
 } from '@/api/order/purchase';
+import { twoStepImageUrl } from '@/api/order/creditCard';
 import { useVModel } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
+import ImageLoad from '@/components/ImageLoad/index.vue';
 
 interface ComponentProps {
   modelValue: boolean;
@@ -160,6 +176,13 @@ const submit = () => {
   border: 1px #eaeaea solid;
   height: 150px;
   border-radius: 4px;
+}
+.hr {
+  margin-bottom: 20px;
+  margin-top: 8px;
+  width: 100%;
+  height: 1px;
+  background-color: #eaeaea;
 }
 .justify-end.w-100 {
   & > div {

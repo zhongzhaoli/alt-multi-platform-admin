@@ -1,4 +1,4 @@
-import { baseURL, ResponsePageJson } from '@/config/request';
+import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export enum OrderStatusEnum {
@@ -16,6 +16,11 @@ export enum OrderInconsistentResonEnum {
   '配送时效不符' = '配送时效不符',
   '库存不符' = '库存不符',
   'Rating不符' = 'Rating不符'
+}
+
+export enum OrderFailResonEnum {
+  '行为异常' = '行为异常',
+  '其他' = '其他'
 }
 
 export interface OrderItemProps {
@@ -91,6 +96,7 @@ export interface BindAccountProps {
 }
 export interface BindAccountDto extends OrderHanderBaseDto, BindAccountProps {
   status: OrderStatusEnum.处理中;
+  card_number: string;
 }
 export interface HanderOldCardDto extends OrderHanderBaseDto {
   status: OrderStatusEnum.处理中;
@@ -159,10 +165,11 @@ export interface CardInfoProps {
   card_phone: string;
   cvv: string;
   card_status: CardStatus;
-  two_step_url: string;
+  two_step_token: string;
   card_path: string;
   card_lifespan: string;
   two_step: string;
+  last_operated_time: string;
 }
 export function getCardInfo(params: GetCardInfoDto): Promise<ResponsePageJson<CardInfoProps>> {
   return request({
@@ -171,5 +178,3 @@ export function getCardInfo(params: GetCardInfoDto): Promise<ResponsePageJson<Ca
     params
   });
 }
-
-export const twoStepAPI = (path: string) => `${baseURL}/card/purchaser/delivery/card/img/${path}`;

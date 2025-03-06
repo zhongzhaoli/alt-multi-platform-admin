@@ -23,6 +23,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { getTwoStepImage } from '@/api/order/creditCard';
 import { Plus } from '@element-plus/icons-vue';
 import { ref, watch } from 'vue';
 
@@ -58,7 +59,7 @@ const inputFileChange = () => {
       image.onload = function () {
         uploadStatus.value = 'success';
       };
-      image.setAttribute('src', blobUrl);
+      image.src = blobUrl;
     };
     reader.readAsArrayBuffer(file);
     emits('success', file);
@@ -67,7 +68,7 @@ const inputFileChange = () => {
 
 watch(
   () => props.defaultImage,
-  (nV) => {
+  async (nV) => {
     if (!nV) {
       uploadStatus.value = 'pending';
       localUrl.value = undefined;
@@ -75,8 +76,14 @@ watch(
       uploadStatus.value = 'loading';
       if (typeof nV === 'string') {
         localUrl.value = nV;
+        const data = await getTwoStepImage(localUrl.value);
+        localUrl.value = URL.createObjectURL(data);
+        uploadStatus.value = 'success';
       }
     }
+  },
+  {
+    immediate: true
   }
 );
 </script>
