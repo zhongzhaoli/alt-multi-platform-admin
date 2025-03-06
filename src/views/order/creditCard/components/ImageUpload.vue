@@ -100,6 +100,7 @@ watch(
     transition: all 0.3s;
     box-sizing: border-box;
     color: #c9c9c9;
+    overflow: hidden;
     &:hover {
       border-color: var(--el-color-primary);
       color: var(--el-color-primary);
