@@ -86,6 +86,14 @@
             >
               绑定账号
             </el-button>
+            <span
+              v-permission="{
+                type: 'noSome',
+                value: 'order:purchase:bindingAccount'
+              }"
+            >
+              -
+            </span>
           </template>
           <template v-else-if="row.status === OrderStatusEnum.处理中">
             <el-button

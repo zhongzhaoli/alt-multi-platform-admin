@@ -17,7 +17,7 @@
         @table-refresh="getListFun"
       >
         <template #table-action="{ row }">
-          <template v-if="row.status === CardStatus.存活">
+          <template v-if="row.card_status === CardStatus.存活">
             <el-button
               v-permission="{ type: 'some', value: 'order:creditCard:twoStepVerify' }"
               link
