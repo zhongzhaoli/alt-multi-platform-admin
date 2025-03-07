@@ -57,7 +57,7 @@ export function getTiktokListingList(
   params: GetListingDto
 ): Promise<ResponsePageJson<ListingProps>> {
   return request({
-    url: '/tk/board/listing',
+    url: '/tiktok/products/listing/monitor',
     method: 'get',
     params
   });

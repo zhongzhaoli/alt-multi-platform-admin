@@ -34,6 +34,13 @@ export const filterColumns: FilterColumnProps[] = [
   //   selectOptions: []
   // },
   {
+    label: '平台',
+    type: 'select',
+    prop: 'platform',
+    width: 240,
+    selectOptions: []
+  },
+  {
     label: '日期',
     type: 'dateRange',
     prop: 'created_date',
@@ -93,7 +100,7 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 160,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+      return h('b', null, cellValue || 0);
     }
   },
   {
@@ -102,7 +109,7 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 160,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+      return h('b', null, cellValue || 0);
     }
   },
   {

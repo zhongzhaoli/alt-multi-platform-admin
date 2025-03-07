@@ -117,6 +117,17 @@
             </el-button>
             <span v-permission="{ type: 'noSome', value: 'order:purchase:cardUp' }">-</span>
           </template>
+          <template v-else-if="row.status === OrderStatusEnum.老号下单员下单失败">
+            <el-button
+              v-permission="{ type: 'some', value: 'order:purchase:adminPurchase' }"
+              link
+              type="primary"
+              @click="adminPurchase(row)"
+            >
+              管理员下单
+            </el-button>
+            <span v-permission="{ type: 'noSome', value: 'order:purchase:adminPurchase' }">-</span>
+          </template>
           <template v-else>-</template>
         </template>
       </TsxElementTable>
@@ -151,6 +162,7 @@
         </el-form-item>
       </el-form>
     </ConfirmDialog>
+    <AdminPurchase v-model="adminPurchaseVisible" @submit="adminPurchaseSubmit" />
   </div>
 </template>
 <script setup lang="ts">
@@ -170,7 +182,9 @@ import {
   HandleCardProps,
   OrderInfoSuccessProps,
   OrderInfoFailProps,
-  BindAccountProps
+  BindAccountProps,
+  AdminPurchaseSuccessProps,
+  AdminPurchaseFailProps
 } from '@/api/order/purchase';
 import ProductItem from '@/components/ProductItem/index.vue';
 import OrderInfo from './components/OrderInfo.vue';
@@ -179,6 +193,7 @@ import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { ElMessage } from 'element-plus';
 import CreditCard from './components/CreditCard.vue';
 import CreditCardInfo from './components/CreditCardInfo.vue';
+import AdminPurchase from './components/AdminPurchase.vue';
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = ref<OrderProps[]>([]);
@@ -337,6 +352,32 @@ const orderInfoSubmit = (formValue: OrderInfoSuccessProps | OrderInfoFailProps) 
       });
       ElMessage.success('提交订单信息成功');
       orderInfoVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+// 管理员下单
+const adminPurchaseVisible = shallowRef(false);
+const adminPurchase = (row: OrderProps) => {
+  tempOrder.value = row;
+  adminPurchaseVisible.value = true;
+};
+const adminPurchaseSubmit = (formValue: AdminPurchaseSuccessProps | AdminPurchaseFailProps) => {
+  useMessageBox('确认提交？', async () => {
+    if (tempOrder.value === null) return;
+    try {
+      await orderHander({
+        shop_id: tempOrder.value.shop_id,
+        platform: tempOrder.value.platform,
+        platform_order_id: tempOrder.value.platform_order_id,
+        customer_order_id: tempOrder.value.customer_order_id,
+        ...formValue
+      });
+      ElMessage.success('管理员下单成功');
+      adminPurchaseVisible.value = false;
       getListFun();
     } catch (err) {
       console.log(err);

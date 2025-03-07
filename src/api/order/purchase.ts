@@ -8,7 +8,10 @@ export enum OrderStatusEnum {
   '处理中' = '处理中',
   '成功' = '成功',
   '不符合条件' = '不符合条件',
-  '失败' = '失败'
+  '失败' = '失败',
+  '老号下单员下单失败' = '老号下单员下单失败',
+  '管理员下单成功' = '管理员下单成功',
+  '管理员下单失败' = '管理员下单失败'
 }
 
 export enum OrderInconsistentResonEnum {
@@ -125,6 +128,21 @@ export interface OrderInfoFailDto extends OrderHanderBaseDto, OrderInfoFailProps
   status: OrderStatusEnum.失败;
   card_number: string;
 }
+export interface AdminPurchaseSuccessProps {
+  status: OrderStatusEnum.管理员下单成功;
+  pay_amount: number;
+}
+export interface AdminPurchaseSuccessDto extends OrderHanderBaseDto, AdminPurchaseSuccessProps {
+  status: OrderStatusEnum.管理员下单成功;
+}
+export interface AdminPurchaseFailProps {
+  status: OrderStatusEnum.管理员下单失败;
+  fail_remark: OrderFailResonEnum;
+  pay_amount: number;
+}
+export interface AdminPurchaseFailDto extends OrderHanderBaseDto, AdminPurchaseFailProps {
+  status: OrderStatusEnum.管理员下单失败;
+}
 export function orderHander(
   data:
     | OrderInconsistentDto
@@ -134,6 +152,8 @@ export function orderHander(
     | HanderOldCardDto
     | OrderInfoSuccessDto
     | OrderInfoFailDto
+    | AdminPurchaseSuccessDto
+    | AdminPurchaseFailDto
 ): Promise<any> {
   return request({
     url: '/card/purchaser/delivery/card/up',

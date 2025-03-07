@@ -1,6 +1,11 @@
 <template>
   <div class="productItem d-flex align-center">
-    <ImageLoad :src="imageUrl" :width="`${size || 40}px`" :height="`${size || 40}px`" />
+    <ImageLoad
+      :src="imageUrl"
+      :width="`${size || 40}px`"
+      :height="`${size || 40}px`"
+      :token="true"
+    />
     <div class="rightBox d-flex fl-column justify-center" :style="{ height: `${size || 40}px` }">
       <div class="productName d-flex align-center">
         <TextEllipsis

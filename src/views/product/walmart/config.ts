@@ -171,12 +171,6 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'created_at',
     minWidth: 180
   }
-  // {
-  //   label: '库存预警',
-  //   align: 'center',
-  //   prop: 'stockWarning',
-  //   minWidth: 140
-  // }
 ];
 
 // 右侧导出按钮

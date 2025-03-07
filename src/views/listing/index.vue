@@ -6,11 +6,14 @@
         :columns="config.filterColumns"
         @submit="getListFun"
         @reset="getListFun"
-      />
-      <!-- <template #shop_id="{ form, row }">
-          <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" />
+      >
+        <template #platform>
+          <el-select v-model="platform" placeholder="请选择平台" @change="getListFun">
+            <el-option label="Walmart" value="walmart" />
+            <el-option label="Tiktok" value="tiktok" />
+          </el-select>
         </template>
-      </FilterContainer> -->
+      </FilterContainer>
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -39,7 +42,10 @@
           </el-radio-group>
         </template>
         <template #table-action="{ row }">
-          <el-button link type="primary" @click="openFeedList(row)">详情</el-button>
+          <template v-if="platform === 'walmart'">
+            <el-button link type="primary" @click="openFeedList(row)">详情</el-button>
+          </template>
+          <template v-else> - </template>
         </template>
         <template #table-shop_survival="{ row }">
           <el-tag v-if="row.shop_survival === 1" disable-transitions type="success"> 存活 </el-tag>
@@ -90,7 +96,7 @@
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import * as config from './config';
-import { ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import FeedDetail from './components/feedDetail.vue';
 import {
@@ -99,10 +105,14 @@ import {
   GetListingDto,
   FeedListProps,
   getWlamartFeedList,
-  GetDetailListDto
+  GetDetailListDto,
+  getTiktokListingList
 } from '@/api/listing';
 import { cloneDeep } from 'lodash-es';
+import { useRoute } from 'vue-router';
 
+const platform = ref<'walmart' | 'tiktok'>('walmart');
+const route = useRoute();
 // 获取列表
 const tableData = shallowRef<ListingProps[]>([]);
 const filterValue = ref<Partial<config.FilterDto>>({});
@@ -118,13 +128,35 @@ const getListFun = async () => {
     type: filterType.value,
     ...filterValue.value
   };
-  getWalmartList(searchParams);
+  console.log(platform.value);
+  if (platform.value === 'walmart') {
+    getWalmartList(searchParams);
+  } else {
+    getTiktokList(searchParams);
+  }
 };
 
 const getWalmartList = async (params: GetListingDto) => {
   loading.value = true;
   try {
     const { data } = await getWalmartListingList(params);
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      listing_rating:
+        item.items_succeeded && item.items_received ? item.items_succeeded / item.items_received : 0
+    }));
+    total.value = data?.total || 0;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const getTiktokList = async (params: GetListingDto) => {
+  loading.value = true;
+  try {
+    const { data } = await getTiktokListingList(params);
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
       listing_rating:
@@ -184,7 +216,12 @@ const openDetail = (row: FeedListProps) => {
   tempDetail.value = cloneDeep(row);
 };
 
-getListFun();
+onMounted(() => {
+  if ('type' in route.query) {
+    platform.value = route.query.type === 'walmart' ? 'walmart' : 'tiktok';
+  }
+  getListFun();
+});
 </script>
 <style lang="scss" scoped>
 .container {

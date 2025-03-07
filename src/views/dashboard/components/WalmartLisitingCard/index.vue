@@ -46,7 +46,7 @@ import { getLastSeventDays } from '../../utils';
 const router = useRouter();
 
 const toDetail = () => {
-  router.push('/listing');
+  router.push({ path: '/listing', query: { type: 'walmart' } });
 };
 
 const summaryList = shallowRef<ListingSummaryProps[]>([]);
