@@ -4,7 +4,14 @@
       <div v-if="!loading && (!cardNumber || (noData && !cardInfo))" class="noData flex-center">
         暂无卡信息
       </div>
-      <el-form v-else label-position="left" label-width="130px">
+      <el-form
+        v-else
+        ref="formRef"
+        label-position="left"
+        label-width="140px"
+        :rules="orderInfoRules"
+        :model="formValue"
+      >
         <el-row :gutter="14">
           <el-col :span="24">
             <el-form-item label="信用卡号：">
@@ -60,14 +67,14 @@
           </el-col>
           <div class="hr" />
           <el-col :span="24">
-            <el-form-item label="订单金额：">
+            <el-form-item label="订单金额：" prop="pay_amount">
               <div class="d-flex justify-end w-100">
                 <el-input-number v-model="formValue.pay_amount" :precision="2" />
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="信用卡存活状态：">
+            <el-form-item label="信用卡存活状态：" prop="card_status">
               <div class="d-flex justify-end w-100">
                 <el-radio-group v-model="formValue.card_status">
                   <el-radio-button label="存活" value="存活" />
@@ -77,7 +84,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="订单状态：">
+            <el-form-item label="订单状态：" prop="status">
               <div class="d-flex justify-end w-100">
                 <el-radio-group v-model="formValue.status">
                   <el-radio-button label="成功" :value="OrderStatusEnum.成功" />
@@ -87,7 +94,7 @@
             </el-form-item>
           </el-col>
           <el-col v-if="formValue.status === OrderStatusEnum.失败" :span="24">
-            <el-form-item label="失败原因">
+            <el-form-item label="失败原因" prop="fail_remark">
               <div class="d-flex justify-end w-100">
                 <el-select v-model="formValue.fail_remark" placeholder="请选择失败原因">
                   <el-option label="行为异常" :value="OrderFailResonEnum.行为异常" />
@@ -111,10 +118,12 @@ import {
   CardInfoProps,
   getCardInfo
 } from '@/api/order/purchase';
+import { orderInfoRules } from './rules';
 import { twoStepImageUrl } from '@/api/order/creditCard';
 import { useVModel } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
 import ImageLoad from '@/components/ImageLoad/index.vue';
+import { FormInstance } from 'element-plus';
 
 interface ComponentProps {
   modelValue: boolean;
@@ -137,6 +146,7 @@ const formValue = ref<OrderInfoSuccessProps | OrderInfoFailProps>({
 
 const loading = shallowRef(true);
 const noData = shallowRef(false);
+const formRef = ref<FormInstance | null>(null);
 const cardInfo = ref<CardInfoProps | null>(null);
 
 const getCardInfoFun = async () => {
@@ -168,7 +178,11 @@ watch([() => props.modelValue, () => props.cardNumber], ([nV1, nV2]) => {
 });
 
 const submit = () => {
-  emits('submit', formValue.value);
+  formRef.value?.validate((valid) => {
+    if (valid) {
+      emits('submit', formValue.value);
+    }
+  });
 };
 </script>
 <style lang="scss" scoped>
@@ -183,6 +197,13 @@ const submit = () => {
   width: 100%;
   height: 1px;
   background-color: #eaeaea;
+}
+.el-form-item {
+  margin-bottom: 16px;
+}
+:deep(.el-form-item__error) {
+  left: unset;
+  right: 0;
 }
 .justify-end.w-100 {
   & > div {

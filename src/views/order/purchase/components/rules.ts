@@ -72,3 +72,49 @@ export const bindAccountRules: FormRules = {
     }
   ]
 };
+
+export const orderInfoRules: FormRules = {
+  pay_amount: [
+    {
+      required: true,
+      message: '请输入支付金额',
+      trigger: 'blur'
+    },
+    {
+      pattern: /^\d+(\.\d{1,2})?$/,
+      message: '请输入正确的金额',
+      trigger: 'blur'
+    },
+    {
+      validator: (_rule, value, callback) => {
+        console.log(value);
+        if (value <= 0) {
+          callback(new Error('订单金额必须大于0'));
+        }
+        return true;
+      },
+      trigger: 'blur'
+    }
+  ],
+  card_status: [
+    {
+      required: true,
+      message: '请选择信用卡存活状态',
+      trigger: 'change'
+    }
+  ],
+  status: [
+    {
+      required: true,
+      message: '请选择订单状态',
+      trigger: 'change'
+    }
+  ],
+  fail_remark: [
+    {
+      required: true,
+      message: '请选择失败原因',
+      trigger: 'blur'
+    }
+  ]
+};
