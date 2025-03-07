@@ -51,8 +51,8 @@ const toDetail = () => {
 const summaryList = shallowRef<ListingSummaryProps[]>([]);
 const summaryTotal = shallowRef<ListingSummaryTotalProps>({
   publish_products: 0,
-  retire_products: 0,
-  unpublish_products: 0
+  unpublish_products: 0,
+  total_sale_products: 0
 });
 const loading = shallowRef(false);
 const getSummaryFun = async () => {
@@ -87,15 +87,15 @@ const getSeventSummaryFun = async () => {
     last7Days.forEach((item, index) => {
       const currentIndex = data.findIndex((i) => i.date === item);
       if (currentIndex !== -1) {
-        uList[index] = data[currentIndex].upload_products;
-        rList[index] = data[currentIndex].download_products;
+        uList[index] = data[currentIndex].publish_products;
+        rList[index] = data[currentIndex].retire_products;
       } else {
         uList[index] = 0;
         rList[index] = 0;
       }
+      upload_products.value = cloneDeep(uList);
+      remove_products.value = cloneDeep(rList);
     });
-    upload_products.value = cloneDeep(uList);
-    remove_products.value = cloneDeep(rList);
   } catch (err) {
     console.log(err);
   } finally {
@@ -109,9 +109,9 @@ getSummaryFun();
 const getSummaries = () => {
   return [
     '汇总',
-    0,
+    summaryTotal.value.total_sale_products || 0,
     summaryTotal.value.publish_products || 0,
-    summaryTotal.value.retire_products || 0
+    summaryTotal.value.unpublish_products || 0
   ];
 };
 </script>

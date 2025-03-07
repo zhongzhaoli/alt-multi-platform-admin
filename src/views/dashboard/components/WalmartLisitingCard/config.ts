@@ -11,7 +11,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '在售链接总数',
-    prop: 'in_sale_product',
+    prop: 'sale_products',
     minWidth: 120,
     align: 'center',
     formatter: (_row, _column, cellValue) => {

@@ -16,8 +16,11 @@ export interface OrderSummaryProps {
 }
 export interface ListingSummaryTotalProps {
   publish_products: number | null;
-  retire_products: number | null;
   unpublish_products: number | null;
+  total_sale_products: number | null;
+}
+export interface WalmartListingSummaryTotalProps extends ListingSummaryTotalProps {
+  retire_products: number | null;
 }
 export interface OrderSummaryTotalProps {
   today_sales: number | null;
@@ -26,8 +29,8 @@ export interface OrderSummaryTotalProps {
 
 export interface SevenDaysSummaryProps {
   date: string;
-  download_products: number;
-  upload_products: number;
+  publish_products: number;
+  retire_products: number;
 }
 
 interface GetSummary {
@@ -35,7 +38,7 @@ interface GetSummary {
 }
 export function getWalmartListingSummary(params: GetSummary): Promise<
   ResponseJson<{
-    daily_summary_total_data: ListingSummaryTotalProps;
+    daily_summary_total_data: WalmartListingSummaryTotalProps;
     daily_summary_data: ListingSummaryProps[];
   }>
 > {
