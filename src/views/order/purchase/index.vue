@@ -376,7 +376,8 @@ const adminPurchaseSubmit = (formValue: AdminPurchaseSuccessProps | AdminPurchas
         customer_order_id: tempOrder.value.customer_order_id,
         ...formValue
       });
-      ElMessage.success('管理员下单成功');
+      if (formValue.status === OrderStatusEnum.管理员下单成功) ElMessage.success('管理员下单成功');
+      if (formValue.status === OrderStatusEnum.管理员下单失败) ElMessage.error('管理员下单失败');
       adminPurchaseVisible.value = false;
       getListFun();
     } catch (err) {
