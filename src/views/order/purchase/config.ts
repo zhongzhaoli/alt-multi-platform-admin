@@ -19,7 +19,10 @@ export const orderStatusMap: {
   [OrderStatusEnum.处理中]: 'warning',
   [OrderStatusEnum.成功]: 'success',
   [OrderStatusEnum.不符合条件]: 'danger',
-  [OrderStatusEnum.失败]: 'danger'
+  [OrderStatusEnum.失败]: 'danger',
+  [OrderStatusEnum.老号下单员下单失败]: 'primary',
+  [OrderStatusEnum.管理员下单成功]: 'success',
+  [OrderStatusEnum.管理员下单失败]: 'danger'
 };
 
 export const filterColumns: FilterColumnProps[] = [
