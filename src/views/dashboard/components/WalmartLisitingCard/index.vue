@@ -35,27 +35,35 @@ import ListingEchart from './ListingEchart.vue';
 import TsxElementTable from 'tsx-element-table';
 import {
   getWalmartListingSummary,
-  type WalmartListingSummaryProps,
-  getWalmartSevenDaysSummary
+  type ListingSummaryProps,
+  getWalmartSevenDaysSummary,
+  type ListingSummaryTotalProps
 } from '@/api/dashboard/index';
 import { tableColumns } from './config';
 import { shallowRef } from 'vue';
-import { cloneDeep, sum } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 import { getLastSeventDays } from '../../utils';
-import { TableColumnCtx } from 'element-plus';
 const router = useRouter();
 
 const toDetail = () => {
   router.push('/listing');
 };
 
-const summaryList = shallowRef<WalmartListingSummaryProps[]>([]);
+const summaryList = shallowRef<ListingSummaryProps[]>([]);
+const summaryTotal = shallowRef<ListingSummaryTotalProps>({
+  publish_products: 0,
+  retire_products: 0,
+  unpublish_products: 0
+});
 const loading = shallowRef(false);
 const getSummaryFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getWalmartListingSummary();
-    summaryList.value = data || [];
+    const { data } = await getWalmartListingSummary({
+      date: last7Days[last7Days.length - 1]
+    });
+    summaryList.value = data.daily_summary_data || [];
+    if (data.daily_summary_total_data) summaryTotal.value = data.daily_summary_total_data;
   } catch (err) {
     console.log(err);
   } finally {
@@ -99,17 +107,14 @@ const getSeventSummaryFun = async () => {
 getSeventSummaryFun();
 getSummaryFun();
 
-interface SummaryMethodProps<T = WalmartListingSummaryProps> {
-  columns: TableColumnCtx<T>[];
-  data: T[];
-}
-const getSummaries = (param: SummaryMethodProps) => {
-  const { data } = param;
+const getSummaries = () => {
   return [
     '汇总',
-    sum(data.map((v) => v.upload_products)),
-    sum(data.map((v) => v.download_products)),
-    sum(data.map((v) => v.reupload_products || 0))
+    0,
+    summaryTotal.value.publish_products || 0,
+    summaryTotal.value.retire_products || 0,
+    summaryTotal.value.unpublish_products || 0,
+    0
   ];
 };
 </script>

@@ -6,16 +6,16 @@
     </div>
     <div class="body">
       <ListingEchart
-        :x-data="['02-21', '02-22', '02-23', '02-24', '02-25', '02-26', '02-27']"
-        :listing-data="[2000, 2200, 3900, 2801, 2931, 2199, 3200]"
-        :remove-data="[1000, 1200, 2000, 1800, 1510, 1200, 1400]"
-        :loading="false"
+        :x-data="last7Days"
+        :listing-data="upload_products"
+        :remove-data="remove_products"
+        :loading="chartLoading"
       />
       <div class="tableBox">
         <TsxElementTable
           :table-columns="tableColumns"
           :table="{
-            data: tableData,
+            data: summaryList,
             border: true,
             showSummary: true,
             summaryMethod: getSummaries
@@ -32,36 +32,86 @@
 import { useRouter } from 'vue-router';
 import ListingEchart from './ListingEchart.vue';
 import TsxElementTable from 'tsx-element-table';
+import {
+  type ListingSummaryProps,
+  type ListingSummaryTotalProps,
+  getTiktokListingSummary,
+  getTiktokSevenDaysSummary
+} from '@/api/dashboard/index';
 import { tableColumns } from './config';
-import { TableColumnCtx } from 'element-plus';
-import { sum } from 'lodash-es';
-import { ref } from 'vue';
+import { shallowRef } from 'vue';
+import { cloneDeep } from 'lodash-es';
+import { getLastSeventDays } from '../../utils';
 const router = useRouter();
 
 const toDetail = () => {
   router.push('/listing');
 };
 
-const tableData = ref<any>([
-  {
-    shop_name: 'Wuxiaoyan',
-    upload_products: 2000,
-    download_products: 1000,
-    reupload_products: 100
+const summaryList = shallowRef<ListingSummaryProps[]>([]);
+const summaryTotal = shallowRef<ListingSummaryTotalProps>({
+  publish_products: 0,
+  retire_products: 0,
+  unpublish_products: 0
+});
+const loading = shallowRef(false);
+const getSummaryFun = async () => {
+  loading.value = true;
+  try {
+    const { data } = await getTiktokListingSummary({
+      date: last7Days[last7Days.length - 1]
+    });
+    summaryList.value = data.daily_summary_data || [];
+    if (data.daily_summary_total_data) summaryTotal.value = data.daily_summary_total_data;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    loading.value = false;
   }
-]);
+};
 
-interface SummaryMethodProps<T = any> {
-  columns: TableColumnCtx<T>[];
-  data: T[];
-}
-const getSummaries = (param: SummaryMethodProps) => {
-  const { data } = param;
+const last7Days = getLastSeventDays();
+
+const chartLoading = shallowRef(false);
+const upload_products = shallowRef<number[]>([]);
+const remove_products = shallowRef<number[]>([]);
+const getSeventSummaryFun = async () => {
+  chartLoading.value = true;
+  try {
+    const { data } = await getTiktokSevenDaysSummary({
+      start_date: last7Days[0],
+      end_date: last7Days[last7Days.length - 1]
+    });
+    let uList: number[] = [];
+    let rList: number[] = [];
+    last7Days.forEach((item, index) => {
+      const currentIndex = data.findIndex((i) => i.date === item);
+      if (currentIndex !== -1) {
+        uList[index] = data[currentIndex].upload_products;
+        rList[index] = data[currentIndex].download_products;
+      } else {
+        uList[index] = 0;
+        rList[index] = 0;
+      }
+    });
+    upload_products.value = cloneDeep(uList);
+    remove_products.value = cloneDeep(rList);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    chartLoading.value = false;
+  }
+};
+
+getSeventSummaryFun();
+getSummaryFun();
+
+const getSummaries = () => {
   return [
     '汇总',
-    sum(data.map((v) => v.upload_products)),
-    sum(data.map((v) => v.download_products)),
-    sum(data.map((v) => v.reupload_products || 0))
+    0,
+    summaryTotal.value.publish_products || 0,
+    summaryTotal.value.retire_products || 0
   ];
 };
 </script>
