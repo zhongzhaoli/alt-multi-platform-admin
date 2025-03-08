@@ -4,7 +4,7 @@
       :src="imageUrl"
       :width="`${size || 40}px`"
       :height="`${size || 40}px`"
-      :token="true"
+      :token="token"
     />
     <div class="rightBox d-flex fl-column justify-center" :style="{ height: `${size || 40}px` }">
       <div class="productName d-flex align-center">
@@ -42,13 +42,19 @@ interface ProductDescListProps {
   prefix: string;
 }
 
-defineProps<{
-  size?: number;
-  imageUrl: string;
-  productNamePrefix?: string;
-  productName: string;
-  descList: ProductDescListProps[];
-}>();
+withDefaults(
+  defineProps<{
+    size?: number;
+    imageUrl: string;
+    productNamePrefix?: string;
+    productName: string;
+    token?: boolean;
+    descList: ProductDescListProps[];
+  }>(),
+  {
+    token: false
+  }
+);
 </script>
 <style lang="scss" scoped>
 @use '@/styles/mixins.scss' as *;

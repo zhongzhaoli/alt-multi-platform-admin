@@ -47,6 +47,7 @@
             :size="60"
             :image-url="row.productImageUrl"
             :product-name="row.new_title"
+            :token="true"
             :desc-list="[
               {
                 text: row.product_id,

@@ -16,6 +16,14 @@
         @page-change="getListFun"
         @table-refresh="getListFun"
       >
+        <template #table-two_step_image="{ row }">
+          <template v-if="row.two_step">
+            <div class="imageLoadBox">
+              <ImageLoad :token="true" :src="row.two_step" />
+            </div>
+          </template>
+          <template v-else>-</template>
+        </template>
         <template #table-action="{ row }">
           <template v-if="row.card_status === CardStatus.存活">
             <el-button
@@ -60,9 +68,10 @@ import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import ImageUpload from './components/ImageUpload.vue';
+import ImageLoad from '@/components/ImageLoad/index.vue';
 import { ref, shallowRef, unref } from 'vue';
 import { getCardInfo, CardInfoProps, CardStatus } from '@/api/order/purchase';
-import { SaveTwoStepDto, saveCreditCardTwoStep } from '@/api/order/creditCard';
+import { SaveTwoStepDto, saveCreditCardTwoStep, twoStepImageUrl } from '@/api/order/creditCard';
 import { ElMessage } from 'element-plus';
 import moment from 'moment-timezone';
 
@@ -86,6 +95,7 @@ const getListFun = async () => {
     tableData.value = (data?.list || []).map((item) => {
       return {
         ...item,
+        two_step: item.two_step ? twoStepImageUrl(item.two_step) : '',
         last_operated_time: item.last_operated_time
           ? moment(item.last_operated_time).format('YYYY-MM-DD HH:mm:ss')
           : '-'
@@ -146,6 +156,12 @@ getListFun();
 </script>
 <style lang="scss" scoped>
 .container {
+  & > .tableBox {
+    .imageLoadBox {
+      display: flex;
+      justify-content: center;
+    }
+  }
   & .imageUploadBox {
     width: 130px;
     height: 130px;

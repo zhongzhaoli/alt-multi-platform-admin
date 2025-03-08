@@ -39,10 +39,20 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '最后操作时间',
-    prop: 'last_operated_time',
+    label: '二步验证Token',
+    prop: 'two_step_token',
     align: 'center',
-    minWidth: 200
+    minWidth: 200,
+    showOverflowTooltip: true,
+    formatter: (_row, _column, cellValue) => {
+      return cellValue || '-';
+    }
+  },
+  {
+    label: '二步验证图片',
+    prop: 'two_step_image',
+    align: 'center',
+    width: 140
   },
   {
     label: '信用卡状态',
@@ -52,6 +62,12 @@ export const tableColumns: TableColumnProps[] = [
     formatter: (_row, _column, cellValue) => {
       return cellValue || '-';
     }
+  },
+  {
+    label: '最后操作时间',
+    prop: 'last_operated_time',
+    align: 'center',
+    minWidth: 200
   },
   {
     label: '操作',
