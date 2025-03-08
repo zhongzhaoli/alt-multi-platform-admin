@@ -42,10 +42,7 @@
           </el-radio-group>
         </template>
         <template #table-action="{ row }">
-          <template v-if="platform === 'walmart'">
-            <el-button link type="primary" @click="openFeedList(row)">详情</el-button>
-          </template>
-          <template v-else> - </template>
+          <el-button link type="primary" @click="openFeedList(row)">详情</el-button>
         </template>
         <template #table-shop_survival="{ row }">
           <el-tag v-if="row.shop_survival === 1" disable-transitions type="success"> 存活 </el-tag>
@@ -88,6 +85,7 @@
     <FeedDetail
       v-model="detailDialog"
       :feed-id="tempDetail?.feed_id || null"
+      :platform="platform"
       @closed="tempDetail = null"
     />
   </div>
@@ -96,7 +94,7 @@
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import * as config from './config';
-import { onMounted, ref, shallowRef } from 'vue';
+import { onMounted, ref, shallowRef, unref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import FeedDetail from './components/feedDetail.vue';
 import {
@@ -105,6 +103,7 @@ import {
   GetListingDto,
   FeedListProps,
   getWlamartFeedList,
+  getTiktokFeedList,
   GetDetailListDto,
   getTiktokListingList
 } from '@/api/listing';
@@ -198,7 +197,9 @@ const getFeedList = async () => {
     if (listingFilterFeedId.value) {
       searchParams.feed_id = listingFilterFeedId.value;
     }
-    const { data } = await getWlamartFeedList(searchParams);
+    const { data } = await (unref(platform) === 'walmart' ? getWlamartFeedList : getTiktokFeedList)(
+      searchParams
+    );
     feedList.value = data?.list || [];
     feedListTotal.value = data?.total || 0;
   } catch (err) {

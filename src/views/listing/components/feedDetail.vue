@@ -13,7 +13,7 @@
           ref="tableRef"
           v-model:current-page="page"
           v-model:page-size="pageSize"
-          :table-columns="config.feedDetailTableColumns"
+          :table-columns="realTableColumns"
           :handle="{ show: true }"
           :table="{
             rowKey: 'id',
@@ -30,33 +30,40 @@
         >
           <template #handle-left>
             <div class="d-flex">
-              <el-select
-                v-model="filterIngestionStatus"
-                placeholder="Feed ID 状态"
-                style="width: 200px; margin-right: var(--normal-padding)"
-                clearable
-                @change="getFeedDetail"
-              >
-                <el-option label="SUCCESS" value="SUCCESS">SUCCESS</el-option>
-                <el-option label="TIMEOUT_ERROR" value="TIMEOUT_ERROR">TIMEOUT_ERROR</el-option>
-                <el-option label="DATA_ERROR" value="DATA_ERROR">DATA_ERROR</el-option>
-                <el-option label="SYSTEM_ERROR" value="SYSTEM_ERROR">SYSTEM_ERROR</el-option>
-              </el-select>
-              <el-input
-                v-model="filterSku"
-                placeholder="SKU"
-                style="width: 200px; margin-right: var(--normal-padding)"
-                @keydown.enter="getFeedDetail"
-              />
+              <template v-if="platform === 'walmart'">
+                <el-select
+                  v-model="filterIngestionStatus"
+                  placeholder="Feed ID 状态"
+                  style="width: 200px; margin-right: var(--normal-padding)"
+                  clearable
+                  @change="getFeedDetail"
+                >
+                  <el-option label="SUCCESS" value="SUCCESS">SUCCESS</el-option>
+                  <el-option label="TIMEOUT_ERROR" value="TIMEOUT_ERROR">TIMEOUT_ERROR</el-option>
+                  <el-option label="DATA_ERROR" value="DATA_ERROR">DATA_ERROR</el-option>
+                  <el-option label="SYSTEM_ERROR" value="SYSTEM_ERROR">SYSTEM_ERROR</el-option>
+                </el-select>
+                <el-input
+                  v-model="filterSku"
+                  placeholder="SKU"
+                  style="width: 200px; margin-right: var(--normal-padding)"
+                  @keydown.enter="getFeedDetail"
+                />
+              </template>
               <el-button @click="handleExpand">展开 / 折叠</el-button>
             </div>
           </template>
           <template #table-expand="{ row }">
-            <template v-if="row.ingestion_status === 'SUCCESS'">
-              <ViewJson :value="row.product_identifiers || {}" :expand-depth="5" />
+            <template v-if="platform === 'walmart'">
+              <template v-if="row.ingestion_status === 'SUCCESS'">
+                <ViewJson :value="row.product_identifiers || {}" :expand-depth="5" />
+              </template>
+              <template v-else>
+                <ViewJson :value="row.ingestion_errors || {}" :expand-depth="5" />
+              </template>
             </template>
             <template v-else>
-              <ViewJson :value="row.ingestion_errors || {}" :expand-depth="5" />
+              <ViewJson :value="row.products" :expand-depth="10" />
             </template>
           </template>
         </TsxElementTable>
@@ -68,20 +75,23 @@
 import { useVModel } from '@vueuse/core';
 import * as config from '../config';
 import {
-  FeedDetailProps,
+  WalmartFeedDetailProps,
+  TiktokFeedDetailProps,
   GetDetailDto,
   getWalmartDetail,
+  getTiktokDetail,
   IngestionStatus
 } from '@/api/listing/index';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import TsxElementTable from 'tsx-element-table';
-import { ref, shallowRef, watch } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import ViewJson from 'vue-json-viewer';
 
 interface ComponentProps {
   modelValue: boolean;
   feedId: string | null;
+  platform: 'walmart' | 'tiktok';
 }
 
 const props = defineProps<ComponentProps>();
@@ -89,8 +99,14 @@ const emits = defineEmits(['update:modelValue', 'closed']);
 
 const visible = useVModel(props, 'modelValue', emits);
 
+const realTableColumns = computed(() => {
+  return props.platform === 'walmart'
+    ? config.walmartFeedDetailTableColumns
+    : config.tiktokFeedDetailTableColumns;
+});
+
 const detailLoading = shallowRef(false);
-const detailList = ref<FeedDetailProps[]>([]);
+const detailList = ref<WalmartFeedDetailProps[] | TiktokFeedDetailProps[]>([]);
 const detailTotal = shallowRef(0);
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
@@ -109,8 +125,23 @@ const getFeedDetail = async () => {
     if (filterSku.value) {
       searchParams.sku = filterSku.value;
     }
-    const { data } = await getWalmartDetail(searchParams);
-    detailList.value = data?.list || [];
+    const { data } = await (props.platform === 'walmart' ? getWalmartDetail : getTiktokDetail)(
+      searchParams
+    );
+    if (props.platform === 'walmart') {
+      detailList.value = data?.list || [];
+    } else {
+      detailList.value = ((data?.list || []) as TiktokFeedDetailProps[]).map(
+        (item: TiktokFeedDetailProps) => {
+          if (item.publish_result && item.publish_result.length > 0) {
+            item.publish_result_first_children = item.publish_result[0];
+          } else {
+            item.publish_result_first_children = null;
+          }
+          return item;
+        }
+      );
+    }
     detailTotal.value = data?.total || 0;
   } catch (err) {
     console.log(err);

@@ -163,7 +163,7 @@ export const feedListTableColumns: TableColumnProps[] = [
     width: 90,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+      return h('b', null, cellValue || 0);
     }
   },
   {
@@ -172,7 +172,7 @@ export const feedListTableColumns: TableColumnProps[] = [
     width: 90,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+      return h('b', null, cellValue || 0);
     }
   },
   {
@@ -181,7 +181,7 @@ export const feedListTableColumns: TableColumnProps[] = [
     width: 90,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+      return h('b', null, cellValue || 0);
     }
   },
   {
@@ -190,14 +190,17 @@ export const feedListTableColumns: TableColumnProps[] = [
     width: 90,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue);
+      return h('b', null, cellValue || 0);
     }
   },
   {
     label: '状态',
     prop: 'feed_status',
     width: 120,
-    align: 'center'
+    align: 'center',
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue || '-');
+    }
   },
   {
     label: '操作',
@@ -207,8 +210,8 @@ export const feedListTableColumns: TableColumnProps[] = [
   }
 ];
 
-// Feed List Detail表格
-export const feedDetailTableColumns: TableColumnProps[] = [
+// Walmart Feed List Detail表格
+export const walmartFeedDetailTableColumns: TableColumnProps[] = [
   {
     label: '#',
     width: 50,
@@ -240,5 +243,47 @@ export const feedDetailTableColumns: TableColumnProps[] = [
     prop: 'ingestion_status',
     minWidth: 120,
     align: 'center'
+  }
+];
+
+// Tiktok Feed List Detail表格
+export const tiktokFeedDetailTableColumns: TableColumnProps[] = [
+  {
+    label: '#',
+    width: 50,
+    align: 'center',
+    type: 'expand',
+    prop: 'expand'
+  },
+  {
+    label: 'Feed Id',
+    prop: 'feed_id',
+    width: 380,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
+    label: 'region',
+    prop: 'publish_result_first_children.region',
+    minWidth: 180,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
+    label: 'status',
+    prop: 'publish_result_first_children.status',
+    minWidth: 180,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
+    label: 'fail_reasons',
+    prop: 'publish_result_first_children.fail_reasons',
+    minWidth: 180,
+    align: 'center',
+    showOverflowTooltip: true,
+    formatter: (_row, _column, cellValue) => {
+      return cellValue ? JSON.stringify(cellValue) : '-';
+    }
   }
 ];

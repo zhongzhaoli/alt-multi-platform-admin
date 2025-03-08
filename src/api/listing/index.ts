@@ -24,13 +24,23 @@ export interface FeedListProps {
 }
 
 export type IngestionStatus = 'SUCCESS' | 'TIMEOUT_ERROR' | 'DATA_ERROR' | 'SYSTEM_ERROR';
-export interface FeedDetailProps {
+export interface WalmartFeedDetailProps {
   ingestion_errors: object | null;
   ingestion_status: IngestionStatus;
   item_id: string;
   product_identifiers: object | null;
   shop_id: string;
   sku: string;
+}
+export interface TiktokFeedDetailPublishResultProps {
+  region: string;
+  status: string;
+  fail_reasons: any[];
+}
+export interface TiktokFeedDetailProps {
+  publish_result: Array<TiktokFeedDetailPublishResultProps> | null;
+  publish_result_first_children: TiktokFeedDetailPublishResultProps | null;
+  products: object | null;
 }
 
 export interface ListingFilterProps {
@@ -98,6 +108,16 @@ export function getWlamartFeedList(
   });
 }
 
+export function getTiktokFeedList(
+  params: GetDetailListDto
+): Promise<ResponsePageJson<FeedListProps>> {
+  return request({
+    url: '/tiktok/products/listing/monitor/feed/ids',
+    method: 'get',
+    params
+  });
+}
+
 export interface GetDetailDto {
   page: number;
   page_size?: number;
@@ -106,9 +126,21 @@ export interface GetDetailDto {
   sku?: string;
 }
 
-export function getWalmartDetail(params: GetDetailDto): Promise<ResponsePageJson<FeedDetailProps>> {
+export function getWalmartDetail(
+  params: GetDetailDto
+): Promise<ResponsePageJson<WalmartFeedDetailProps>> {
   return request({
     url: '/walmart/products/listing/monitor/details',
+    method: 'get',
+    params
+  });
+}
+
+export function getTiktokDetail(
+  params: GetDetailDto
+): Promise<ResponsePageJson<TiktokFeedDetailProps>> {
+  return request({
+    url: '/tiktok/products/listing/monitor/details',
     method: 'get',
     params
   });
