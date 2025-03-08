@@ -23,8 +23,8 @@ export interface WalmartListingSummaryTotalProps extends ListingSummaryTotalProp
   retire_products: number | null;
 }
 export interface OrderSummaryTotalProps {
-  today_sales: number | null;
-  today_sales_amount: number | null;
+  today_total_sales: number | null;
+  today_total_sales_amount: number | null;
 }
 
 export interface SevenDaysSummaryProps {

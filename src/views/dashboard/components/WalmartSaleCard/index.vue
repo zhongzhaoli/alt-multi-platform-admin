@@ -34,8 +34,8 @@ import moment from 'moment-timezone';
 
 const tableData = ref<OrderSummaryProps[]>([]);
 const totalData = ref<OrderSummaryTotalProps>({
-  today_sales: 0,
-  today_sales_amount: 0
+  today_total_sales: 0,
+  today_total_sales_amount: 0
 });
 const loading = shallowRef(false);
 const getListFun = async () => {
@@ -56,8 +56,8 @@ const getListFun = async () => {
 const getSummaries = () => {
   return [
     '汇总',
-    (totalData.value.today_sales || 0).toFixed(2),
-    `$ ${(totalData.value.today_sales_amount || 0).toFixed(2)}`
+    (totalData.value.today_total_sales || 0).toFixed(2),
+    `$ ${(totalData.value.today_total_sales_amount || 0).toFixed(2)}`
   ];
 };
 getListFun();
