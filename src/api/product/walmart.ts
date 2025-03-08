@@ -40,3 +40,16 @@ export function getWalmartProductList(
     params
   });
 }
+
+export interface RetireProductProps {
+  sku: string;
+  shop_id: string;
+  asin: string;
+}
+export function retireProduct(data: { products: RetireProductProps[] }): Promise<any> {
+  return request({
+    url: '/walmart/products/retire',
+    method: 'put',
+    data
+  });
+}

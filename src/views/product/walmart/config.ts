@@ -81,6 +81,14 @@ export const filterColumns: FilterColumnProps[] = [
 
 export const tableColumns: TableColumnProps[] = [
   {
+    type: 'selection',
+    label: '#',
+    width: 50,
+    align: 'center',
+    prop: 'selection',
+    reserveSelection: true
+  },
+  {
     label: '爬取平台',
     align: 'center',
     width: 120,
@@ -170,6 +178,13 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'created_at',
     minWidth: 180
+  },
+  {
+    label: '操作',
+    align: 'center',
+    prop: 'action',
+    width: 120,
+    fixed: 'right'
   }
 ];
 

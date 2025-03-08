@@ -14,12 +14,14 @@
     </div>
     <div class="tableBox">
       <TsxElementTable
+        ref="tableRef"
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
         :table-columns="config.tableColumns"
         :table="{
           data: tableData,
           border: true,
+          rowKey: (row: WalmartProductProps) => row.shop_id + row.sku + row.asin,
           loading
         }"
         :handle="{
@@ -31,9 +33,19 @@
         }"
         @page-change="getListFun"
         @table-refresh="getListFun"
+        @selection-change="selectionChange"
       >
         <template #handle-left>
-          <div class="frequencyText">更新频率：每 6 个小时</div>
+          <div class="d-flex align-center">
+            <el-button
+              type="primary"
+              :disabled="!selectionList.length"
+              @click="retireItemFun(selectionList)"
+            >
+              批量下架
+            </el-button>
+            <div class="frequencyText">更新频率：每 6 个小时</div>
+          </div>
         </template>
         <template #table-shopId="{ row }">
           <RenderCopyIcon :text="row.shopId" type="primary" title="店铺ID" margin="r" />{{
@@ -71,13 +83,16 @@
         <template #table-asin="{ row }">
           <TextEllipsis :text="row.asin" :line="2" />
         </template>
+        <template #table-action="{ row }">
+          <el-button link type="primary" @click="retireItemFun([row])">下架</el-button>
+        </template>
       </TsxElementTable>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import FilterContainer from '@/components/FilterContainer/index.vue';
-import TsxElementTable from 'tsx-element-table';
+import TsxElementTable, { ComponentInstance } from 'tsx-element-table';
 import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import * as config from './config';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
@@ -86,11 +101,14 @@ import { ref, shallowRef } from 'vue';
 import {
   getWalmartProductList,
   type WalmartProductFilterProps,
-  type WalmartProductProps
+  type WalmartProductProps,
+  retireProduct
 } from '@/api/product/walmart';
 import ProductItem from '@/components/ProductItem/index.vue';
 import { RenderCopyIcon } from '@/utils';
 import moment from 'moment-timezone';
+import { useMessageBox } from '@/hooks/useMessageBox';
+import { ElMessage } from 'element-plus';
 
 const filterValue = ref<Partial<WalmartProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
@@ -108,7 +126,7 @@ const getListFun = async () => {
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
-      productImageUrl: item.image_url[0],
+      productImageUrl: item.image_url && item.image_url.length ? item.image_url[0] : '',
       updated_at: moment(item.updated_at).format('YYYY-MM-DD HH:mm:ss'),
       created_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
     }));
@@ -119,6 +137,41 @@ const getListFun = async () => {
     loading.value = false;
   }
 };
+
+// 下架
+const selectionList = ref<WalmartProductProps[]>([]);
+const tableRef = ref<ComponentInstance | null>(null);
+const selectionChange = (rows: WalmartProductProps[]) => {
+  selectionList.value = rows;
+};
+const retireItemFun = async (rows: WalmartProductProps[]) => {
+  if (!rows.length) return ElMessage.warning('请选择商品');
+  if (rows.length > 20) return ElMessage.warning('最多选择20个商品');
+  useMessageBox('确认下架该商品？', async () => {
+    try {
+      await retireProduct({
+        products: rows.map((v) => {
+          return {
+            shop_id: v.shop_id,
+            sku: v.sku,
+            asin: v.asin
+          };
+        })
+      });
+      ElMessage.success('下架成功');
+      tableRef.value?.getTableRef().clearSelection();
+      getListFun();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
 getListFun();
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  & .frequencyText {
+    margin-left: var(--normal-padding);
+  }
+}
+</style>
