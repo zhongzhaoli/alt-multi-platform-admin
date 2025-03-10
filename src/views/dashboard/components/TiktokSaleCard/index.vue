@@ -56,7 +56,7 @@ const getListFun = async () => {
 const getSummaries = () => {
   return [
     '汇总',
-    (totalData.value.today_total_sales || 0).toFixed(2),
+    totalData.value.today_total_sales || 0,
     `$ ${(totalData.value.today_total_sales_amount || 0).toFixed(2)}`
   ];
 };
