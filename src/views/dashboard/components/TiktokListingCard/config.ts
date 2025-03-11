@@ -20,7 +20,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '今日上架总数',
-    prop: 'upload_products',
+    prop: 'publish_products',
     minWidth: 120,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
@@ -29,7 +29,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '今日上架失败',
-    prop: 'download_products',
+    prop: 'unpublish_products',
     minWidth: 120,
     align: 'center',
     formatter: (_row, _column, cellValue) => {
