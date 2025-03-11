@@ -103,8 +103,10 @@ export interface DeliverProductsDto {
   carrier: string;
   tracking_number: string;
   shop_id: string;
-  // order_line_number: string;
-  // order_line_quantity_amount: string;
+  children: Array<{
+    order_line_number: string;
+    order_line_quantity_amount: string;
+  }>;
 }
 export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
   return request({

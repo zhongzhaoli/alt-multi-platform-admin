@@ -408,9 +408,11 @@ const dialogSubmit = async () => {
     tracking_number: row.tracking_number,
     purchase_order_id: row.purchase_order_id,
     shop_id: row.shop_id,
-    seller_order_id: row.customer_order_id
-    // order_line_number: String(row.order_line_number),
-    // order_line_quantity_amount: String(row.order_line_quantity_amount)
+    seller_order_id: row.customer_order_id,
+    children: row.children.map((v) => ({
+      order_line_number: String(v.order_line_number),
+      order_line_quantity_amount: String(v.order_line_quantity_amount)
+    }))
   }));
   try {
     await deliverProducts(deliverList);
