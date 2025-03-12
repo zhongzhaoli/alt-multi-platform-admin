@@ -27,7 +27,7 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <span class="testText"> PS：测试数据 </span>
+          <span class="testText">更新频率：每 6 个小时</span>
         </template>
       </TsxElementTable>
     </div>
