@@ -44,7 +44,7 @@
           <div class="handleLeftBox d-flex align-center">
             <!-- <el-button type="warning" @click="multipleDeliver"> 批量发货 </el-button> -->
             <!-- <div class="vr" /> -->
-            <div class="frequencyText">更新频率：每天</div>
+            <div class="frequencyText">更新频率：实时更新</div>
           </div>
         </template>
         <template #table-orderSn="{ row }">

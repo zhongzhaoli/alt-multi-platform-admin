@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <div class="filterBox">
-      <FilterContainer v-model="filterValue" :columns="config.filterColumns" @submit="getListFun" />
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+        @reset="getListFun"
+      />
     </div>
     <div class="tableBox">
       <TsxElementTable

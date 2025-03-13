@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <div class="filterBox">
-      <FilterContainer v-model="filterValue" :columns="config.filterColumns" @submit="getListFun">
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+        @reset="getListFun"
+      >
         <template #shop_id="{ form, row }">
           <SelectWalmartStore v-model="form[row.prop]" multiple @change="getListFun" />
         </template>
@@ -27,7 +32,7 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <span class="testText">更新频率：每 6 个小时</span>
+          <span class="frequencyText">更新频率：实时更新</span>
         </template>
       </TsxElementTable>
     </div>
