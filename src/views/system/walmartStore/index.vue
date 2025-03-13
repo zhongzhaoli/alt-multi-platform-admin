@@ -212,6 +212,7 @@ const submitFun = () => {
         // 编辑
         params.id = editFormValues.value.id;
         params.pause = editFormValues.value.pause;
+        params.available = editFormValues.value.available;
         await editStore(params as EditStoreDto);
         ElMessage.success('编辑成功');
       } else {

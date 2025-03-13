@@ -14,29 +14,3 @@ export const getLastSeventDays = () => {
   }
   return last7Days;
 };
-
-export const getWalmartAllStore = (): WalmartStoreProps[] => {
-  return [
-    {
-      id: 0,
-      shop_id: 'ALL',
-      shop_name: '全部店铺',
-      client_id: '',
-      client_secret: '',
-      created_at: ''
-    }
-  ];
-};
-
-export const getTiktokAllStore = (): TiktokStoreProps[] => {
-  return [
-    {
-      id: 0,
-      shop_id: 'ALL',
-      shop_name: '全部店铺',
-      app_secret: '',
-      app_key: '',
-      created_at: ''
-    }
-  ];
-};
