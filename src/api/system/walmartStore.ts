@@ -14,6 +14,11 @@ export interface StoreProps {
   client_id: string;
   client_secret: string;
   created_at: string;
+  max_limit: number;
+  brand: string;
+  daily_limit: number;
+  available: number;
+  pause: 1 | 0;
 }
 
 export interface HandleStoreProps {
@@ -41,10 +46,13 @@ export interface CreateStoreDto {
   client: string;
   clientSecret: string;
   shopPartnerId: string;
+  brand: string;
+  max_limit?: number | null;
+  daily_limit: number;
 }
 export function createStore(data: CreateStoreDto) {
   return request({
-    url: '/walmart/shop',
+    url: '/walmart/shop/add',
     method: 'post',
     data
   });
@@ -53,21 +61,20 @@ export function createStore(data: CreateStoreDto) {
 // 编辑店铺
 export interface EditStoreDto extends Partial<CreateStoreDto> {
   id: number;
+  pause: 1 | 0;
 }
 export function editStore(data: EditStoreDto): Promise<any> {
   return request({
-    url: `/walmart/shop/${data.id}`,
+    url: `/walmart/shop/edit`,
     method: 'put',
     data
   });
 }
-
-// 删除店铺
-export function deleteStore(row: StoreProps): Promise<any> {
+export function editPauseStore(_id: string | number, data: EditStoreDto): Promise<any> {
   return request({
-    url: '/walmart/shop',
-    method: 'delete',
-    data: { id: row.id, shopId: row.shop_id, shopName: row.shop_name }
+    url: `/walmart/shop/edit`,
+    method: 'put',
+    data
   });
 }
 

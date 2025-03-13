@@ -5,13 +5,13 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: 'ID',
     align: 'center',
-    width: 140,
+    width: 80,
     prop: 'id'
   },
   {
     label: '店铺ID',
     align: 'center',
-    width: 140,
+    width: 120,
     prop: 'shop_id'
   },
   {
@@ -21,16 +21,46 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
+    label: '开启上架',
+    prop: 'pause',
+    width: 100,
+    align: 'center'
+  },
+  {
+    label: '是否存活',
+    prop: 'available',
+    width: 100,
+    align: 'center'
+  },
+  {
     label: 'Client',
     prop: 'client_id',
-    minWidth: 160,
+    minWidth: 280,
     align: 'center'
   },
   {
     label: 'Client Secret',
     prop: 'client_secret',
-    minWidth: 160,
+    minWidth: 280,
     align: 'center'
+  },
+  {
+    label: '上架最大限制数量',
+    width: 140,
+    align: 'center',
+    prop: 'max_limit',
+    formatter: (_row, _column, cellValue) => {
+      return cellValue ?? '-';
+    }
+  },
+  {
+    label: '每日上架限制数量',
+    width: 140,
+    align: 'center',
+    prop: 'daily_limit',
+    formatter: (_row, _column, cellValue) => {
+      return cellValue ?? '-';
+    }
   },
   {
     label: '创建时间',
@@ -40,7 +70,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '操作',
-    width: 120,
+    width: 100,
     align: 'center',
     fixed: 'right',
     prop: 'handle'
@@ -55,9 +85,57 @@ export const editFormRules: FormRules = {
       trigger: 'blur'
     }
   ],
-  shop_name: [{ required: true, message: '请输入店铺名称', trigger: 'change' }],
-  client_id: [{ required: true, message: '请输入店铺 Client', trigger: 'change' }],
-  client_secret: [{ required: true, message: '请输入店铺 Client Secret', trigger: 'change' }]
+  shop_name: [{ required: true, message: '请输入店铺名称', trigger: 'blur' }],
+  client_id: [{ required: true, message: '请输入店铺 Client', trigger: 'blur' }],
+  client_secret: [{ required: true, message: '请输入店铺 Client Secret', trigger: 'blur' }],
+  brand: [{ required: true, message: '请输入品牌', trigger: 'blur' }],
+  max_limit: [
+    {
+      type: 'number',
+      message: '请输入数字',
+      trigger: 'blur'
+    },
+    {
+      asyncValidator: (_rule, value) => {
+        return new Promise((resolve, reject) => {
+          if (value === undefined || value === null) {
+            resolve();
+          } else if (value < 1) {
+            reject('上架最大限制数量不能小于1');
+          } else {
+            resolve();
+          }
+        });
+      },
+      trigger: 'blur'
+    }
+  ],
+  daily_limit: [
+    {
+      required: true,
+      message: '请输入每日上架限制数量',
+      trigger: 'blur'
+    },
+    {
+      type: 'number',
+      message: '请输入数字',
+      trigger: 'blur'
+    },
+    {
+      asyncValidator: (_rule, value) => {
+        return new Promise((resolve, reject) => {
+          if (value < 1) {
+            reject('每日上架限制数量不能小于1');
+          } else if (value > 5000) {
+            reject('每日上架限制数量不能大于5000');
+          } else {
+            resolve();
+          }
+        });
+      },
+      trigger: 'blur'
+    }
+  ]
 };
 
 export const handleColumns: HandleColumnProps[] = [

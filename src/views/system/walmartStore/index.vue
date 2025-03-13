@@ -20,6 +20,17 @@
         @page-change="getListFun"
         @table-refresh="getListFun"
       >
+        <template #table-pause="{ row }">
+          <SwitchHandle
+            v-model="row.pause"
+            status-key="pause"
+            :inactive-value="0"
+            :active-value="1"
+            p-id="id"
+            :extra-data="row"
+            :api="editPauseStore"
+          />
+        </template>
         <template #table-client_id="{ row }">
           <div class="textBox">
             <RenderCopyIcon title="Client" :text="row.client_id" margin="r" />
@@ -36,15 +47,19 @@
           <el-tag v-if="row.shop_survival === 1" disable-transitions type="success"> 存活 </el-tag>
           <el-tag v-else disable-transitions type="danger">死亡</el-tag>
         </template>
+        <template #table-available="{ row }">
+          <el-tag v-if="row.available" type="success" disable-transitions>存活</el-tag>
+          <el-tag v-else type="danger" disable-transitions>死亡</el-tag>
+        </template>
         <template #table-handle="{ row }">
           <el-button type="primary" link @click="editDialog(row)"> 编辑 </el-button>
-          <el-button type="primary" link @click="delMessageBox(row)"> 删除 </el-button>
         </template>
       </TsxElementTable>
     </div>
     <ConfirmDialog
       v-model="dialogVisible"
-      width="400px"
+      width="500px"
+      top="10vh"
       :title="dialogTitle"
       :submit-loading="submitLoading"
       @closed="dialogClosed"
@@ -57,15 +72,22 @@
         label-position="top"
       >
         <el-form-item prop="shop_id" label="店铺前台ID：">
-          <el-input v-model="editFormValues.shop_id" placeholder="请输入店铺ID" />
+          <el-input
+            v-model="editFormValues.shop_id"
+            :disabled="editFormValues.hasOwnProperty('id')"
+            placeholder="请输入店铺ID"
+          />
         </el-form-item>
         <el-form-item prop="shop_name" label="店铺名称：">
           <el-input v-model="editFormValues.shop_name" placeholder="请输入店铺名称" />
         </el-form-item>
+        <el-form-item prop="brand" label="品牌：">
+          <el-input v-model="editFormValues.brand" placeholder="请输入品牌" />
+        </el-form-item>
         <el-form-item prop="client_id" label="Client：">
           <el-input v-model="editFormValues.client_id" placeholder="请输入 Client" />
         </el-form-item>
-        <el-form-item prop="clientSecret" label="Client Secret：">
+        <el-form-item prop="client_secret" label="Client Secret：">
           <el-input
             v-model="editFormValues.client_secret"
             class="clientSecretInput"
@@ -73,6 +95,28 @@
             :rows="3"
             placeholder="请输入 Client Secret"
           />
+        </el-form-item>
+        <el-form-item prop="max_limit" label="上架最大限制数量：">
+          <div class="inputNumberBox">
+            <el-input-number
+              v-model="editFormValues.max_limit"
+              style="width: 100%"
+              :controls="false"
+              placeholder="请输入上架最大限制数量"
+              :min="1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item prop="daily_limit" label="每日上架限制数量：">
+          <div class="inputNumberBox">
+            <el-input-number
+              v-model="editFormValues.daily_limit"
+              style="width: 100%"
+              :controls="false"
+              placeholder="请输入每日上架限制数量"
+              :min="1"
+            />
+          </div>
         </el-form-item>
       </el-form>
     </ConfirmDialog>
@@ -86,17 +130,18 @@ import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ElMessage, FormInstance } from 'element-plus';
+import SwitchHandle from '@/components/SwitchHandle/index.vue';
 import { RenderCopyIcon } from '@/utils';
+import moment from 'moment-timezone';
 import {
   type StoreProps,
   getStoreList,
-  deleteStore,
   createStore,
   editStore,
   CreateStoreDto,
+  editPauseStore,
   EditStoreDto
 } from '@/api/system/walmartStore';
-import { useMessageBox } from '@/hooks/useMessageBox';
 import { cloneDeep } from 'lodash-es';
 
 // 店铺列表
@@ -112,7 +157,10 @@ const getListFun = async () => {
       page: currentPage.value,
       page_size: pageSize.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      created_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
+    }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
@@ -155,11 +203,15 @@ const submitFun = () => {
         shop_id: editFormValues.value.shop_id,
         shop_name: editFormValues.value.shop_name,
         client_id: editFormValues.value.client_id,
-        client_secret: editFormValues.value.client_secret
+        client_secret: editFormValues.value.client_secret,
+        max_limit: editFormValues.value.max_limit,
+        daily_limit: editFormValues.value.daily_limit,
+        brand: editFormValues.value.brand
       };
       if (editFormValues.value.hasOwnProperty('id')) {
         // 编辑
         params.id = editFormValues.value.id;
+        params.pause = editFormValues.value.pause;
         await editStore(params as EditStoreDto);
         ElMessage.success('编辑成功');
       } else {
@@ -173,19 +225,6 @@ const submitFun = () => {
       console.log(err);
     } finally {
       submitLoading.value = false;
-    }
-  });
-};
-
-// 删除店铺
-const delMessageBox = (row: StoreProps) => {
-  useMessageBox('确认删除此店铺？', async () => {
-    try {
-      await deleteStore(row);
-      ElMessage.success('删除成功');
-      getListFun();
-    } catch (err) {
-      console.log(err);
     }
   });
 };
@@ -212,6 +251,12 @@ const delMessageBox = (row: StoreProps) => {
   }
   & .clientSecretInput {
     word-break: break-all;
+  }
+  & .inputNumberBox {
+    width: 100%;
+    &:deep(input) {
+      text-align: left;
+    }
   }
 }
 </style>
