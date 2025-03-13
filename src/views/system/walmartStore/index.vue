@@ -64,7 +64,6 @@
       width="500px"
       top="10vh"
       :title="dialogTitle"
-      :submit-loading="submitLoading"
       @closed="dialogClosed"
       @submit="submitFun"
     >
@@ -106,7 +105,6 @@
               style="width: 100%"
               :controls="false"
               placeholder="请输入上架最大限制数量"
-              :min="1"
             />
           </div>
         </el-form-item>
@@ -117,7 +115,6 @@
               style="width: 100%"
               :controls="false"
               placeholder="请输入每日上架限制数量"
-              :min="1"
             />
           </div>
         </el-form-item>
@@ -147,6 +144,7 @@ import {
   EditStoreDto
 } from '@/api/system/walmartStore';
 import { cloneDeep } from 'lodash-es';
+import { useMessageBox } from '@/hooks/useMessageBox';
 
 // 店铺列表
 const filterValue = ref<Partial<config.FilterDto>>({});
@@ -180,7 +178,6 @@ getListFun();
 const editFormRef = shallowRef<FormInstance>();
 const dialogTitle = shallowRef('新增店铺');
 const dialogVisible = shallowRef(false);
-const submitLoading = shallowRef(false);
 const editFormValues = ref<Partial<StoreProps>>({});
 const editDialog = (row: StoreProps) => {
   editFormValues.value = cloneDeep(row);
@@ -198,41 +195,39 @@ const dialogClosed = () => {
   editFormRef.value?.resetFields();
 };
 const submitFun = () => {
-  submitLoading.value = true;
   editFormRef.value?.validate(async (valid) => {
     if (!valid) {
-      submitLoading.value = false;
       return;
     }
-    try {
-      const params: any = {
-        shop_id: editFormValues.value.shop_id,
-        shop_name: editFormValues.value.shop_name,
-        client_id: editFormValues.value.client_id,
-        client_secret: editFormValues.value.client_secret,
-        max_limit: editFormValues.value.max_limit,
-        daily_limit: editFormValues.value.daily_limit,
-        brand: editFormValues.value.brand
-      };
-      if (editFormValues.value.hasOwnProperty('id')) {
-        // 编辑
-        params.id = editFormValues.value.id;
-        params.pause = editFormValues.value.pause;
-        params.available = editFormValues.value.available;
-        await editStore(params as EditStoreDto);
-        ElMessage.success('编辑成功');
-      } else {
-        // 新增
-        await createStore(params as CreateStoreDto);
-        ElMessage.success('新增成功');
+    useMessageBox('确认提交？', async () => {
+      try {
+        const params: any = {
+          shop_id: editFormValues.value.shop_id,
+          shop_name: editFormValues.value.shop_name,
+          client_id: editFormValues.value.client_id,
+          client_secret: editFormValues.value.client_secret,
+          max_limit: editFormValues.value.max_limit,
+          daily_limit: editFormValues.value.daily_limit,
+          brand: editFormValues.value.brand
+        };
+        if (editFormValues.value.hasOwnProperty('id')) {
+          // 编辑
+          params.id = editFormValues.value.id;
+          params.pause = editFormValues.value.pause;
+          params.available = editFormValues.value.available;
+          await editStore(params as EditStoreDto);
+          ElMessage.success('编辑成功');
+        } else {
+          // 新增
+          await createStore(params as CreateStoreDto);
+          ElMessage.success('新增成功');
+        }
+        dialogVisible.value = false;
+        getListFun();
+      } catch (err) {
+        console.log(err);
       }
-      dialogVisible.value = false;
-      getListFun();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      submitLoading.value = false;
-    }
+    });
   });
 };
 </script>
