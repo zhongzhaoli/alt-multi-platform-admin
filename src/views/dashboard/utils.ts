@@ -1,5 +1,3 @@
-import { StoreProps as WalmartStoreProps } from '@/api/system/walmartStore';
-import { StoreProps as TiktokStoreProps } from '@/api/system/tiktokStore';
 import moment from 'moment-timezone';
 
 export const getLastSeventDays = () => {
