@@ -1,5 +1,51 @@
 import { type HandleColumnProps, type TableColumnProps } from 'tsx-element-table';
 import { FormRules } from 'element-plus';
+import { FilterColumnProps } from '@/components/FilterContainer/types';
+
+export interface FilterDto {
+  shop_name: string;
+  available: 0 | 1;
+  pause: 0 | 1;
+}
+
+export const filterColumns: FilterColumnProps[] = [
+  {
+    label: '店铺名称',
+    type: 'input',
+    prop: 'shop_name',
+    width: 240
+  },
+  {
+    label: '存活状态',
+    type: 'select',
+    prop: 'available',
+    selectOptions: [
+      {
+        label: '存活',
+        value: 1
+      },
+      {
+        label: '死亡',
+        value: 0
+      }
+    ]
+  },
+  {
+    label: '开启上架',
+    type: 'select',
+    prop: 'pause',
+    selectOptions: [
+      {
+        label: '开启',
+        value: 1
+      },
+      {
+        label: '关闭',
+        value: 0
+      }
+    ]
+  }
+];
 
 export const tableColumns: TableColumnProps[] = [
   {
@@ -35,13 +81,13 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: 'Client',
     prop: 'client_id',
-    minWidth: 280,
+    minWidth: 240,
     align: 'center'
   },
   {
     label: 'Client Secret',
     prop: 'client_secret',
-    minWidth: 280,
+    minWidth: 240,
     align: 'center'
   },
   {

@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <div class="filterBox">
+      <FilterContainer v-model="filterValue" :columns="config.filterColumns" @submit="getListFun" />
+    </div>
     <div class="tableBox">
       <TsxElementTable
         v-model:current-page="currentPage"
@@ -131,6 +134,7 @@ import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ElMessage, FormInstance } from 'element-plus';
 import SwitchHandle from '@/components/SwitchHandle/index.vue';
+import FilterContainer from '@/components/FilterContainer/index.vue';
 import { RenderCopyIcon } from '@/utils';
 import moment from 'moment-timezone';
 import {
@@ -145,6 +149,7 @@ import {
 import { cloneDeep } from 'lodash-es';
 
 // 店铺列表
+const filterValue = ref<Partial<config.FilterDto>>({});
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
@@ -155,7 +160,8 @@ const getListFun = async () => {
   try {
     const { data } = await getStoreList({
       page: currentPage.value,
-      page_size: pageSize.value
+      page_size: pageSize.value,
+      ...filterValue.value
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
@@ -234,7 +240,6 @@ const submitFun = () => {
 @use '@/styles/mixins.scss' as *;
 .container {
   & > .tableBox {
-    margin-top: 0;
     & .textBox {
       display: inline-flex;
       align-items: center;

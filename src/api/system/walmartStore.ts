@@ -5,6 +5,8 @@ export interface GetStoreDto {
   page: number;
   page_size?: number;
   shop_name?: string;
+  available?: 0 | 1;
+  pause?: 0 | 1;
 }
 
 export interface StoreProps {
