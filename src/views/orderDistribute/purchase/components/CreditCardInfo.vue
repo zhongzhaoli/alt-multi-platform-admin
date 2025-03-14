@@ -55,7 +55,7 @@
 import { useVModel } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-import { CardInfoProps, getCardInfo } from '@/api/order/purchase';
+import { CardInfoProps, getCardInfo } from '@/api/orderDistribute/purchase';
 
 interface ComponentProps {
   modelValue: boolean;

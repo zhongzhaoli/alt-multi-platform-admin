@@ -89,12 +89,12 @@ import {
   autoDeliveryNumber,
   handDeliveryOrder,
   autoDeliveryOrder
-} from '@/api/order/distribute';
+} from '@/api/orderDistribute/distribute';
 import type {
   DeliveryOrderProps,
   DeliveryOrderSuccessProps,
   DistributeUserProps
-} from '@/api/order/distribute';
+} from '@/api/orderDistribute/distribute';
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';

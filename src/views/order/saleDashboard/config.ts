@@ -55,11 +55,11 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'shop_name',
     align: 'center',
     showOverflowTooltip: true,
-    minWidth: 200
+    minWidth: 160
   },
   {
     label: '已售出',
-    prop: 'sold_num',
+    prop: 'pay_quantity',
     width: 120,
     align: 'center',
     sortable: 'custom',
@@ -70,7 +70,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '已支付金额',
-    prop: 'paid_amount',
+    prop: 'total_pay_amount',
     width: 120,
     align: 'center',
     sortable: 'custom',
@@ -80,21 +80,25 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '客单价（已支付）',
+    label: '客单价',
     align: 'center',
-    width: 170,
+    width: 120,
     prop: 'per_order_amount',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, `$ ${parseFloat(cellValue || 0).toFixed(2)}`);
+    formatter: (row, _column, _cellValue) => {
+      return h(
+        'b',
+        null,
+        `$ ${((row.total_pay_amount || 0) / (row.buyer_number || 0)).toFixed(2)}`
+      );
     }
   },
   {
-    label: '买家数（已支付）',
+    label: '订单数',
     align: 'center',
-    width: 170,
-    prop: 'buyer_num',
+    width: 120,
+    prop: 'buyer_number',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
@@ -102,10 +106,10 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '运费（已支付）',
+    label: '运费',
     align: 'center',
-    width: 150,
-    prop: 'shipping_fee',
+    width: 120,
+    prop: 'total_shipping_amount',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
@@ -113,21 +117,54 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '税费（已支付）',
+    label: '产品税费',
     align: 'center',
-    width: 150,
-    prop: 'tax_fee',
+    width: 120,
+    prop: 'product_tax',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
       return h('b', null, `$ ${parseFloat(cellValue || 0).toFixed(2)}`);
+    }
+  },
+  {
+    label: '运输税费',
+    align: 'center',
+    width: 120,
+    prop: 'shipping_tax',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, `$ ${parseFloat(cellValue || 0).toFixed(2)}`);
+    }
+  },
+  {
+    label: '取消数',
+    align: 'center',
+    width: 120,
+    prop: 'cancelled_quantity',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, cellValue || 0);
+    }
+  },
+  {
+    label: '取消率',
+    align: 'center',
+    width: 120,
+    prop: 'cancelled_proportion',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, `${parseFloat(cellValue || 0).toFixed(2)}%`);
     }
   },
   {
     label: '退货数',
     align: 'center',
     width: 120,
-    prop: 'refund_num',
+    prop: 'refund_quantity',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
@@ -138,7 +175,7 @@ export const tableColumns: TableColumnProps[] = [
     label: '退货率',
     align: 'center',
     width: 120,
-    prop: 'refund_rate',
+    prop: 'refund_proportion',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {

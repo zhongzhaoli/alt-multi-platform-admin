@@ -34,7 +34,7 @@ import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { useVModel } from '@vueuse/core';
 import { bindAccountRules } from './rules';
 import { ref } from 'vue';
-import { BindAccountProps } from '@/api/order/purchase';
+import { BindAccountProps } from '@/api/orderDistribute/purchase';
 import { FormInstance } from 'element-plus';
 
 interface ComponentProps {

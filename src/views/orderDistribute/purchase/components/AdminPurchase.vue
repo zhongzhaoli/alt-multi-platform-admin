@@ -42,7 +42,7 @@ import {
   OrderStatusEnum,
   AdminPurchaseSuccessProps,
   AdminPurchaseFailProps
-} from '@/api/order/purchase';
+} from '@/api/orderDistribute/purchase';
 import { orderInfoRules } from './rules';
 import { useVModel } from '@vueuse/core';
 import { ref } from 'vue';

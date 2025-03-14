@@ -38,7 +38,7 @@
         <template #table-product_info="{ row }">
           <ProductItem
             class="productItem"
-            :image-url="row.product_image_url"
+            :image-url="row.image_url"
             :product-name="row.product_name"
             :size="50"
             :desc-list="[
@@ -64,33 +64,31 @@ import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
+import { getSaleDashboard, SaleDashboardProps } from '@/api/order/saleDashboard';
 
 const filterValue = ref<Partial<config.FilterDto>>({
   platform: 'walmart'
 });
 const loading = shallowRef(false);
-const tableData = shallowRef([
-  {
-    product_image_url:
-      'https://i5.walmartimages.com/asr/242ef7f3-b53b-4416-8a80-0df44bc5a505.688073380db78431cd179414a11b41c6.jpeg',
-    product_name: 'Quilted Handbag Purse Shoulder Bag Pocketbook',
-    product_sku: 'GDGXN6FBBJ_M71B6B83_3',
-    product_id: '15425952727',
-    shop_name: 'Pengchengming',
-    sold_num: 99,
-    paid_amount: 2910.99,
-    per_order_amount: 29.99,
-    buyer_num: 96,
-    shipping_fee: 3.45,
-    tax_fee: 0.05,
-    refund_num: 9,
-    refund_rate: 0.09
-  }
-]);
+const tableData = shallowRef<SaleDashboardProps[]>([]);
 const page = shallowRef(PAGE);
 const page_size = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
 
-const getListFun = () => {};
+const getListFun = async () => {
+  try {
+    const { data } = await getSaleDashboard({
+      page: page.value,
+      page_size: page_size.value,
+      ...filterValue.value
+    });
+    tableData.value = data?.list || [];
+    total.value = data?.total || 0;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+getListFun();
 </script>
 <style lang="scss" scoped></style>

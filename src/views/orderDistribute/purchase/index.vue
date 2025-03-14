@@ -190,7 +190,7 @@ import {
   BindAccountProps,
   AdminPurchaseSuccessProps,
   AdminPurchaseFailProps
-} from '@/api/order/purchase';
+} from '@/api/orderDistribute/purchase';
 import ProductItem from '@/components/ProductItem/index.vue';
 import OrderInfo from './components/OrderInfo.vue';
 import { useMessageBox } from '@/hooks/useMessageBox';

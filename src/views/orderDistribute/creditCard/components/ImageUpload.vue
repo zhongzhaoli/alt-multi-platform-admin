@@ -23,7 +23,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getTwoStepImage } from '@/api/order/creditCard';
+import { getTwoStepImage } from '@/api/orderDistribute/creditCard';
 import { Plus } from '@element-plus/icons-vue';
 import { ref, watch } from 'vue';
 

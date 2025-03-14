@@ -34,7 +34,7 @@ import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { useVModel } from '@vueuse/core';
 import { creditCardRules } from './rules';
 import { ref } from 'vue';
-import { HandleCardProps } from '@/api/order/purchase';
+import { HandleCardProps } from '@/api/orderDistribute/purchase';
 import { FormInstance } from 'element-plus';
 
 interface ComponentProps {

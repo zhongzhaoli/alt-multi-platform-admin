@@ -75,8 +75,12 @@ import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import ImageUpload from './components/ImageUpload.vue';
 import ImageLoad from '@/components/ImageLoad/index.vue';
 import { ref, shallowRef, unref } from 'vue';
-import { getCardInfo, CardInfoProps, CardStatus } from '@/api/order/purchase';
-import { SaveTwoStepDto, saveCreditCardTwoStep, twoStepImageUrl } from '@/api/order/creditCard';
+import { getCardInfo, CardInfoProps, CardStatus } from '@/api/orderDistribute/purchase';
+import {
+  SaveTwoStepDto,
+  saveCreditCardTwoStep,
+  twoStepImageUrl
+} from '@/api/orderDistribute/creditCard';
 import { ElMessage } from 'element-plus';
 import moment from 'moment-timezone';
 

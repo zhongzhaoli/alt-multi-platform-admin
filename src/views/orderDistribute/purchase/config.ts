@@ -1,4 +1,4 @@
-import { OrderStatusEnum } from '@/api/order/purchase';
+import { OrderStatusEnum } from '@/api/orderDistribute/purchase';
 import { FilterColumnProps } from '@/components/FilterContainer/types';
 import { TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';

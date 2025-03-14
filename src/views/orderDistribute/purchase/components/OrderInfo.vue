@@ -117,9 +117,9 @@ import {
   OrderFailResonEnum,
   CardInfoProps,
   getCardInfo
-} from '@/api/order/purchase';
+} from '@/api/orderDistribute/purchase';
 import { orderInfoRules } from './rules';
-import { twoStepImageUrl } from '@/api/order/creditCard';
+import { twoStepImageUrl } from '@/api/orderDistribute/creditCard';
 import { useVModel } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
 import ImageLoad from '@/components/ImageLoad/index.vue';

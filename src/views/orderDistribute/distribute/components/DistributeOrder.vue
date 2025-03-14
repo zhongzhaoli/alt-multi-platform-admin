@@ -37,7 +37,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { DeliveryOrderProps, getDeliveryOrder, GetDeliveryOrderDto } from '@/api/order/distribute';
+import {
+  DeliveryOrderProps,
+  getDeliveryOrder,
+  GetDeliveryOrderDto
+} from '@/api/orderDistribute/distribute';
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
