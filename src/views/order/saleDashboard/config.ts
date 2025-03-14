@@ -90,7 +90,7 @@ export const tableColumns: TableColumnProps[] = [
       return h(
         'b',
         null,
-        `$ ${((row.total_pay_amount || 0) / (row.buyer_number || 0)).toFixed(2)}`
+        `$ ${((row.total_pay_amount || 0) / (row.pay_quantity || 0)).toFixed(2)}`
       );
     }
   },
@@ -120,7 +120,7 @@ export const tableColumns: TableColumnProps[] = [
     label: '产品税费',
     align: 'center',
     width: 120,
-    prop: 'product_tax',
+    prop: 'total_product_tax',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
@@ -131,7 +131,7 @@ export const tableColumns: TableColumnProps[] = [
     label: '运输税费',
     align: 'center',
     width: 120,
-    prop: 'shipping_tax',
+    prop: 'total_shipping_tax',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
