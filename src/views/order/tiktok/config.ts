@@ -5,7 +5,7 @@ import { h } from 'vue';
 import { Download } from '@element-plus/icons-vue';
 import { ElText } from 'element-plus';
 
-const tiktokStatusMap: Array<{
+export const tiktokStatusMap: Array<{
   label: string;
   value: TiktokStausEnum;
   type: 'primary' | 'success' | 'info' | 'warning' | 'danger';

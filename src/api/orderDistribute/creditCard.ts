@@ -2,8 +2,9 @@ import { baseURL } from '@/config/request';
 import { request } from '@/utils/request';
 
 export interface SaveTwoStepDto {
-  two_step_img?: File;
+  two_step_img?: File | string;
   two_step_token?: string;
+  card_phone: string;
   card_number: string;
 }
 

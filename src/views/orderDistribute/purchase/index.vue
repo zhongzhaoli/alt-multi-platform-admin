@@ -27,6 +27,11 @@
             {{ row.status }}
           </el-tag>
         </template>
+        <template #table-platform_status="{ row }">
+          <el-text v-if="row.statusObject" :type="row.statusObject.type">
+            {{ row.statusObject.label }}
+          </el-text>
+        </template>
         <template #table-product_info="{ row }">
           <div class="multipleProductBox">
             <template
@@ -163,6 +168,7 @@
             <el-option label="配送时效不符" :value="OrderInconsistentResonEnum.配送时效不符" />
             <el-option label="库存不符" :value="OrderInconsistentResonEnum.库存不符" />
             <el-option label="Rating不符" :value="OrderInconsistentResonEnum.Rating不符" />
+            <el-option label="订单已取消" :value="OrderInconsistentResonEnum.订单已取消" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -399,7 +405,15 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => {
+      const statusItem = config.platformStatusMap.find(
+        (statusItem) => statusItem.value === item.platform_status
+      );
+      return {
+        ...item,
+        statusObject: statusItem || null
+      };
+    });
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

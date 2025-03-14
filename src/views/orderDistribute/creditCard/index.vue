@@ -53,11 +53,14 @@
       top="100px"
       @submit="submitFun"
     >
-      <el-form label-position="left" label-width="100px">
-        <el-form-item label="验证Token：">
+      <el-form label-position="left" label-width="140px">
+        <el-form-item label="验证Token：" required>
           <el-input v-model="formValue.two_step_token" placeholder="请输入二步验证Token" />
         </el-form-item>
-        <el-form-item label="验证图片：">
+        <el-form-item label="亚马逊手机号：" required>
+          <el-input v-model="formValue.card_phone" placeholder="请输入手机号" />
+        </el-form-item>
+        <el-form-item label="验证图片：" required>
           <div class="imageUploadBox">
             <ImageUpload :default-image="defaultImage" @success="imgHander" />
           </div>
@@ -105,6 +108,7 @@ const getListFun = async () => {
       return {
         ...item,
         two_step: item.two_step ? twoStepImageUrl(item.two_step) : '',
+        origin_two_step: item.two_step,
         last_operated_time: item.last_operated_time
           ? moment(item.last_operated_time).format('YYYY-MM-DD HH:mm:ss')
           : '-'
@@ -123,12 +127,15 @@ const defaultImage = shallowRef('');
 const formValue = ref<SaveTwoStepDto>({
   two_step_token: undefined,
   two_step_img: undefined,
-  card_number: ''
+  card_number: '',
+  card_phone: ''
 });
 const twoStepHander = (row: CardInfoProps) => {
   tempCardInfo.value = row;
   formValue.value.two_step_token = row.two_step_token;
-  defaultImage.value = row.two_step;
+  formValue.value.card_phone = row.card_phone;
+  formValue.value.two_step_img = row.origin_two_step;
+  defaultImage.value = row.origin_two_step;
   twoStepVisible.value = true;
 };
 
@@ -141,12 +148,20 @@ const submitFun = async () => {
     ElMessage.error('请输入二步验证Token或上传验证图片');
     return;
   }
+  if (!unref(formValue).card_phone) {
+    ElMessage.error('请输入亚马逊手机号');
+    return;
+  }
   submitLoading.value = true;
   try {
     formValue.value.card_number = unref(tempCardInfo)?.card_number || '';
     const formData = new FormData();
     Object.entries(unref(formValue)).forEach(([key, value]) => {
-      if (value) {
+      if (key === 'two_step_img') {
+        if (typeof value !== 'string') {
+          formData.append(key, value as Blob);
+        }
+      } else {
         formData.append(key, value as string | Blob);
       }
     });

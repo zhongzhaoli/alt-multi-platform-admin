@@ -1,5 +1,7 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
+import { WalmartStausEnum } from '../order/walmart';
+import { TiktokStausEnum } from '../order/tiktok';
 
 export enum OrderStatusEnum {
   '未处理' = '未处理',
@@ -18,7 +20,8 @@ export enum OrderInconsistentResonEnum {
   '价格不符' = '价格不符',
   '配送时效不符' = '配送时效不符',
   '库存不符' = '库存不符',
-  'Rating不符' = 'Rating不符'
+  'Rating不符' = 'Rating不符',
+  '订单已取消' = '订单已取消'
 }
 
 export enum OrderFailResonEnum {
@@ -43,6 +46,7 @@ export interface OrderProps {
   creator_type: 'old' | 'new';
   total_amount: number;
   card_number: string;
+  platform_status: WalmartStausEnum & TiktokStausEnum;
   full_address: string;
   postal_code: string;
   postal_address_name: string;
@@ -192,6 +196,7 @@ export interface CardInfoProps {
   card_path: string;
   card_lifespan: string;
   two_step: string;
+  origin_two_step: string;
   last_operated_time: string;
 }
 export function getCardInfo(params: GetCardInfoDto): Promise<ResponsePageJson<CardInfoProps>> {

@@ -1,5 +1,7 @@
 import { OrderStatusEnum } from '@/api/orderDistribute/purchase';
 import { FilterColumnProps } from '@/components/FilterContainer/types';
+import { tiktokStatusMap } from '@/views/order/tiktok/config';
+import { walmartStatusMap } from '@/views/order/walmart/config';
 import { TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
@@ -9,6 +11,8 @@ export interface FilterDto {
   platform: 'walmart' | 'tiktok';
   status: string;
 }
+
+export const platformStatusMap = [...walmartStatusMap, ...tiktokStatusMap];
 
 export const orderStatusMap: {
   [key in OrderStatusEnum]: 'info' | 'warning' | 'success' | 'danger' | 'primary';
@@ -103,6 +107,12 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '订单状态',
     prop: 'status',
+    width: 160,
+    align: 'center'
+  },
+  {
+    label: '平台状态',
+    prop: 'platform_status',
     width: 160,
     align: 'center'
   },
