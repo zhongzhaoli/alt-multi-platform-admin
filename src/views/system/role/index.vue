@@ -89,6 +89,7 @@ import { ROUTE_TYPE_ENUM } from '@/constants/route';
 import * as API_ROLE from '@/api/system/role';
 import { DataProps, getRouterList } from '@/api/system/router';
 import { ElMessage, FormInstance } from 'element-plus';
+import moment from 'moment-timezone';
 
 const tableData = shallowRef<API_ROLE.RoleProps[]>([]);
 const currentPage = shallowRef(PAGE);
@@ -113,7 +114,13 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => {
+      return {
+        ...item,
+        create_time: moment(item.create_time).format('YYYY-MM-DD HH:mm:ss'),
+        update_time: moment(item.update_time).format('YYYY-MM-DD HH:mm:ss')
+      };
+    });
     total.value = data?.total || 0;
   } catch (err) {
     console.error(err);

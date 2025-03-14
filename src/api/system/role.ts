@@ -6,6 +6,7 @@ export interface RoleProps {
   role_id: string;
   role_name: string;
   create_time: string;
+  update_time: string;
 }
 
 export interface GetRoleDto {
