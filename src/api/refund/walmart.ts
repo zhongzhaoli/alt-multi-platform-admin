@@ -1,40 +1,28 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
-import { WalmartStausEnum } from '../order/walmart';
-
-export enum OrderStatusEnum {
-  'INITIATED' = 'INITIATED',
-  'CANCELLED' = 'CANCELLED',
-  'REFUNDED' = 'REFUNDED'
-}
-
-export enum TrackingStatusEnum {
-  'INITIATED' = 'INITIATED',
-  'SHIPPING' = 'SHIPPING',
-  'RETURNED' = 'RETURNED'
-}
 
 export interface RefundWalmartProps {
   id: number;
   purchase_order_id: string;
   customer_order_id: string;
   shop_name: string;
-  order_line_status: OrderStatusEnum;
-  image_url: string;
+  status: string;
+  current_delivery_status: any;
+  current_refund_status: any;
+  total_refund_amount: number;
+  customer_first_name: string;
+  customer_last_name: string;
+  return_order_date: string;
+  product_image_url: string;
   product_name: string;
-  product_sku: string;
-  trackingStatus: TrackingStatusEnum;
-  status_quantity_amount: number;
-  orderAmount: number;
-  name: string;
-  requestDate: string;
+  sku: string;
 }
 
 export interface WalmartRefunFilterProps {
-  shopId: string;
-  purchaseOrderId: string;
-  customerOrderId: string;
-  startDate: string;
+  shop_id: string;
+  purchase_order_id: string;
+  customer_order_id: string;
+  start_date: string;
   endDate: string;
 }
 
@@ -47,11 +35,8 @@ export function getWalmartRefundList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<RefundWalmartProps>> {
   return request({
-    url: '/order/',
+    url: '/returns/walmart/returns_orders',
     method: 'get',
-    params: {
-      ...params,
-      status: JSON.stringify([WalmartStausEnum.Cancelled])
-    }
+    params: params
   });
 }

@@ -7,9 +7,9 @@
         @submit="getListFun"
         @reset="getListFun"
       >
-        <!-- <template #shopId="{ form, row }"> -->
-        <!-- <SelectWalmartStore v-model="form[row.prop]" @change="getListFun" /> -->
-        <!-- </template> -->
+        <template #shop_id="{ form, row }">
+          <SelectWalmartStore v-model="form[row.prop]" multiple @change="getListFun" />
+        </template>
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -33,7 +33,18 @@
         @page-change="getListFun"
       >
         <template #handle-left>
-          <div class="frequencyText">更新频率：每 3 个小时</div>
+          <div class="frequencyText">更新频率：实时更新</div>
+        </template>
+        <template #table-return_order_id="{ row }">
+          <div class="d-inline-flex">
+            <RenderCopyIcon
+              type="primary"
+              :text="row.return_order_id"
+              title="退货订单号"
+              margin="r"
+            />
+            <TextEllipsis :line="1" placement="right" :text="`${row.return_order_id || '-'}`" />
+          </div>
         </template>
         <template #table-orderNo="{ row }">
           <div class="d-inline-flex">
@@ -61,16 +72,16 @@
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              :image-url="row.image_url"
+              :image-url="row.product_image_url"
               :product-name="row.product_name"
               :desc-list="[
                 {
-                  text: row.product_sku,
+                  text: row.sku,
                   prefix: 'SKU'
                 }
               ]"
             />
-            <div class="quantityAmount"> x{{ row.status_quantity_amount || 0 }} </div>
+            <div class="quantityAmount"> x{{ row.refunded_qty || 0 }} </div>
           </div>
         </template>
       </TsxElementTable>
@@ -79,6 +90,7 @@
 </template>
 <script setup lang="ts">
 import FilterContainer from '@/components/FilterContainer/index.vue';
+import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
@@ -91,6 +103,7 @@ import {
 } from '@/api/refund/walmart';
 import { RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import moment from 'moment-timezone';
 
 const filterValue = ref<Partial<WalmartRefunFilterProps>>({});
 const tableData = shallowRef<RefundWalmartProps[]>([]);
@@ -106,7 +119,10 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      return_order_date: moment(item.return_order_date).format('YYYY-MM-DD HH:mm:ss')
+    }));
     total.value = data?.total || 0;
     loading.value = false;
   } catch (err) {

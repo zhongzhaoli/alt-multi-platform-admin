@@ -1,65 +1,22 @@
-import { OrderStatusEnum, TrackingStatusEnum } from '@/api/refund/walmart';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
-import { ElText } from 'element-plus';
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
-export const orderStatusMap: Array<{
-  label: string;
-  value: OrderStatusEnum;
-  type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
-}> = [
-  {
-    label: '已发起',
-    value: OrderStatusEnum.INITIATED,
-    type: 'info'
-  },
-  {
-    label: '已取消',
-    value: OrderStatusEnum.CANCELLED,
-    type: 'danger'
-  },
-  {
-    label: '已退款',
-    value: OrderStatusEnum.REFUNDED,
-    type: 'success'
-  }
-];
-
-export const trackingStatusMap: Array<{
-  label: string;
-  value: TrackingStatusEnum;
-  type: 'primary' | 'success' | 'info' | 'warning' | 'danger';
-}> = [
-  {
-    label: '已发起',
-    value: TrackingStatusEnum.INITIATED,
-    type: 'info'
-  },
-  {
-    label: '在途',
-    value: TrackingStatusEnum.SHIPPING,
-    type: 'warning'
-  },
-  {
-    label: '已退回',
-    value: TrackingStatusEnum.RETURNED,
-    type: 'success'
-  }
-];
-
 export const filterColumns: FilterColumnProps[] = [
   {
-    label: '店铺名称',
-    type: 'input',
-    prop: 'shopId'
+    label: '所属店铺',
+    type: 'select',
+    prop: 'shop_id',
+    width: 240,
+    multiple: true,
+    selectOptions: []
   },
   {
-    label: 'PO单号',
+    label: '退货订单号',
     type: 'input',
     multiple: true,
-    prop: 'poNo'
+    prop: 'return_order_id'
   },
   {
     label: 'CO单号',
@@ -71,7 +28,9 @@ export const filterColumns: FilterColumnProps[] = [
     label: '请求日期',
     type: 'dateRange',
     width: 240,
-    prop: 'requestDate'
+    prop: 'requestDate',
+    startKey: 'start_date',
+    endKey: 'end_date'
   }
 ];
 
@@ -81,6 +40,18 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     width: 220,
     prop: 'orderNo'
+  },
+  {
+    label: 'PO 行号',
+    align: 'center',
+    width: 100,
+    prop: 'purchase_order_line_number'
+  },
+  {
+    label: '退货订单号',
+    align: 'center',
+    width: 220,
+    prop: 'return_order_id'
   },
   {
     label: '店铺名称',
@@ -97,37 +68,52 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '订单总金额',
     align: 'center',
-    prop: 'orderAmount',
+    prop: 'total_refund_amount',
     minWidth: 130,
-    formatter: (row) => {
-      return h(
-        'b',
-        null,
-        `$ ${(parseFloat(row.fee_amount || '0') + parseFloat(row.product_amount || '0') + parseFloat(row.shipping_amount || '0') + parseFloat(row.product_tax_amount || '0') + parseFloat(row.fee_tax_amount || '0') + parseFloat(row.shipping_tax_amount || '0')).toFixed(2)}`
-      );
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, `$ ${cellValue.toFixed(2)}`);
     }
   },
 
   {
-    label: '追踪状态',
+    label: '退款流程状态',
     align: 'center',
-    prop: 'trackingStatus',
-    minWidth: 120,
-    formatter: (_row, _column, cellValue) => {
-      const status = trackingStatusMap.find((item) => item.value === cellValue);
-      return h(ElText, { type: status?.type || 'info' }, status?.label || '');
-    }
+    prop: 'status',
+    minWidth: 180
+  },
+  {
+    label: '退货状态',
+    align: 'center',
+    prop: 'current_delivery_status',
+    minWidth: 220
+  },
+  {
+    label: '退款状态',
+    align: 'center',
+    prop: 'current_refund_status',
+    minWidth: 220
   },
   {
     label: '客户姓名',
     align: 'center',
     prop: 'postal_address_name',
-    minWidth: 140
+    minWidth: 140,
+    showOverflowTooltip: true,
+    formatter: (row, _column, _cellValue) => {
+      return row.customer_first_name + ' ' + row.customer_last_name;
+    }
+  },
+  {
+    label: '退货申请原因',
+    align: 'center',
+    prop: 'return_description',
+    showOverflowTooltip: true,
+    minWidth: 180
   },
   {
     label: '请求日期',
     align: 'center',
-    prop: 'update_time',
+    prop: 'return_order_date',
     minWidth: 180
   }
 ];
