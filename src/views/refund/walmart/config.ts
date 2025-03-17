@@ -19,6 +19,12 @@ export const filterColumns: FilterColumnProps[] = [
     prop: 'return_order_id'
   },
   {
+    label: 'PO单号',
+    type: 'input',
+    multiple: true,
+    prop: 'poNo'
+  },
+  {
     label: 'CO单号',
     type: 'input',
     multiple: true,
