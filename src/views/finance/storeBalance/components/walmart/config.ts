@@ -72,7 +72,7 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 200
   },
   {
-    label: '应付金额',
+    label: '回款金额',
     align: 'center',
     prop: 'pay_amount',
     minWidth: 200

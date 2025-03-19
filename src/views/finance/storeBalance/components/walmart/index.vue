@@ -52,7 +52,7 @@
           <el-form-item label="店铺余额：">
             <PriceItem :bold="true" :price="tempRow.closing_balance || 0" />
           </el-form-item>
-          <el-form-item label="可用余额：">
+          <el-form-item label="回款金额：">
             <PriceItem :bold="true" :price="tempRow.pay_amount || 0" />
           </el-form-item>
           <el-form-item label="暂扣金额：">
