@@ -122,6 +122,7 @@ const getSummaries = () => {
 <style lang="scss" scoped>
 .walmartBox {
   & > .body {
+    position: relative;
     & > .tableBox {
       height: 400px;
     }

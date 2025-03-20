@@ -22,6 +22,7 @@
         :pagination="{ total }"
         @table-refresh="getListFun"
         @page-change="getListFun"
+        @sort-change="sortChange"
       >
         <template #handle-left>
           <span class="frequencyText">更新频率：实时更新</span>
@@ -37,7 +38,7 @@ import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { getPerformanceList, PerformanceProps } from '@/api/performance';
+import { GetListDto, getPerformanceList, PerformanceProps } from '@/api/performance';
 import moment from 'moment-timezone';
 
 const filterValue = ref<Partial<config.FilterDto>>({});
@@ -49,11 +50,15 @@ const loading = shallowRef(false);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getPerformanceList({
+    const searchParams: GetListDto = {
+      ...filterValue.value,
       page: page.value,
-      page_size: pageSize.value,
-      ...filterValue.value
-    });
+      page_size: pageSize.value
+    };
+    if (sortOrder.value) {
+      searchParams.sort = JSON.stringify(sortOrder.value);
+    }
+    const { data } = await getPerformanceList(searchParams);
     tableData.value = (data?.list || []).map((item: any) => {
       return {
         ...item,
@@ -66,6 +71,19 @@ const getListFun = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+// 排序条件变化
+const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
+const sortChange = (data: { column: any; prop: string; order: any }) => {
+  if (!data.order) {
+    sortOrder.value = null;
+  } else {
+    sortOrder.value = {
+      [data.prop]: data.order === 'ascending' ? 'ASC' : 'DESC'
+    };
+  }
+  getListFun();
 };
 
 getListFun();

@@ -1,4 +1,4 @@
-import { ResponsePageJson } from '@/config/request';
+import { ResponseJson } from '@/config/request';
 import { request } from '@/utils/request';
 
 export enum WalmartSellerStatusEnum {
@@ -11,6 +11,7 @@ export interface GetWalmartBalanceDto {
   page: number;
   page_size?: number;
   shop_id?: string;
+  sort?: string;
 }
 
 export interface WalmartStoreBalanceProps {
@@ -27,10 +28,19 @@ export interface WalmartStoreBalanceProps {
   scheduled_settlement_date: string;
   settle_cycle: string;
 }
+export interface WalmartStoreBalanceSummaryProps {
+  total_closing_balance: number;
+  total_hold_amount: number;
+  total_pay_amount: number;
+}
 
-export function getWalmartStoreBalance(
-  params: GetWalmartBalanceDto
-): Promise<ResponsePageJson<WalmartStoreBalanceProps>> {
+export function getWalmartStoreBalance(params: GetWalmartBalanceDto): Promise<
+  ResponseJson<{
+    list: WalmartStoreBalanceProps[];
+    total: number;
+    all: WalmartStoreBalanceSummaryProps;
+  }>
+> {
   return request({
     url: '/walmart/payment',
     method: 'get',

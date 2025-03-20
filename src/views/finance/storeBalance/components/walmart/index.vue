@@ -17,10 +17,17 @@
         v-model:current-page="page"
         v-model:page-size="pageSize"
         :table-columns="config.tableColumns"
-        :table="{ data: tableData, border: true, loading }"
+        :table="{
+          data: tableData,
+          border: true,
+          loading,
+          showSummary: true,
+          summaryMethod: getSummaries
+        }"
         :pagination="{ total }"
         @table-refresh="getListFun"
         @page-change="getListFun"
+        @sort-change="sortChange"
       >
         <template #table-action="{ row }">
           <el-button link type="primary" @click="openDetail(row)">查看详情</el-button>
@@ -81,9 +88,14 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
-import { ref, shallowRef } from 'vue';
+import { h, ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { getWalmartStoreBalance, WalmartStoreBalanceProps } from '@/api/finance/storeBalance';
+import {
+  GetWalmartBalanceDto,
+  getWalmartStoreBalance,
+  WalmartStoreBalanceProps,
+  WalmartStoreBalanceSummaryProps
+} from '@/api/finance/storeBalance';
 import PriceItem from '../PriceItem.vue';
 import moment from 'moment-timezone';
 
@@ -93,14 +105,23 @@ const loading = shallowRef(false);
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
+const summaryData = ref<WalmartStoreBalanceSummaryProps>({
+  total_closing_balance: 0,
+  total_hold_amount: 0,
+  total_pay_amount: 0
+});
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getWalmartStoreBalance({
+    const searchParams: GetWalmartBalanceDto = {
       page: page.value,
       page_size: pageSize.value,
       ...filterValue.value
-    });
+    };
+    if (sortOrder.value) {
+      searchParams.sort = JSON.stringify(sortOrder.value);
+    }
+    const { data } = await getWalmartStoreBalance(searchParams);
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
       last_updated_date: moment(item.last_updated_date).format('YYYY-MM-DD HH:mm:ss'),
@@ -109,11 +130,42 @@ const getListFun = async () => {
       )
     }));
     total.value = data?.total || 0;
+    summaryData.value = data.all;
   } catch (err) {
     console.log(err);
   } finally {
     loading.value = false;
   }
+};
+
+// 排序条件变化
+const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
+const sortChange = (data: { column: any; prop: string; order: any }) => {
+  if (!data.order) {
+    sortOrder.value = null;
+  } else {
+    sortOrder.value = {
+      [data.prop]: data.order === 'ascending' ? 'ASC' : 'DESC'
+    };
+  }
+  getListFun();
+};
+
+// 汇总
+const getSummaries = () => {
+  const { total_closing_balance, total_pay_amount, total_hold_amount } = summaryData.value;
+  return [
+    '-',
+    '-',
+    '汇总',
+    h(PriceItem, { price: total_closing_balance }),
+    h(PriceItem, { price: total_pay_amount }),
+    h(PriceItem, { price: total_hold_amount }),
+    '-',
+    '-',
+    '-',
+    '-'
+  ];
 };
 
 const detailVisible = shallowRef(false);

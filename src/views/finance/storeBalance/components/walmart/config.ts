@@ -69,18 +69,24 @@ export const tableColumns: TableColumnProps[] = [
     label: '帐号余额',
     align: 'center',
     prop: 'closing_balance',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     minWidth: 200
   },
   {
     label: '回款金额',
     align: 'center',
     prop: 'pay_amount',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     minWidth: 200
   },
   {
     label: '暂扣金额',
     align: 'center',
     prop: 'hold_amount',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     minWidth: 200
   },
   {

@@ -35,6 +35,8 @@ export const tableColumns: TableColumnProps[] = [
     label: '准时交货',
     align: 'center',
     prop: 'on_time_delivery',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     minWidth: 140,
     formatter: (_row, _column, cellValue: number) => {
       if (cellValue < 0) {
@@ -48,6 +50,8 @@ export const tableColumns: TableColumnProps[] = [
     label: '取消',
     align: 'center',
     prop: 'cancellations',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     minWidth: 140,
     formatter: (_row, _column, cellValue: number) => {
       if (cellValue < 0) {
@@ -61,6 +65,8 @@ export const tableColumns: TableColumnProps[] = [
     label: '有效追踪',
     align: 'center',
     prop: 'valid_tracking',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     minWidth: 140,
     formatter: (_row, _column, cellValue: number) => {
       if (cellValue < 0) {
@@ -75,6 +81,8 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'seller_response',
     minWidth: 140,
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue: number) => {
       if (cellValue < 0) {
         return h('span', { style: { color: '#cecdce' } }, '无数据');
@@ -88,6 +96,8 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'refunds',
     minWidth: 140,
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue: number) => {
       if (cellValue < 0) {
         return h('span', { style: { color: '#cecdce' } }, '无数据');

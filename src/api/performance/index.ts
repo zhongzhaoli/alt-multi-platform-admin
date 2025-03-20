@@ -5,6 +5,7 @@ export interface GetListDto {
   page: number;
   page_size?: number;
   shop_id?: string;
+  sort?: string;
 }
 
 export interface PerformanceProps {
