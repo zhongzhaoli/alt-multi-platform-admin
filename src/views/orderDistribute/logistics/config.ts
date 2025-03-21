@@ -9,6 +9,7 @@ export interface FilterDto {
   start_delivery_date: string;
   end_delivery_date: string;
   postal_code: string;
+  status: string;
 }
 
 export const filterColumns: FilterColumnProps[] = [

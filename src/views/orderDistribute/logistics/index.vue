@@ -66,7 +66,8 @@ const getListFun = async () => {
   try {
     const searchParams: GetLogisticsListDto = {
       page: page.value,
-      page_size: pageSize.value
+      page_size: pageSize.value,
+      ...unref(filterValue)
     };
     if (
       'start_ship_date' in unref(filterValue) &&
@@ -89,9 +90,6 @@ const getListFun = async () => {
         unref(filterValue).start_delivery_date,
         unref(filterValue).end_delivery_date
       ]);
-    }
-    if ('postal_code' in unref(filterValue) && unref(filterValue).postal_code) {
-      searchParams.postal_code = unref(filterValue).postal_code;
     }
     const { data } = await getLogisticsList(searchParams);
     tableData.value = data?.list || [];

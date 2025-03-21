@@ -8,6 +8,7 @@ export interface GetLogisticsListDto {
   ship_date?: string;
   delivery_date?: string;
   postal_code?: string;
+  status?: string;
 }
 
 export interface LogisticsProps {
