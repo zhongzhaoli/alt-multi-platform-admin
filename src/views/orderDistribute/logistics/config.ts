@@ -23,6 +23,11 @@ export const filterColumns: FilterColumnProps[] = [
     prop: 'postal_code'
   },
   {
+    label: '状态',
+    type: 'input',
+    prop: 'status'
+  },
+  {
     type: 'dateRange',
     label: '发货日期',
     prop: 'ship_date',
