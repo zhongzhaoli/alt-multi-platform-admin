@@ -71,7 +71,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '已支付金额',
     prop: 'total_pay_amount',
-    width: 120,
+    width: 140,
     align: 'center',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
@@ -86,12 +86,8 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'per_order_amount',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
-    formatter: (row, _column, _cellValue) => {
-      return h(
-        'b',
-        null,
-        `$ ${((row.total_pay_amount || 0) / (row.pay_quantity || 0)).toFixed(2)}`
-      );
+    formatter: (_row, _column, cellValue) => {
+      return h('b', null, `$ ${(parseFloat(cellValue) || 0).toFixed(2)}`);
     }
   },
   {
@@ -117,10 +113,10 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '产品税费',
+    label: '运输税费',
     align: 'center',
     width: 120,
-    prop: 'total_product_tax',
+    prop: 'total_shipping_tax',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
@@ -128,10 +124,10 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '运输税费',
+    label: '产品税费',
     align: 'center',
     width: 120,
-    prop: 'total_shipping_tax',
+    prop: 'total_product_tax',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     formatter: (_row, _column, cellValue) => {
