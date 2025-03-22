@@ -58,12 +58,12 @@ export const filterColumns: FilterColumnProps[] = [
     prefixSelect: {
       options: [
         {
-          label: '卖家SKU',
-          value: 'seller_sku'
-        },
-        {
           label: 'SKU',
           value: 'sku_id'
+        },
+        {
+          label: '卖家SKU',
+          value: 'seller_sku'
         },
         {
           label: '全球SKU',
