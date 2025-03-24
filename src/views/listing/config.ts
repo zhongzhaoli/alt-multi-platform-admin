@@ -270,6 +270,20 @@ export const tiktokFeedDetailTableColumns: TableColumnProps[] = [
     showOverflowTooltip: true
   },
   {
+    label: 'code',
+    prop: 'code',
+    minWidth: 180,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
+    label: 'message',
+    prop: 'message',
+    minWidth: 180,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
     label: 'status',
     prop: 'publish_result_first_children.status',
     minWidth: 180,
