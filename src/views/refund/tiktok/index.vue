@@ -7,9 +7,9 @@
         @submit="getListFun"
         @reset="getListFun"
       >
-        <!-- <template #shopId="{ form, row }"> -->
-        <!-- <SelectTiktokStore v-model="form[row.prop]" @change="getListFun" /> -->
-        <!-- </template> -->
+        <template #shop_id="{ form, row }">
+          <SelectTiktokStore v-model="form[row.prop]" multiple @change="getListFun" />
+        </template>
       </FilterContainer>
     </div>
     <div class="tableBox">
@@ -41,11 +41,16 @@
             row.order_id
           }}
         </template>
+        <template #table-return_id="{ row }">
+          <RenderCopyIcon :text="row.return_id" type="primary" title="退货订单号" margin="r" />{{
+            row.return_id
+          }}
+        </template>
         <template #table-productInfo="{ row }">
           <div class="d-flex align-center">
             <ProductItem
               class="productItem"
-              :image-url="row.sku_image"
+              :image-url="row.img_url"
               :product-name="row.product_name"
               :desc-list="[
                 {
@@ -57,8 +62,23 @@
             <div class="quantityAmount">x1</div>
           </div>
         </template>
+        <template #table-logisticsInfo="{ row }">
+          <div>{{ row.return_provider_name || '-' }}</div>
+          <template v-if="row.return_tracking_number">
+            <TextEllipsis :text="row.return_tracking_number || '-'" />
+          </template>
+        </template>
+        <template #table-buyer_name="{ row }">
+          <template v-if="row.name && row.last_name">
+            <TextEllipsis :text="`${row.name} ${row.last_name}`" :line="1" />
+          </template>
+          <TextEllipsis :text="`${row.phone_number || '-'}`" :line="1" />
+        </template>
         <template #table-reason="{ row }">
-          <TextEllipsis :text="row.reason" :line="2" />
+          <TextEllipsis :text="row.return_reason" :line="2" />
+        </template>
+        <template #table-return_reason_text="{ row }">
+          <TextEllipsis :text="row.return_reason_text" :line="2" />
         </template>
       </TsxElementTable>
     </div>
@@ -69,6 +89,7 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import ProductItem from '@/components/ProductItem/index.vue';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
 import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
@@ -81,6 +102,7 @@ import {
 import { downloadCore, generateVisualNumber, RenderCopyIcon } from '@/utils/index';
 import axios, { CancelTokenSource } from 'axios';
 import { useFullLoading } from '@/hooks/useFullLoading';
+import moment from 'moment-timezone';
 
 const filterValue = ref<Partial<TiktokRefunFilterProps>>({});
 const tableData = shallowRef<RefundTiktokProps[]>([]);
@@ -96,7 +118,12 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => {
+      return {
+        ...item,
+        create_time: moment(item.create_time).format('YYYY-MM-DD HH:mm:ss')
+      };
+    });
     total.value = data?.total || 0;
     loading.value = false;
   } catch (err) {
@@ -119,8 +146,7 @@ const handleRightClick = async () => {
       {
         page: currentPage.value,
         page_size: pageSize.value,
-        ...filterValue.value,
-        export: 1
+        ...filterValue.value
       },
       source.token
     );

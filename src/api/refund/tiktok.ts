@@ -2,45 +2,69 @@ import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 import { CancelToken } from 'axios';
 
-export enum OrderStatusEnum {
-  'INITIATED' = 'INITIATED',
-  'CANCELLED' = 'CANCELLED',
-  'REFUNDED' = 'REFUNDED'
-}
+export type ReturnStatus =
+  | 'RETURN_OR_REFUND_REQUEST_PENDING'
+  | 'REFUND_OR_RETURN_REQUEST_REJECT'
+  | 'AWAITING_BUYER_SHIP'
+  | 'BUYER_SHIPPED_ITEM'
+  | 'REJECT_RECEIVE_PACKAGE'
+  | 'RETURN_OR_REFUND_REQUEST_SUCCESS'
+  | 'RETURN_OR_REFUND_REQUEST_CANCEL'
+  | 'RETURN_OR_REFUND_REQUEST_COMPLETE'
+  | 'REPLACEMENT_REQUEST_PENDING'
+  | 'REPLACEMENT_REQUEST_REJECT'
+  | 'REPLACEMENT_REQUEST_REFUND_SUCCESS'
+  | 'REPLACEMENT_REQUEST_CANCEL'
+  | 'REPLACEMENT_REQUEST_COMPLETE'
+  | 'AWAITING_BUYER_RESPONSE';
+
+export type ReturnType = 'REFUND' | 'RETURN_AND_REFUND' | 'REPLACEMENT';
+
+export type ShipmentType = 'PLATFORM' | 'BUYER_ARRANGE';
 
 export interface RefundTiktokProps {
-  id: number;
+  create_time: string;
   order_id: string;
-  shop_name: string;
-  shop_id: string;
-  order_status: OrderStatusEnum;
-  sku_image: string;
-  product_name: string;
-  sku_id: string;
-  total_amount: number;
   name: string;
-  order_create_time: string;
-  update_time: string;
+  last_name: string;
+  phone_number: string;
+  order_line_item_id: string;
+  img_url: string;
+  product_name: string;
+  refund_subtotal: number;
+  return_id: string;
+  return_provider_name: string;
+  return_reason: string;
+  return_reason_text: string;
+  return_status: ReturnStatus;
+  return_tracking_number: string | null;
+  return_type: ReturnType;
+  role: string;
   seller_sku: string;
+  shipment_type: ShipmentType;
+  shop_id: string;
+  shop_name: string;
+  update_time: string;
 }
 
 export interface TiktokRefunFilterProps {
   shop_id: string;
+  start_date: string;
+  end_date: string;
   order_id: string;
-  order_status: string;
+  return_id: string;
 }
 
 export interface GetOrderDto extends Partial<TiktokRefunFilterProps> {
   page: number;
   page_size?: number;
-  export?: 1 | 0;
 }
 
 export function getTiktokRefundList(
   params: GetOrderDto
 ): Promise<ResponsePageJson<RefundTiktokProps>> {
   return request({
-    url: '/tk/get_return_order',
+    url: '/returns/tiktok/returns_orders',
     method: 'get',
     params
   });
