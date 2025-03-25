@@ -142,6 +142,15 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
+    label: '税费',
+    align: 'center',
+    width: 100,
+    prop: 'tax',
+    formatter: (_row, _column, _cellValue) => {
+      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+    }
+  },
+  {
     label: '运费',
     align: 'center',
     prop: 'shipping_fee',
@@ -175,7 +184,7 @@ export const tableColumns: TableColumnProps[] = [
     width: 140
   },
   {
-    label: '税费',
+    label: '产品税费',
     align: 'center',
     prop: 'item_tax',
     width: 100
