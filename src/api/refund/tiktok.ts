@@ -22,6 +22,8 @@ export type ReturnType = 'REFUND' | 'RETURN_AND_REFUND' | 'REPLACEMENT';
 
 export type ShipmentType = 'PLATFORM' | 'BUYER_ARRANGE';
 
+export type ReturnRole = 'BUYER' | 'SELLER' | 'OPERATOR' | 'SYSTEM';
+
 export interface RefundTiktokProps {
   create_time: string;
   order_id: string;
@@ -39,7 +41,7 @@ export interface RefundTiktokProps {
   return_status: ReturnStatus;
   return_tracking_number: string | null;
   return_type: ReturnType;
-  role: string;
+  role: ReturnRole;
   seller_sku: string;
   shipment_type: ShipmentType;
   shop_id: string;

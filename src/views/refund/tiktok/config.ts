@@ -1,4 +1,4 @@
-import { ReturnStatus, ReturnType, ShipmentType } from '@/api/refund/tiktok';
+import { ReturnRole, ReturnStatus, ReturnType, ShipmentType } from '@/api/refund/tiktok';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { ElText } from 'element-plus';
 import type { TableColumnProps } from 'tsx-element-table';
@@ -99,7 +99,7 @@ export const orderTypeMap: Array<{
   }
 ];
 
-export const ShipmentTypeMap: Array<{
+export const shipmentTypeMap: Array<{
   label: string;
   value: ShipmentType;
 }> = [
@@ -110,6 +110,28 @@ export const ShipmentTypeMap: Array<{
   {
     label: '卖家自发货',
     value: 'BUYER_ARRANGE'
+  }
+];
+
+export const orderReturnRoleMap: Array<{
+  label: string;
+  value: ReturnRole;
+}> = [
+  {
+    label: '买家',
+    value: 'BUYER'
+  },
+  {
+    label: '卖家',
+    value: 'SELLER'
+  },
+  {
+    label: '平台客服',
+    value: 'OPERATOR'
+  },
+  {
+    label: '系统',
+    value: 'SYSTEM'
   }
 ];
 
@@ -213,6 +235,16 @@ export const tableColumns: TableColumnProps[] = [
     width: 170
   },
   {
+    label: '发起人',
+    align: 'center',
+    prop: 'role',
+    width: 120,
+    formatter: (_row, _column, cellValue) => {
+      const role = orderReturnRoleMap.find((item) => item.value === cellValue);
+      return h(ElText, { type: 'info' }, role?.label || '-');
+    }
+  },
+  {
     label: '客户姓名',
     align: 'center',
     prop: 'buyer_name',
@@ -224,7 +256,7 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'shipment_type',
     minWidth: 120,
     formatter: (_row, _column, cellValue) => {
-      const type = ShipmentTypeMap.find((item) => item.value === cellValue);
+      const type = shipmentTypeMap.find((item) => item.value === cellValue);
       return h(ElText, { type: 'info' }, type?.label || '-');
     }
   },
