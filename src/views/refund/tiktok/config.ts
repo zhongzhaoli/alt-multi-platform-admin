@@ -1,8 +1,7 @@
 import { ReturnStatus, ReturnType, ShipmentType } from '@/api/refund/tiktok';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
-import { Download } from '@element-plus/icons-vue';
 import { ElText } from 'element-plus';
-import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
+import type { TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
 export const orderStatusMap: Array<{
@@ -246,15 +245,5 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'return_reason_text',
     width: 180
-  }
-];
-
-// 右侧导出按钮
-export const handleRightColumns: HandleRightColumnProps[] = [
-  {
-    key: 'export',
-    tooltip: '数据导出',
-    loading: false,
-    icon: Download
   }
 ];

@@ -23,8 +23,7 @@
           loading
         }"
         :handle="{
-          show: true,
-          rightColumns: config.handleRightColumns
+          show: true
         }"
         :pagination="{
           total
@@ -34,7 +33,7 @@
         @handle-right-click="handleRightClick"
       >
         <template #handle-left>
-          <div class="frequencyText">更新频率：每 3 个小时</div>
+          <div class="frequencyText">更新频率：实时更新</div>
         </template>
         <template #table-order_id="{ row }">
           <RenderCopyIcon :text="row.order_id" type="primary" title="订单号" margin="r" />{{
