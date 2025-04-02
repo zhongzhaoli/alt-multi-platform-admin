@@ -1,5 +1,13 @@
 <template>
   <div class="container">
+    <div class="filterBox">
+      <FilterContainer
+        v-model="filterValue"
+        :columns="config.filterColumns"
+        @submit="getListFun"
+        @reset="getListFun"
+      />
+    </div>
     <div class="tableBox">
       <TsxElementTable
         v-model:current-page="currentPage"
@@ -11,16 +19,17 @@
           border: true
         }"
         :handle="{
-          show: true,
-          columns: config.handleColumns
+          show: true
         }"
         :pagination="{
           total
         }"
-        @handle-click="handleClick"
         @page-change="getListFun"
         @table-refresh="getListFun"
       >
+        <template #handle-left>
+          <el-button type="primary" disabled>新增店铺</el-button>
+        </template>
         <template #table-app_key="{ row }">
           <div class="textBox">
             <RenderCopyIcon title="App Key" :text="row.app_key" margin="r" />
@@ -33,13 +42,23 @@
             <TextEllipsis :text="row.app_secret" />
           </div>
         </template>
-        <template #table-shop_survival="{ row }">
-          <el-tag v-if="row.shop_survival === 1" disable-transitions type="success"> 存活 </el-tag>
-          <el-tag v-else disable-transitions type="danger">死亡</el-tag>
+        <template #table-pause="{ row }">
+          <SwitchHandle
+            v-model="row.pause"
+            status-key="pause"
+            :inactive-value="0"
+            :active-value="1"
+            p-id="id"
+            :extra-data="row"
+            :api="API_TIKTOK.editPauseStore"
+          />
+        </template>
+        <template #table-available="{ row }">
+          <el-tag v-if="row.available" type="success" disable-transitions>存活</el-tag>
+          <el-tag v-else type="danger" disable-transitions>死亡</el-tag>
         </template>
         <template #table-handle="{ row }">
           <el-button type="primary" link @click="editDialog(row)"> 编辑 </el-button>
-          <el-button type="primary" link @click="delMessageBox(row)"> 删除 </el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -58,7 +77,11 @@
         label-position="top"
       >
         <el-form-item prop="shop_id" label="店铺ID：">
-          <el-input v-model="editFormValues.shop_id" placeholder="请输入店铺ID" />
+          <el-input
+            v-model="editFormValues.shop_id"
+            :disabled="editFormValues.hasOwnProperty('id')"
+            placeholder="请输入店铺ID"
+          />
         </el-form-item>
         <el-form-item prop="shop_name" label="店铺名称：">
           <el-input v-model="editFormValues.shop_name" placeholder="请输入店铺名称" />
@@ -82,7 +105,7 @@
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
-import { ref, shallowRef } from 'vue';
+import { ref, shallowRef, unref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import * as API_TIKTOK from '@/api/system/tiktokStore';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
@@ -91,7 +114,12 @@ import { useMessageBox } from '@/hooks/useMessageBox';
 import { FormInstance } from 'element-plus';
 import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { cloneDeep } from 'lodash-es';
+import SwitchHandle from '@/components/SwitchHandle/index.vue';
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import moment from 'moment-timezone';
+import { ElMessage } from 'element-plus';
 
+const filterValue = ref<Partial<config.FilterDto>>({});
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
@@ -104,9 +132,13 @@ const getListFun = async () => {
   try {
     const { data } = await API_TIKTOK.getStoreList({
       page: currentPage.value,
-      page_size: pageSize.value
+      page_size: pageSize.value,
+      ...unref(filterValue)
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      created_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
+    }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
@@ -129,17 +161,37 @@ const dialogClosed = () => {
   editFormValues.value = {};
   editFormRef.value?.resetFields();
 };
-const handleClick = (key: string) => {
-  if (key === 'create') {
-    dialogTitle.value = '新增店铺';
-    dialogVisible.value = true;
-  }
-};
-const submitFun = () => {};
-// 删除店铺
-const delMessageBox = (row: API_TIKTOK.StoreProps) => {
-  console.log(row);
-  useMessageBox('确认删除此店铺？', async () => {});
+const submitFun = () => {
+  editFormRef.value?.validate(async (valid) => {
+    if (!valid) {
+      return;
+    }
+    useMessageBox('确认提交？', async () => {
+      try {
+        const params: any = {
+          shop_id: editFormValues.value.shop_id,
+          app_key: editFormValues.value.app_key,
+          app_secret: editFormValues.value.app_secret,
+          shop_name: editFormValues.value.shop_name
+        };
+        if (editFormValues.value.hasOwnProperty('id')) {
+          // 编辑
+          params.id = editFormValues.value.id;
+          params.pause = editFormValues.value.pause;
+          params.available = editFormValues.value.available;
+          await API_TIKTOK.editStore(params as API_TIKTOK.EditStoreDto);
+          ElMessage.success('编辑成功');
+        } else {
+          // 新增
+          ElMessage.warning('新增店铺功能暂未开放');
+        }
+        dialogVisible.value = false;
+        getListFun();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  });
 };
 
 getListFun();
@@ -148,7 +200,6 @@ getListFun();
 @use '@/styles/mixins.scss' as *;
 .container {
   & > .tableBox {
-    margin-top: 0;
     & .textBox {
       display: inline-flex;
       align-items: center;

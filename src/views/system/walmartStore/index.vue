@@ -51,10 +51,6 @@
             <TextEllipsis :text="row.client_secret" />
           </div>
         </template>
-        <template #table-shop_survival="{ row }">
-          <el-tag v-if="row.shop_survival === 1" disable-transitions type="success"> 存活 </el-tag>
-          <el-tag v-else disable-transitions type="danger">死亡</el-tag>
-        </template>
         <template #table-available="{ row }">
           <el-tag v-if="row.available" type="success" disable-transitions>存活</el-tag>
           <el-tag v-else type="danger" disable-transitions>死亡</el-tag>

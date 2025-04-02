@@ -1,5 +1,51 @@
+import { FilterColumnProps } from '@/components/FilterContainer/types';
 import { FormRules } from 'element-plus';
-import { HandleColumnProps, type TableColumnProps } from 'tsx-element-table/src/types';
+import { type TableColumnProps } from 'tsx-element-table/src/types';
+
+export interface FilterDto {
+  shop_name: string;
+  available: 0 | 1;
+  pause: 0 | 1;
+}
+
+export const filterColumns: FilterColumnProps[] = [
+  {
+    label: '店铺名称',
+    type: 'input',
+    prop: 'shop_name',
+    width: 240
+  },
+  {
+    label: '存活状态',
+    type: 'select',
+    prop: 'available',
+    selectOptions: [
+      {
+        label: '存活',
+        value: 1
+      },
+      {
+        label: '死亡',
+        value: 0
+      }
+    ]
+  },
+  {
+    label: '开启上架',
+    type: 'select',
+    prop: 'pause',
+    selectOptions: [
+      {
+        label: '开启',
+        value: 1
+      },
+      {
+        label: '关闭',
+        value: 0
+      }
+    ]
+  }
+];
 
 export const tableColumns: TableColumnProps[] = [
   {
@@ -23,10 +69,29 @@ export const tableColumns: TableColumnProps[] = [
     showOverflowTooltip: true
   },
   {
+    label: '开启上架',
+    prop: 'pause',
+    width: 100,
+    align: 'center'
+  },
+  {
+    label: '是否存活',
+    prop: 'available',
+    width: 100,
+    align: 'center'
+  },
+  {
+    label: '分类名称',
+    prop: 'category_name',
+    minWidth: 140,
+    align: 'center',
+    showOverflowTooltip: true
+  },
+  {
     label: 'App Key',
     prop: 'app_key',
     align: 'center',
-    minWidth: 160
+    minWidth: 120
   },
   {
     label: 'App Secret',
@@ -42,18 +107,10 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '操作',
-    width: 120,
+    width: 100,
     align: 'center',
     fixed: 'right',
     prop: 'handle'
-  }
-];
-
-export const handleColumns: HandleColumnProps[] = [
-  {
-    label: '新增店铺',
-    type: 'primary',
-    key: 'create'
   }
 ];
 
