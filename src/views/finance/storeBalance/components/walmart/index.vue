@@ -33,13 +33,13 @@
           <el-button link type="primary" @click="openDetail(row)">查看详情</el-button>
         </template>
         <template #table-closing_balance="{ row }">
-          <PriceItem :bold="true" :price="row.closing_balance || 0" />
+          <PriceItem :cent="false" :bold="true" :price="row.closing_balance || 0" />
         </template>
         <template #table-pay_amount="{ row }">
-          <PriceItem :bold="false" :price="row.pay_amount || 0" />
+          <PriceItem :cent="false" :bold="false" :price="row.pay_amount || 0" />
         </template>
         <template #table-hold_amount="{ row }">
-          <PriceItem :bold="false" :price="row.hold_amount || 0" />
+          <PriceItem :cent="false" :bold="false" :price="row.hold_amount || 0" />
         </template>
       </TsxElementTable>
     </div>
@@ -57,13 +57,13 @@
           </el-form-item>
           <div class="hr" />
           <el-form-item label="店铺余额：">
-            <PriceItem :bold="true" :price="tempRow.closing_balance || 0" />
+            <PriceItem :cent="false" :bold="true" :price="tempRow.closing_balance || 0" />
           </el-form-item>
           <el-form-item label="回款金额：">
-            <PriceItem :bold="true" :price="tempRow.pay_amount || 0" />
+            <PriceItem :cent="false" :bold="true" :price="tempRow.pay_amount || 0" />
           </el-form-item>
           <el-form-item label="暂扣金额：">
-            <PriceItem :bold="true" :price="tempRow.hold_amount || 0" />
+            <PriceItem :cent="false" :bold="true" :price="tempRow.hold_amount || 0" />
           </el-form-item>
           <el-form-item label="暂扣时间：">
             <div>{{ tempRow.hold_dates || '-' }}</div>
@@ -158,9 +158,9 @@ const getSummaries = () => {
     '-',
     '-',
     '汇总',
-    h(PriceItem, { price: total_closing_balance }),
-    h(PriceItem, { price: total_pay_amount }),
-    h(PriceItem, { price: total_hold_amount }),
+    h(PriceItem, { price: total_closing_balance, cent: false }),
+    h(PriceItem, { price: total_pay_amount, cent: false }),
+    h(PriceItem, { price: total_hold_amount, cent: false }),
     '-',
     '-',
     '-',
