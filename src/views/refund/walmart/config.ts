@@ -1,6 +1,7 @@
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
+import PriceItem from '@/components/PriceItem/index.vue';
 import { h } from 'vue';
 
 export const filterColumns: FilterColumnProps[] = [
@@ -77,7 +78,7 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'total_refund_amount',
     minWidth: 130,
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, `$ ${cellValue.toFixed(2)}`);
+      return h(PriceItem, { price: cellValue, bold: true, cent: false });
     }
   },
 

@@ -3,6 +3,7 @@ import { FilterColumnProps } from '@/components/FilterContainer/types';
 import { tiktokStatusMap } from '@/views/order/tiktok/config';
 import { walmartStatusMap } from '@/views/order/walmart/config';
 import { TableColumnProps } from 'tsx-element-table';
+import PriceItem from '@/components/PriceItem/index.vue';
 import { h } from 'vue';
 
 export interface FilterDto {
@@ -122,7 +123,7 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'total_amount',
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, `$${cellValue || 0}`);
+      return h(PriceItem, { price: cellValue, bold: true, cent: false });
     }
   },
   {

@@ -1,8 +1,9 @@
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
 import { FilterColumnProps } from '@/components/FilterContainer/types';
-import { TiktokStausEnum, TiktokOrderProps } from '@/api/order/tiktok';
+import { TiktokStausEnum } from '@/api/order/tiktok';
 import { h } from 'vue';
 import { Download } from '@element-plus/icons-vue';
+import PriceItem from '@/components/PriceItem/index.vue';
 import { ElText } from 'element-plus';
 
 export const tiktokStatusMap: Array<{
@@ -91,17 +92,6 @@ export const filterColumns: FilterColumnProps[] = [
 
 export const tableColumns: TableColumnProps[] = [
   {
-    label: '#',
-    width: 50,
-    align: 'center',
-    type: 'selection',
-    reserveSelection: true,
-    selectable: (row: TiktokOrderProps) => {
-      return row.status === TiktokStausEnum.AWAITING_SHIPMENT;
-    },
-    prop: 'selection'
-  },
-  {
     label: '订单号',
     align: 'center',
     width: 200,
@@ -138,7 +128,7 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'total_amount',
     width: 140,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h(PriceItem, { price: _cellValue, bold: true, cent: false });
     }
   },
   {
@@ -147,7 +137,7 @@ export const tableColumns: TableColumnProps[] = [
     width: 100,
     prop: 'tax',
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h(PriceItem, { price: _cellValue, bold: true, cent: false });
     }
   },
   {
@@ -156,7 +146,7 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'shipping_fee',
     width: 100,
     formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+      return h(PriceItem, { price: _cellValue, bold: true, cent: false });
     }
   },
   {
@@ -194,14 +184,14 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'remark',
     minWidth: 160
+  },
+  {
+    label: '操作',
+    align: 'center',
+    width: 130,
+    fixed: 'right',
+    prop: 'action'
   }
-  // {
-  //   label: '操作',
-  //   align: 'center',
-  //   width: 130,
-  //   fixed: 'right',
-  //   prop: 'action'
-  // }
 ];
 
 // 右侧导出按钮

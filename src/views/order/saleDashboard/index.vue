@@ -71,7 +71,7 @@ import {
   SaleDashboardProps,
   SaleDashboardSummaryProps
 } from '@/api/order/saleDashboard';
-import PriceItem from '@/views/finance/storeBalance/components/PriceItem.vue';
+import PriceItem from '@/components/PriceItem/index.vue';
 
 const filterValue = ref<Partial<config.FilterDto>>({
   platform: 'walmart'

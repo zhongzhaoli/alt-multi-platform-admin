@@ -2,6 +2,20 @@ import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 import { CancelToken } from 'axios';
 
+const deliverErrorCode: { [key in string]: string } = {
+  '11028006': '这个追踪号码无法与任何承运商匹配，请检查追踪号码并重新上传。',
+  '21001201': '系统进程错误，请稍后再试。',
+  '21011001': '找不到包。如果错误持续存在，请联系平台寻求帮助。',
+  '21011007': '包裹物品有售后请求，请先处理售后请求。',
+  '21011022': '无效的跟踪号码或提供商ID。请再次检查并重新尝试。',
+  '21011025': '重复的跟綜号码。',
+  '21011046': '无法拆分已经合并订单的订单。',
+  '21021010': '包裹物品有售后请求，请先处理售后请求。',
+  '21022026': '无法购买运单，请稍后再试。',
+  '21022030': '系统进程错误，请稍后再试。',
+  '99999999': '内部系统超时错误。如果错误持续存在，请联系平台寻求帮助。'
+};
+
 export enum TiktokStausEnum {
   'ON_HOLD' = 'ON_HOLD',
   'UNPAID' = 'UNPAID',
@@ -25,6 +39,8 @@ export interface TiktokOrderProps {
   tax: number;
   total_amount: number;
   tracking_number: string;
+  shipping_provider_id: string;
+  is_shipping: null | '已发货';
 }
 
 export interface TiktokOrderItemProps {
@@ -89,11 +105,18 @@ export interface DeliverProductsDto {
   shop_id: string;
   order_line_item_ids: string[];
 }
-export function deliverProducts(data: Array<DeliverProductsDto>): Promise<any> {
+export function deliverProducts(data: DeliverProductsDto): Promise<any> {
   return request({
-    url: '/tk/mark_package_as_shipped',
+    url: '/tiktok/mark_package_as_shipped',
     method: 'post',
-    data
+    data,
+    customServerErrorMessage: (data: any) => {
+      const code = data?.code;
+      if (code && code in Object.keys(deliverErrorCode)) {
+        return deliverErrorCode[code];
+      }
+      return '发货失败，请稍后再试';
+    }
   });
 }
 

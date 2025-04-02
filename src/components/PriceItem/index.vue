@@ -6,12 +6,24 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const props = defineProps<{ price: number; bold?: boolean }>();
+const props = withDefaults(
+  defineProps<{ price: number; bold?: boolean; abs?: boolean; cent?: boolean }>(),
+  {
+    bold: false,
+    abs: true,
+    cent: true
+  }
+);
 
-const priceIsNegative = computed(() => props.price < 0);
+const priceIsNegative = computed(() => {
+  return (props.abs === true ? Math.abs(props.price) : props.price) < 0;
+});
 
 const priceText = computed(() => {
-  const absPrice = Math.abs(props.price).toFixed(2);
+  const absPrice =
+    props.abs === undefined || props.abs === true
+      ? (Math.abs(props.price) / (props.cent ? 100 : 1)).toFixed(2)
+      : (props.price / (props.cent ? 100 : 1)).toFixed(2);
   const decimal = absPrice.split('.')[1];
   const integer = absPrice.split('.')[0];
   return `${parseInt(integer).toLocaleString()}.${decimal}`;

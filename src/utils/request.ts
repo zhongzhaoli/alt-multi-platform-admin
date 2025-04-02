@@ -20,11 +20,11 @@ import { router } from '@/router';
 
 export type ApiDataType = ResponseJson<any> | ResponsePageJson<any>;
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-  customServerErrorMessage?: string | null;
+  customServerErrorMessage?: (data?: any) => string | null;
 }
 
 interface CustomConfig extends InternalAxiosRequestConfig<any> {
-  customServerErrorMessage?: string | null;
+  customServerErrorMessage?: (data?: any) => string | null;
 }
 interface CustomResponse<T = any> {
   data: T;
@@ -62,8 +62,8 @@ function createService() {
       case ResponseCode.SUCCESS:
         return apiData;
       case ResponseCode.BODYERROR:
-        if (response.config.customServerErrorMessage !== null) {
-          ElMessage.error(apiData.msg || response.config.customServerErrorMessage);
+        if (response.config.customServerErrorMessage) {
+          ElMessage.error(response.config.customServerErrorMessage(apiData) || apiData.msg);
         }
         return Promise.reject(apiData);
       case ResponseCode.UNAUTHORIZATION:
@@ -72,8 +72,10 @@ function createService() {
         router && router.push('/login');
         return Promise.reject(apiData);
       case ResponseCode.SERVERERROR:
-        if (response.config.customServerErrorMessage !== null) {
-          ElMessage.error(response.config.customServerErrorMessage || '服务器错误，请联系管理员');
+        if (response.config.customServerErrorMessage) {
+          ElMessage.error(
+            response.config.customServerErrorMessage(apiData) || '服务器错误，请联系管理员'
+          );
         }
         return Promise.reject(apiData);
       default:
@@ -89,8 +91,10 @@ function createService() {
       console.log('错误信息：', error);
       const code = error.code;
       if ((code && code === 'ERR_NETWORK') || code === 'ECONNABORTED') {
-        if (error.config.customServerErrorMessage !== null) {
-          ElMessage.error(error.config.customServerErrorMessage || '服务器错误，请联系管理员');
+        if (error.config.customServerErrorMessage) {
+          ElMessage.error(
+            error.config.customServerErrorMessage(error) || '服务器错误，请联系管理员'
+          );
         }
       } else if (code && code === 'ERR_CANCELED') {
         ElMessage.warning('请求取消');

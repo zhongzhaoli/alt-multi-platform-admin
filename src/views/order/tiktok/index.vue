@@ -36,14 +36,11 @@
         }"
         @table-refresh="getListFun"
         @page-change="getListFun"
-        @selection-change="selectionChange"
         @handle-right-click="handleRightClick"
         @sort-change="sortChange"
       >
         <template #handle-left>
           <div class="handleLeftBox d-flex align-center">
-            <!-- <el-button type="warning" @click="multipleDeliver"> 批量发货 </el-button> -->
-            <!-- <div class="vr" /> -->
             <div class="frequencyText">更新频率：实时更新</div>
           </div>
         </template>
@@ -110,20 +107,21 @@
         <template #table-remark="{ row }">
           <TextEllipsis :text="row.buyer_message || '-'" :line="2" />
         </template>
-        <!-- <template #table-action="{ row }">
-          <template v-if="row.order_status === TiktokStausEnum.AWAITING_SHIPMENT">
+        <template #table-action="{ row }">
+          <template v-if="row.status === TiktokStausEnum.AWAITING_SHIPMENT">
             <el-button link type="primary" @click="singleDeliver(row)"> 发货 </el-button>
-            <el-button link type="primary" @click="cancelOrder(row)"> 取消 </el-button>
+            <!-- <el-button link type="primary" @click="cancelOrder(row)"> 取消 </el-button> -->
           </template>
           <template v-else>-</template>
-        </template> -->
+        </template>
       </TsxElementTable>
     </div>
-    <!-- <ConfirmDialog
+    <ConfirmDialog
       v-model="dialogVisible"
       top="10vh"
       width="700px"
       title="订单发货"
+      :submit-loading="submitLoading"
       @closed="dialogClosed"
       @submit="dialogSubmit"
     >
@@ -182,26 +180,15 @@
           </template>
         </el-table-column>
       </el-table>
-    </ConfirmDialog> -->
-    <!-- <ConfirmDialog v-model="cancelVisible" width="400px" title="取消订单" @submit="cancelSubmit">
-      <template v-if="tempRow">
-        <el-input
-          v-model="tempRow.cancel_reason"
-          type="textarea"
-          placeholder="请输入取消原因"
-          :rows="4"
-        />
-      </template>
-      <template v-else>请选择订单</template>
-    </ConfirmDialog> -->
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
-// import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
-// import { carrierList } from '../carrier';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import { carrierList } from '../carrier';
 import { downloadCore, generateVisualNumber, RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import ProductItem from '@/components/ProductItem/index.vue';
@@ -210,21 +197,19 @@ import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getTiktokOrderList,
-  // deliverProducts,
-  // DeliverProductsDto,
+  deliverProducts,
   TiktokOrderProps,
   type TiktokOrderFilterProps,
-  // TiktokStausEnum,
+  TiktokStausEnum,
   exportTiktokOrderList,
   GetOrderDto,
-  // CancelOrderDto,
-  // cancelOrder as cancelOrderApi,
-  TaxItem
+  TaxItem,
+  DeliverProductsDto
 } from '@/api/order/tiktok';
 import { cloneDeep } from 'lodash-es';
-// import { ElMessage } from 'element-plus';
 import axios, { CancelTokenSource } from 'axios';
 import { useFullLoading } from '@/hooks/useFullLoading';
+import { ElMessage } from 'element-plus';
 
 // 排序条件变化
 const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
@@ -258,7 +243,7 @@ const getListFun = async () => {
       searchParams.sort = JSON.stringify(sortOrder.value);
     }
     const { data } = await getTiktokOrderList(searchParams);
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({ ...item, shipping_provider_id: '' }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);
@@ -268,91 +253,46 @@ const getListFun = async () => {
 };
 getListFun();
 
-// 多选
-const selectionList = shallowRef<TiktokOrderProps[]>([]);
-const selectionChange = (rows: TiktokOrderProps[]) => {
-  selectionList.value = cloneDeep(rows);
+// 发货
+const dialogVisible = shallowRef(false);
+const submitLoading = shallowRef(false);
+const selectedRows = ref<TiktokOrderProps[]>([]);
+const singleDeliver = (row: TiktokOrderProps) => {
+  selectedRows.value = [cloneDeep(row)];
+  dialogVisible.value = true;
 };
-
-// // 取消订单
-// const cancelVisible = ref(false);
-// interface CancelOrderProps extends TiktokOrderProps {
-//   cancel_reason: string;
-// }
-// const tempRow = ref<CancelOrderProps | null>(null);
-// const cancelOrder = (row: TiktokOrderProps) => {
-//   tempRow.value = {
-//     ...row,
-//     cancel_reason: ''
-//   };
-//   cancelVisible.value = true;
-// };
-// const cancelSubmit = async () => {
-//   if (!tempRow.value) return ElMessage.warning('请选择订单');
-//   const requestData: CancelOrderDto = {
-//     order_id: tempRow.value.order_id,
-//     cancel_reason: tempRow.value.cancel_reason || '',
-//     order_line_item_ids: [tempRow.value.order_line_item_id],
-//     shop_id: tempRow.value.shop_id,
-//     skus: [{ sku_id: tempRow.value.sku_id, quantity: 1 }]
-//   };
-//   submitLoading.value = true;
-//   try {
-//     await cancelOrderApi([requestData]);
-//     ElMessage.success('取消成功');
-//     cancelVisible.value = false;
-//     tempRow.value = null;
-//     getListFun();
-//   } catch (err) {
-//     console.log(err);
-//   } finally {
-//     submitLoading.value = false;
-//   }
-// };
-
-// // 发货
-// const dialogVisible = shallowRef(false);
-// const submitLoading = shallowRef(false);
-// const selectedRows = ref<TiktokOrderProps[]>([]);
-// const singleDeliver = (row: TiktokOrderProps) => {
-//   selectedRows.value = [cloneDeep(row)];
-//   dialogVisible.value = true;
-// };
-// const multipleDeliver = () => {
-//   if (!selectionList.value.length) return ElMessage.warning('请选择订单');
-//   selectedRows.value = cloneDeep(selectionList.value);
-//   dialogVisible.value = true;
-// };
-// const dialogClosed = () => {
-//   batchName.value = '';
-//   batchNumber.value = '';
-//   selectedRows.value = [];
-// };
-// const dialogSubmit = async () => {
-//   const carrierNameIsEmpty = selectedRows.value.some((row) => !row.shipping_provider_id);
-//   const trackingNumberIsEmpty = selectedRows.value.some((row) => !row.tracking_number);
-//   if (carrierNameIsEmpty || trackingNumberIsEmpty) {
-//     return ElMessage.warning('请填写物流承运商或物流追踪号');
-//   }
-//   submitLoading.value = true;
-//   const deliverList: DeliverProductsDto[] = selectedRows.value.map((row) => ({
-//     shop_id: row.shop_id,
-//     order_id: row.order_id,
-//     shipping_provider_id: row.shipping_provider_id,
-//     tracking_number: row.tracking_number,
-//     order_line_item_ids: [row.order_line_item_id]
-//   }));
-//   try {
-//     await deliverProducts(deliverList);
-//     ElMessage.success('发货成功');
-//     dialogVisible.value = false;
-//     getListFun();
-//   } catch (err) {
-//     console.log(err);
-//   } finally {
-//     submitLoading.value = false;
-//   }
-// };
+const dialogClosed = () => {
+  batchName.value = '';
+  batchNumber.value = '';
+  selectedRows.value = [];
+};
+const dialogSubmit = async () => {
+  submitLoading.value = true;
+  const carrierNameIsEmpty = selectedRows.value.some((row) => !row.shipping_provider_id);
+  const trackingNumberIsEmpty = selectedRows.value.some((row) => !row.tracking_number);
+  if (carrierNameIsEmpty || trackingNumberIsEmpty) {
+    return ElMessage.warning('请填写物流承运商或物流追踪号');
+  }
+  const { shop_id, order_id, shipping_provider_id, tracking_number, children } =
+    selectedRows.value[0];
+  const deliverList: DeliverProductsDto = {
+    shop_id: shop_id,
+    order_id: order_id,
+    shipping_provider_id: shipping_provider_id,
+    tracking_number: tracking_number,
+    order_line_item_ids: children.map((item) => item.order_line_item_id)
+  };
+  try {
+    await deliverProducts(deliverList);
+    ElMessage.success('发货成功');
+    dialogVisible.value = false;
+    getListFun();
+  } catch (err) {
+    console.log(err);
+  } finally {
+    submitLoading.value = false;
+  }
+};
 
 // 导出
 const cancelToken = axios.CancelToken;
@@ -379,16 +319,16 @@ const handleRightClick = async () => {
   }
 };
 
-// // 批量设置
-// const batchName = shallowRef('');
-// const batchNumber = shallowRef('');
-// const batchSetting = () => {
-//   if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
-//   selectedRows.value.forEach((row: TiktokOrderProps) => {
-//     row.shipping_provider_id = batchName.value;
-//     row.tracking_number = batchNumber.value;
-//   });
-// };
+// 批量设置
+const batchName = shallowRef('');
+const batchNumber = shallowRef('');
+const batchSetting = () => {
+  if (!selectedRows.value.length) return ElMessage.warning('未选择订单');
+  selectedRows.value.forEach((row: TiktokOrderProps) => {
+    row.shipping_provider_id = batchName.value;
+    row.tracking_number = batchNumber.value;
+  });
+};
 </script>
 <style lang="scss" scoped>
 .container {

@@ -96,7 +96,7 @@ import {
   WalmartStoreBalanceProps,
   WalmartStoreBalanceSummaryProps
 } from '@/api/finance/storeBalance';
-import PriceItem from '../PriceItem.vue';
+import PriceItem from '@/components/PriceItem/index.vue';
 import moment from 'moment-timezone';
 
 const filterValue = ref<Partial<config.FilterDto>>({});

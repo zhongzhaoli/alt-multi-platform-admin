@@ -2,6 +2,7 @@ import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table
 import { FilterColumnProps } from '@/components/FilterContainer/types';
 import { h } from 'vue';
 import { WalmartOrderProps, WalmartStausEnum } from '@/api/order/walmart';
+import PriceItem from '@/components/PriceItem/index.vue';
 import { Download } from '@element-plus/icons-vue';
 
 export const walmartStatusMap: Array<{
@@ -111,7 +112,7 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'order_total',
     minWidth: 140,
     formatter: (_row, _column, cellValue) => {
-      return h('b', null, `$ ${(cellValue || 0).toFixed(2)}`);
+      return h(PriceItem, { price: cellValue, bold: true, cent: false });
     }
   },
   {

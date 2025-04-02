@@ -2,6 +2,7 @@ import { ReturnRole, ReturnStatus, ReturnType, ShipmentType } from '@/api/refund
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { ElText } from 'element-plus';
 import type { TableColumnProps } from 'tsx-element-table';
+import PriceItem from '@/components/PriceItem/index.vue';
 import { h } from 'vue';
 
 export const orderStatusMap: Array<{
@@ -204,8 +205,8 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'refund_subtotal',
     minWidth: 120,
-    formatter: (_row, _column, _cellValue) => {
-      return h('b', null, `$ ${parseFloat(_cellValue || '0').toFixed(2)}`);
+    formatter: (_row, _column, cellValue) => {
+      return h(PriceItem, { price: cellValue, bold: true, cent: false });
     }
   },
   {

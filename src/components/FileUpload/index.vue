@@ -177,7 +177,7 @@ const upload = async (formData: FormData, fileListItem: UploadFile) => {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
-      customServerErrorMessage: props.multiple ? null : '上传失败',
+      customServerErrorMessage: () => (props.multiple ? null : '上传失败'),
       data: formData
     });
     fileListItem.status = 'success';
