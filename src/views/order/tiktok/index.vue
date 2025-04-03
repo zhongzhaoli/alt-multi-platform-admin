@@ -73,9 +73,7 @@
         <template #table-sale_price="{ row }">
           <div class="multipleProductBox">
             <template v-for="item in row.children" :key="`sale_price_${item.order_line_item_id}`">
-              <div>
-                <b>$ {{ item.sale_price }}</b>
-              </div>
+              <PriceItem :cent="false" bold :price="item.sale_price" />
             </template>
           </div>
         </template>
@@ -84,11 +82,16 @@
             <template v-for="item in row.children" :key="`item_tax_${item.order_line_item_id}`">
               <div>
                 <b>
-                  ${{
-                    item.item_tax
-                      .reduce((pre: number, next: TaxItem) => pre + parseFloat(next.tax_amount), 0)
-                      .toFixed(2)
-                  }}
+                  <PriceItem
+                    :cent="false"
+                    bold
+                    :price="
+                      item.item_tax.reduce(
+                        (pre: number, next: TaxItem) => pre + parseFloat(next.tax_amount),
+                        0
+                      )
+                    "
+                  />
                 </b>
               </div>
             </template>
@@ -195,6 +198,7 @@ import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
+import PriceItem from '@/components/PriceItem/index.vue';
 import {
   getTiktokOrderList,
   deliverProducts,

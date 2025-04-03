@@ -100,9 +100,17 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺名称',
     align: 'center',
-    width: 160,
+    width: 180,
     showOverflowTooltip: true,
     prop: 'shop_name'
+  },
+  {
+    label: '需求发货时间',
+    align: 'center',
+    prop: 'tts_sla_time',
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
+    minWidth: 180
   },
   {
     label: '下单时间',
@@ -126,7 +134,7 @@ export const tableColumns: TableColumnProps[] = [
     label: '总金额',
     align: 'center',
     prop: 'total_amount',
-    width: 140,
+    width: 120,
     formatter: (_row, _column, _cellValue) => {
       return h(PriceItem, { price: _cellValue, bold: true, cent: false });
     }
@@ -134,7 +142,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '税费',
     align: 'center',
-    width: 100,
+    width: 120,
     prop: 'tax',
     formatter: (_row, _column, _cellValue) => {
       return h(PriceItem, { price: _cellValue, bold: true, cent: false });
@@ -144,7 +152,7 @@ export const tableColumns: TableColumnProps[] = [
     label: '运费',
     align: 'center',
     prop: 'shipping_fee',
-    width: 100,
+    width: 120,
     formatter: (_row, _column, _cellValue) => {
       return h(PriceItem, { price: _cellValue, bold: true, cent: false });
     }
@@ -171,13 +179,13 @@ export const tableColumns: TableColumnProps[] = [
     label: '产品金额',
     align: 'center',
     prop: 'sale_price',
-    width: 140
+    width: 120
   },
   {
     label: '产品税费',
     align: 'center',
     prop: 'item_tax',
-    width: 100
+    width: 120
   },
   {
     label: '买家备注',
