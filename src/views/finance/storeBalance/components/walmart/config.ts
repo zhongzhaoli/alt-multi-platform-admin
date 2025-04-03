@@ -2,6 +2,7 @@ import { WalmartSellerStatusEnum } from '@/api/finance/storeBalance';
 import { FilterColumnProps } from '@/components/FilterContainer/types';
 import { ElTag } from 'element-plus';
 import type { TableColumnProps } from 'tsx-element-table';
+import PriceItem from '@/components/PriceItem/index.vue';
 import { h } from 'vue';
 
 export interface FilterDto {
@@ -71,7 +72,10 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'closing_balance',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
-    minWidth: 200
+    minWidth: 200,
+    formatter: (_row, _column, cellValue) => {
+      return h(PriceItem, { abs: false, price: cellValue, bold: true, cent: false });
+    }
   },
   {
     label: '回款金额',
@@ -79,7 +83,10 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'pay_amount',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
-    minWidth: 200
+    minWidth: 200,
+    formatter: (_row, _column, cellValue) => {
+      return h(PriceItem, { abs: false, price: cellValue, bold: false, cent: false });
+    }
   },
   {
     label: '暂扣金额',
@@ -87,7 +94,10 @@ export const tableColumns: TableColumnProps[] = [
     prop: 'hold_amount',
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
-    minWidth: 200
+    minWidth: 200,
+    formatter: (_row, _column, cellValue) => {
+      return h(PriceItem, { abs: false, price: cellValue, bold: false, cent: false });
+    }
   },
   {
     label: '收款平台',

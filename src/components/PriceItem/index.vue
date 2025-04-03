@@ -20,10 +20,7 @@ const priceIsNegative = computed(() => {
 });
 
 const priceText = computed(() => {
-  const absPrice =
-    props.abs === undefined || props.abs === true
-      ? (Math.abs(props.price) / (props.cent ? 100 : 1)).toFixed(2)
-      : (props.price / (props.cent ? 100 : 1)).toFixed(2);
+  const absPrice = (Math.abs(props.price) / (props.cent ? 100 : 1)).toFixed(2);
   const decimal = absPrice.split('.')[1];
   const integer = absPrice.split('.')[0];
   return `${parseInt(integer).toLocaleString()}.${decimal}`;

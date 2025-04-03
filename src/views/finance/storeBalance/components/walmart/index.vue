@@ -32,15 +32,6 @@
         <template #table-action="{ row }">
           <el-button link type="primary" @click="openDetail(row)">查看详情</el-button>
         </template>
-        <template #table-closing_balance="{ row }">
-          <PriceItem :cent="false" :bold="true" :price="row.closing_balance || 0" />
-        </template>
-        <template #table-pay_amount="{ row }">
-          <PriceItem :cent="false" :bold="false" :price="row.pay_amount || 0" />
-        </template>
-        <template #table-hold_amount="{ row }">
-          <PriceItem :cent="false" :bold="false" :price="row.hold_amount || 0" />
-        </template>
       </TsxElementTable>
     </div>
     <el-drawer v-model="detailVisible" size="500px" title="店铺余额详情">
