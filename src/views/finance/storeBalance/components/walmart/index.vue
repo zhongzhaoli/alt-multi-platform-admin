@@ -57,13 +57,18 @@
           </el-form-item>
           <div class="hr" />
           <el-form-item label="店铺余额：">
-            <PriceItem :cent="false" :bold="true" :price="tempRow.closing_balance || 0" />
+            <PriceItem
+              :abs="false"
+              :cent="false"
+              :bold="true"
+              :price="tempRow.closing_balance || 0"
+            />
           </el-form-item>
           <el-form-item label="回款金额：">
-            <PriceItem :cent="false" :bold="true" :price="tempRow.pay_amount || 0" />
+            <PriceItem :abs="false" :cent="false" :bold="true" :price="tempRow.pay_amount || 0" />
           </el-form-item>
           <el-form-item label="暂扣金额：">
-            <PriceItem :cent="false" :bold="true" :price="tempRow.hold_amount || 0" />
+            <PriceItem :abs="false" :cent="false" :bold="true" :price="tempRow.hold_amount || 0" />
           </el-form-item>
           <el-form-item label="暂扣时间：">
             <div>{{ tempRow.hold_dates || '-' }}</div>
