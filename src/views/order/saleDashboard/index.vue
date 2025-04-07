@@ -101,19 +101,24 @@ const summaryMethod = () => {
     '汇总',
     unref(summaryData).all_pay_quantity || 0,
     h(PriceItem, {
+      cent: false,
       price: unref(summaryData).all_pay_amount || 0
     }),
     h(PriceItem, {
+      cent: false,
       price: unref(summaryData).all_per_order_amount || 0
     }),
     unref(summaryData).all_buyer_number || 0,
     h(PriceItem, {
+      cent: false,
       price: unref(summaryData).all_shipping_amount || 0
     }),
     h(PriceItem, {
+      cent: false,
       price: unref(summaryData).all_shipping_tax || 0
     }),
     h(PriceItem, {
+      cent: false,
       price: unref(summaryData).all_product_tax || 0
     }),
     unref(summaryData).all_cancelled_quantity || 0,
