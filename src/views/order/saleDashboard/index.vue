@@ -6,7 +6,14 @@
         :columns="config.filterColumns"
         @submit="getListFun"
         @reset="getListFun"
-      />
+      >
+        <template #platform>
+          <el-select v-model="platform" placeholder="请选择平台" @change="getListFun">
+            <el-option label="Walmart" value="walmart" />
+            <el-option label="Tiktok" value="tiktok" />
+          </el-select>
+        </template>
+      </FilterContainer>
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -63,7 +70,7 @@ import TsxElementTable from 'tsx-element-table';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import ProductItem from '@/components/ProductItem/index.vue';
 import * as config from './config';
-import { h, ref, shallowRef, unref } from 'vue';
+import { h, onMounted, ref, shallowRef, unref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import {
   getSaleDashboard,
@@ -72,10 +79,11 @@ import {
   SaleDashboardSummaryProps
 } from '@/api/order/saleDashboard';
 import PriceItem from '@/components/PriceItem/index.vue';
+import { useRoute } from 'vue-router';
 
-const filterValue = ref<Partial<config.FilterDto>>({
-  platform: 'walmart'
-});
+const route = useRoute();
+const filterValue = ref<Partial<config.FilterDto>>({});
+const platform = ref<'walmart' | 'tiktok'>('walmart');
 const loading = shallowRef(false);
 const tableData = shallowRef<SaleDashboardProps[]>([]);
 const page = shallowRef(PAGE);
@@ -146,7 +154,8 @@ const getListFun = async () => {
     const searchParams: GetSaleDashboardDto = {
       page: page.value,
       page_size: page_size.value,
-      ...filterValue.value
+      ...filterValue.value,
+      platform: platform.value
     };
     if (sortOrder.value) {
       searchParams.sort = JSON.stringify(sortOrder.value);
@@ -172,6 +181,11 @@ const getListFun = async () => {
   }
 };
 
-getListFun();
+onMounted(() => {
+  if ('type' in route.query) {
+    platform.value = route.query.type === 'walmart' ? 'walmart' : 'tiktok';
+  }
+  getListFun();
+});
 </script>
 <style lang="scss" scoped></style>

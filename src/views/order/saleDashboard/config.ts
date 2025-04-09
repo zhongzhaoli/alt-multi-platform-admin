@@ -16,16 +16,7 @@ export const filterColumns: FilterColumnProps[] = [
     type: 'select',
     prop: 'platform',
     clearable: false,
-    selectOptions: [
-      {
-        label: 'Walmart',
-        value: 'walmart'
-      },
-      {
-        label: 'Tiktok',
-        value: 'tiktok'
-      }
-    ]
+    selectOptions: []
   },
   {
     label: 'MSKU',

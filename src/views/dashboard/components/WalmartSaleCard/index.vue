@@ -2,7 +2,12 @@
   <div class="walmartBox cardBox">
     <div class="titleBox">
       <div class="title flex-center">Walmart 销量看板</div>
-      <el-button type="primary" link @click="getListFun">刷新数据</el-button>
+      <div>
+        <el-button type="info" link @click="getListFun">
+          <el-icon><Refresh /></el-icon>
+        </el-button>
+        <el-button type="primary" link @click="toDetail">查看详情</el-button>
+      </div>
     </div>
     <div class="body">
       <div class="tableBox">
@@ -25,12 +30,14 @@
 import TsxElementTable from 'tsx-element-table';
 import { tableColumns } from './config';
 import { ref, shallowRef } from 'vue';
+import { useRouter } from 'vue-router';
 import {
   getWalmartOrderSummary,
   OrderSummaryProps,
   OrderSummaryTotalProps
 } from '@/api/dashboard/index';
 import moment from 'moment-timezone';
+import { Refresh } from '@element-plus/icons-vue';
 
 const tableData = ref<OrderSummaryProps[]>([]);
 const totalData = ref<OrderSummaryTotalProps>({
@@ -51,6 +58,11 @@ const getListFun = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const router = useRouter();
+const toDetail = () => {
+  router.push({ path: '/order/saleDashboard', query: { type: 'walmart' } });
 };
 
 const getSummaries = () => {

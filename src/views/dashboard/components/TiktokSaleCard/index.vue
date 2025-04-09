@@ -2,7 +2,14 @@
   <div class="walmartBox cardBox">
     <div class="titleBox">
       <div class="title flex-center">TikTok 销量看板</div>
-      <el-button type="primary" link @click="getListFun">刷新数据</el-button>
+      <div>
+        <el-button type="primary" link @click="getListFun">
+          <el-button type="info" link @click="getListFun">
+            <el-icon><Refresh /></el-icon>
+          </el-button>
+        </el-button>
+        <el-button type="primary" link @click="toDetail">查看详情</el-button>
+      </div>
     </div>
     <div class="body">
       <div class="tableBox">
@@ -31,6 +38,8 @@ import {
   OrderSummaryTotalProps
 } from '@/api/dashboard/index';
 import moment from 'moment-timezone';
+import { useRouter } from 'vue-router';
+import { Refresh } from '@element-plus/icons-vue';
 
 const tableData = ref<OrderSummaryProps[]>([]);
 const totalData = ref<OrderSummaryTotalProps>({
@@ -60,6 +69,12 @@ const getSummaries = () => {
     `$ ${(totalData.value.today_total_sales_amount || 0).toFixed(2)}`
   ];
 };
+
+const router = useRouter();
+const toDetail = () => {
+  router.push({ path: '/order/saleDashboard', query: { type: 'tiktok' } });
+};
+
 getListFun();
 </script>
 <style lang="scss" scoped>
