@@ -2,7 +2,10 @@
   <div class="walmartBox cardBox">
     <div class="titleBox">
       <div class="title flex-center">Walmart 上架看板</div>
-      <el-button link type="primary" @click="toDetail">查看详情</el-button>
+      <div>
+        <el-button link type="primary" @click="toDetail">查看详情</el-button>
+        <el-button link type="primary" @click="historicalVisible = true"> 产品类目统计 </el-button>
+      </div>
     </div>
     <div class="body">
       <ListingEchart
@@ -27,12 +30,24 @@
         />
       </div>
     </div>
+    <ConfirmDialog
+      v-model="historicalVisible"
+      width="800px"
+      title="产品类目统计"
+      class="historicalDialog"
+      :show-confirm-btn="false"
+      cancel-btn-text="关闭"
+    >
+      <HistoricalCategoryTable platform="walmart" />
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import ListingEchart from './ListingEchart.vue';
 import TsxElementTable from 'tsx-element-table';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import HistoricalCategoryTable from '../historicalCategoryTable/index.vue';
 import {
   getWalmartListingSummary,
   type ListingSummaryProps,
@@ -118,6 +133,9 @@ const getSummaries = () => {
     0
   ];
 };
+
+// 历史类目
+const historicalVisible = shallowRef(false);
 </script>
 <style lang="scss" scoped>
 .walmartBox {
@@ -126,6 +144,15 @@ const getSummaries = () => {
     & > .tableBox {
       height: 400px;
     }
+  }
+}
+</style>
+<style lang="scss">
+.historicalDialog {
+  height: calc(100vh - 40px);
+  margin: 20px auto;
+  & .el-dialog__body {
+    height: calc(100% - 72px - 72px);
   }
 }
 </style>

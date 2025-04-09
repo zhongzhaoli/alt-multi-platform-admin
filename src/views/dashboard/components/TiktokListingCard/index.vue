@@ -2,7 +2,10 @@
   <div class="tiktokBox cardBox">
     <div class="titleBox">
       <div class="title flex-center">Tiktok 上架看板</div>
-      <el-button link type="primary" @click="toDetail">查看详情</el-button>
+      <div>
+        <el-button link type="primary" @click="toDetail">查看详情</el-button>
+        <el-button link type="primary" @click="historicalVisible = true"> 产品类目统计 </el-button>
+      </div>
     </div>
     <div class="body">
       <ListingEchart
@@ -26,12 +29,24 @@
         />
       </div>
     </div>
+    <ConfirmDialog
+      v-model="historicalVisible"
+      width="800px"
+      title="产品类目统计"
+      class="historicalDialog"
+      :show-confirm-btn="false"
+      cancel-btn-text="关闭"
+    >
+      <HistoricalCategoryTable platform="tiktok" />
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import ListingEchart from './ListingEchart.vue';
 import TsxElementTable from 'tsx-element-table';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
+import HistoricalCategoryTable from '../historicalCategoryTable/index.vue';
 import {
   type ListingSummaryProps,
   type ListingSummaryTotalProps,
@@ -114,6 +129,9 @@ const getSummaries = () => {
     summaryTotal.value.unpublish_products || 0
   ];
 };
+
+// 历史类目
+const historicalVisible = shallowRef(false);
 </script>
 <style lang="scss" scoped>
 .tiktokBox {

@@ -109,3 +109,33 @@ export function getTiktokOrderSummary(params: GetSummary): Promise<
     params
   });
 }
+
+export interface HistoricalCategoryTableProps {
+  id: number;
+  platform: 'walmart' | 'tiktok';
+  category_id: string;
+  category_name: string;
+  pasin_count: number;
+  asin_count: number;
+  created_date: string;
+}
+
+export function getWalmartHistoricalCategoryList(params: {
+  date: string;
+}): Promise<ResponseJson<HistoricalCategoryTableProps[]>> {
+  return request({
+    url: '/walmart/products/category/dimensions/statistics',
+    method: 'get',
+    params
+  });
+}
+
+export function getTiktokHistoricalCategoryList(params: {
+  date: string;
+}): Promise<ResponseJson<HistoricalCategoryTableProps[]>> {
+  return request({
+    url: '/tiktok/products/category/dimensions/statistics',
+    method: 'get',
+    params
+  });
+}
