@@ -16,14 +16,17 @@
       @table-refresh="getListFun"
     >
       <template #handle-left>
-        <el-date-picker
-          v-model="filterDate"
-          placeholder="请选择日期"
-          type="date"
-          value-format="YYYY-MM-DD"
-          clearable
-          @change="datechange"
-        />
+        <div class="d-flex align-center">
+          <el-date-picker
+            v-model="filterDate"
+            placeholder="请选择日期"
+            type="date"
+            value-format="YYYY-MM-DD"
+            clearable
+            @change="datechange"
+          />
+          <div class="frequencyText">更新时间：上架前10分钟</div>
+        </div>
       </template>
     </TsxElementTable>
   </div>
@@ -70,4 +73,10 @@ const datechange = () => {
   getListFun();
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.historicalCategoryComponent {
+  .frequencyText {
+    margin-left: var(--normal-padding);
+  }
+}
+</style>
