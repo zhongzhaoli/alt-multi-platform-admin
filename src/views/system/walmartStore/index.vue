@@ -63,17 +63,13 @@
     <ConfirmDialog
       v-model="dialogVisible"
       width="500px"
-      top="10vh"
+      top="40px"
+      class="editDialog"
       :title="dialogTitle"
       @closed="dialogClosed"
       @submit="submitFun"
     >
-      <el-form
-        ref="editFormRef"
-        :rules="config.editFormRules"
-        :model="editFormValues"
-        label-position="top"
-      >
+      <el-form ref="editFormRef" :rules="rules" :model="editFormValues" label-position="top">
         <el-form-item prop="shop_id" label="店铺前台ID：">
           <el-input
             v-model="editFormValues.shop_id"
@@ -116,6 +112,27 @@
               style="width: 100%"
               :controls="false"
               placeholder="请输入每日上架限制数量"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item prop="listing_min_price" required label="价格区间：">
+          <div class="inputNumberBox d-flex align-center">
+            <el-input-number
+              v-model="editFormValues.listing_min_price"
+              style="width: 100%"
+              :precision="0"
+              :min="1"
+              :controls="false"
+              placeholder="最小值"
+            />
+            <div class="interval">~</div>
+            <el-input-number
+              v-model="editFormValues.listing_max_price"
+              style="width: 100%"
+              :precision="0"
+              :min="1"
+              :controls="false"
+              placeholder="最大值"
             />
           </div>
         </el-form-item>
@@ -176,6 +193,23 @@ const getListFun = async () => {
 getListFun();
 
 // 新增和编辑店铺
+const validatorPrice = (_rule: any, _value: any, callback: any) => {
+  if (editFormValues.value.listing_min_price && editFormValues.value.listing_max_price) {
+    if (editFormValues.value.listing_min_price > editFormValues.value.listing_max_price) {
+      callback(new Error('最小值不能大于最大值'));
+    } else if (editFormValues.value.listing_min_price === editFormValues.value.listing_max_price) {
+      callback(new Error('最小值不能等于最大值'));
+    } else {
+      callback();
+    }
+  } else {
+    callback(new Error('请输入价格区间'));
+  }
+};
+const rules = {
+  ...config.editFormRules,
+  listing_min_price: [{ validator: validatorPrice, trigger: 'blur' }]
+};
 const editFormRef = shallowRef<FormInstance>();
 const dialogTitle = shallowRef('新增店铺');
 const dialogVisible = shallowRef(false);
@@ -209,7 +243,9 @@ const submitFun = () => {
           client_secret: editFormValues.value.client_secret,
           max_limit: editFormValues.value.max_limit,
           daily_limit: editFormValues.value.daily_limit,
-          brand: editFormValues.value.brand
+          brand: editFormValues.value.brand,
+          listing_min_price: editFormValues.value.listing_min_price,
+          listing_max_price: editFormValues.value.listing_max_price
         };
         if (editFormValues.value.hasOwnProperty('id')) {
           // 编辑
@@ -251,6 +287,7 @@ const submitFun = () => {
       }
     }
   }
+
   & .clientSecretInput {
     word-break: break-all;
   }
@@ -259,6 +296,11 @@ const submitFun = () => {
     &:deep(input) {
       text-align: left;
     }
+    & > .interval {
+      width: 100px;
+      text-align: center;
+    }
   }
 }
 </style>
+<style lang="scss"></style>

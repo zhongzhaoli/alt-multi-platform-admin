@@ -21,6 +21,8 @@ export interface StoreProps {
   daily_limit: number;
   available: number;
   pause: 1 | 0;
+  listing_min_price: number;
+  listing_max_price: number;
 }
 
 export interface HandleStoreProps {
@@ -51,6 +53,8 @@ export interface CreateStoreDto {
   brand: string;
   max_limit?: number | null;
   daily_limit: number;
+  listing_min_price: number;
+  listing_max_price: number;
 }
 export function createStore(data: CreateStoreDto) {
   return request({

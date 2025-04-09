@@ -11,6 +11,8 @@ export interface StoreProps {
   id: number;
   available: 0 | 1;
   pause: 0 | 1;
+  listing_min_price: number;
+  listing_max_price: number;
 }
 export interface GetStoreDto {
   page: number;
@@ -43,6 +45,8 @@ export interface CreateStoreDto {
   shop_name: string;
   app_secret: string;
   app_key: string;
+  listing_min_price: number;
+  listing_max_price: number;
 }
 
 // 编辑店铺

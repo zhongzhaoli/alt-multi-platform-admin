@@ -70,12 +70,7 @@
       @closed="dialogClosed"
       @submit="submitFun"
     >
-      <el-form
-        ref="editFormRef"
-        :rules="config.editFormRules"
-        :model="editFormValues"
-        label-position="top"
-      >
+      <el-form ref="editFormRef" :rules="rules" :model="editFormValues" label-position="top">
         <el-form-item prop="shop_id" label="店铺ID：">
           <el-input
             v-model="editFormValues.shop_id"
@@ -97,6 +92,27 @@
             :rows="3"
             placeholder="请输入 App Secret"
           />
+        </el-form-item>
+        <el-form-item prop="listing_min_price" required label="价格区间：">
+          <div class="inputNumberBox d-flex align-center">
+            <el-input-number
+              v-model="editFormValues.listing_min_price"
+              style="width: 100%"
+              :precision="0"
+              :min="1"
+              :controls="false"
+              placeholder="最小值"
+            />
+            <div class="interval">~</div>
+            <el-input-number
+              v-model="editFormValues.listing_max_price"
+              style="width: 100%"
+              :precision="0"
+              :min="1"
+              :controls="false"
+              placeholder="最大值"
+            />
+          </div>
         </el-form-item>
       </el-form>
     </ConfirmDialog>
@@ -126,6 +142,23 @@ const total = shallowRef(0);
 const loading = shallowRef(false);
 const tableData = shallowRef<API_TIKTOK.StoreProps[]>([]);
 
+const validatorPrice = (_rule: any, _value: any, callback: any) => {
+  if (editFormValues.value.listing_min_price && editFormValues.value.listing_max_price) {
+    if (editFormValues.value.listing_min_price > editFormValues.value.listing_max_price) {
+      callback(new Error('最小值不能大于最大值'));
+    } else if (editFormValues.value.listing_min_price === editFormValues.value.listing_max_price) {
+      callback(new Error('最小值不能等于最大值'));
+    } else {
+      callback();
+    }
+  } else {
+    callback(new Error('请输入价格区间'));
+  }
+};
+const rules = {
+  ...config.editFormRules,
+  listing_min_price: [{ validator: validatorPrice, trigger: 'blur' }]
+};
 const getListFun = async () => {
   if (loading.value) return;
   loading.value = true;
@@ -172,7 +205,9 @@ const submitFun = () => {
           shop_id: editFormValues.value.shop_id,
           app_key: editFormValues.value.app_key,
           app_secret: editFormValues.value.app_secret,
-          shop_name: editFormValues.value.shop_name
+          shop_name: editFormValues.value.shop_name,
+          listing_min_price: editFormValues.value.listing_min_price,
+          listing_max_price: editFormValues.value.listing_max_price
         };
         if (editFormValues.value.hasOwnProperty('id')) {
           // 编辑
@@ -213,6 +248,16 @@ getListFun();
           color: var(--el-color-primary);
         }
       }
+    }
+  }
+  & .inputNumberBox {
+    width: 100%;
+    &:deep(input) {
+      text-align: left;
+    }
+    & > .interval {
+      width: 100px;
+      text-align: center;
     }
   }
 }

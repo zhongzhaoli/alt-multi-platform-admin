@@ -109,6 +109,15 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
+    label: '上架价格区间',
+    width: 140,
+    align: 'center',
+    prop: 'listing_min_price',
+    formatter: (row, _column, cellValue) => {
+      return `$${cellValue.toFixed(2)} - $${row.listing_max_price.toFixed(2)}`;
+    }
+  },
+  {
     label: '创建时间',
     align: 'center',
     prop: 'created_at',
