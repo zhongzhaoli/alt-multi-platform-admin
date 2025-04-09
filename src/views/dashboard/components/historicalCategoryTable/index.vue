@@ -75,6 +75,7 @@ const datechange = () => {
 </script>
 <style lang="scss" scoped>
 .historicalCategoryComponent {
+  height: 100%;
   .frequencyText {
     margin-left: var(--normal-padding);
   }
