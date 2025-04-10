@@ -48,7 +48,7 @@ export interface TiktokOrderItemProps {
   order_line_item_id: string;
   pasin: string;
   product_name: string;
-  sku_id: string;
+  seller_sku: string;
   sku_image: string;
   order_line_quantity_amount: number;
   sale_price: number;

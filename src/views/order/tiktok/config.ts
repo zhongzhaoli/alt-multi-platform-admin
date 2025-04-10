@@ -81,6 +81,12 @@ export const filterColumns: FilterColumnProps[] = [
     selectOptions: tiktokStatusMap
   },
   {
+    label: 'SKU',
+    type: 'input',
+    multiple: true,
+    prop: 'seller_sku'
+  },
+  {
     label: '创建时间',
     type: 'dateRange',
     startKey: 'start_date',

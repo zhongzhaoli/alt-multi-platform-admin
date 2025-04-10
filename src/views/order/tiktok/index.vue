@@ -60,7 +60,7 @@
                   :size="40"
                   :desc-list="[
                     {
-                      text: item.sku_id,
+                      text: item.seller_sku,
                       prefix: 'SKU'
                     }
                   ]"
