@@ -66,16 +66,28 @@ export const filterColumns: FilterColumnProps[] = [
     selectOptions: walmartProductStatusMap
   },
   {
-    label: 'ASIN',
-    prop: 'asin',
+    label: '产品信息',
+    prop: 'keyword',
     type: 'input',
-    multiple: true
-  },
-  {
-    label: 'SKU',
-    prop: 'sku',
-    type: 'input',
-    multiple: true
+    multiple: true,
+    width: 280,
+    prefixSelect: {
+      options: [
+        {
+          label: 'ASIN',
+          value: 'asin'
+        },
+        {
+          label: 'PASIN',
+          value: 'pasin'
+        },
+        {
+          label: 'SKU',
+          value: 'sku'
+        }
+      ],
+      width: 100
+    }
   }
 ];
 
@@ -98,7 +110,7 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: 'ASIN',
+    label: 'ASIN / PASIN',
     align: 'center',
     width: 160,
     prop: 'asin'

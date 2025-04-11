@@ -44,17 +44,31 @@ export const filterColumns: FilterColumnProps[] = [
     selectOptions: tiktokProductStatusMap
   },
   {
-    label: 'ASIN',
-    prop: 'asin',
+    label: '产品ASIN信息',
+    prop: 'keyword',
     type: 'input',
-    multiple: true
+    multiple: true,
+    width: 280,
+    prefixSelect: {
+      options: [
+        {
+          label: 'ASIN',
+          value: 'asin'
+        },
+        {
+          label: 'PASIN',
+          value: 'pasin'
+        }
+      ],
+      width: 100
+    }
   },
   {
-    label: 'SKU信息',
+    label: '产品SKU信息',
     type: 'input',
     multiple: true,
     prop: 'SKU',
-    width: 300,
+    width: 280,
     prefixSelect: {
       options: [
         {
@@ -78,7 +92,7 @@ export const filterColumns: FilterColumnProps[] = [
     type: 'input',
     multiple: true,
     prop: 'product_id',
-    width: 300,
+    width: 280,
     prefixSelect: {
       options: [
         {
@@ -106,9 +120,9 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: 'ASIN / 卖家SKU',
+    label: 'ASIN / PASIN',
     align: 'center',
-    width: 190,
+    width: 160,
     prop: 'asin'
   },
   {
@@ -120,8 +134,14 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: 'SKU / 全球SKU',
     align: 'center',
-    width: 200,
+    width: 180,
     prop: 'sku'
+  },
+  {
+    label: '卖家SKU',
+    align: 'center',
+    width: 180,
+    prop: 'seller_sku'
   },
   {
     label: '店铺名称',

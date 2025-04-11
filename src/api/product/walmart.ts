@@ -11,6 +11,7 @@ export interface WalmartProductProps {
   new_title: string;
   title: string;
   asin: string;
+  pasin: string;
   sku: string;
   stock: number;
   price: number;

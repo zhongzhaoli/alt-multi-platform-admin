@@ -70,6 +70,14 @@
             <span class="warehouses_id">{{ row.global_sku_id }}</span>
           </div>
         </template>
+        <template #table-seller_sku="{ row }">
+          <div class="d-inline-flex justify-center align-center">
+            <RenderCopyIcon :text="row.seller_sku" type="primary" title="卖家 SKU" margin="r" />
+            <span class="warehouses_id">
+              <TextEllipsis :text="row.seller_sku" :line="1" />
+            </span>
+          </div>
+        </template>
         <template #table-shipping_fee="{ row }">
           <div>
             <b>$ {{ row.shipping_fee.toFixed(2) }}</b>
@@ -80,10 +88,9 @@
           </div>
         </template>
         <template #table-asin="{ row }">
-          <div class="asinBox">
-            <TextEllipsis :text="row.asin" :line="1" />
-            <TextEllipsis :text="row.seller_sku" :line="1" />
-          </div>
+          <TextEllipsis :text="row.asin" :line="1" />
+          <TextEllipsis :text="row.pasin" :line="1" bold />
+          <!-- <TextEllipsis :text="row.seller_sku" :line="1" /> -->
         </template>
         <template #table-stockWarning="{ row }">
           <el-tag

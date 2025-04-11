@@ -6,6 +6,7 @@ export type ProductStatus = 0 | 1 | 2;
 export interface TiktokProductProps {
   shop_id: string;
   asin: string;
+  pasin: string;
   price: number;
   shop_price: number;
   product_image: string[];

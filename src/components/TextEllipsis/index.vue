@@ -2,7 +2,7 @@
   <el-tooltip :disabled="disabledTooptip" :placement="placement" :show-after="showAfter">
     <div
       ref="textEllipsisRef"
-      :class="{ textEllipsisComponent: true, wordBreak: props.wordBreak }"
+      :class="{ textEllipsisComponent: true, wordBreak: props.wordBreak, bold: props.bold }"
       :style="{ '-webkit-line-clamp': line }"
     >
       {{ prefix }}{{ text || '-' }}
@@ -22,6 +22,7 @@ interface ComponentProps {
   line?: number;
   showAfter?: number;
   prefix?: string;
+  bold?: boolean;
   // 找不到element plus的类型
   placement?:
     | 'top'
@@ -42,7 +43,8 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   line: 1,
   placement: 'top',
   showAfter: 200,
-  wordBreak: true
+  wordBreak: true,
+  bold: false
 });
 
 const textEllipsisRef = shallowRef<HTMLElement | null>(null);
@@ -95,6 +97,9 @@ onMounted(() => {
   flex: 1;
   &.wordBreak {
     word-break: break-all;
+  }
+  &.bold {
+    font-weight: bold;
   }
 }
 </style>

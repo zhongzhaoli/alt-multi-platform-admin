@@ -81,7 +81,8 @@
           </el-tag>
         </template>
         <template #table-asin="{ row }">
-          <TextEllipsis :text="row.asin" :line="2" />
+          <TextEllipsis :text="row.asin" :line="1" />
+          <TextEllipsis :text="row.pasin" :line="1" bold />
         </template>
         <template #table-action="{ row }">
           <el-button link type="primary" @click="retireItemFun([row])">下架</el-button>
