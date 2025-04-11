@@ -47,6 +47,10 @@
             <div class="frequencyText">更新频率：每 6 个小时</div>
           </div>
         </template>
+        <template #table-shop_name="{ row }">
+          <TextEllipsis :text="row.shop_name" :line="1" />
+          <el-button v-if="row.is_deleted === 1" link type="danger">(死亡)</el-button>
+        </template>
         <template #table-shopId="{ row }">
           <RenderCopyIcon :text="row.shopId" type="primary" title="店铺ID" margin="r" />{{
             row.shopId

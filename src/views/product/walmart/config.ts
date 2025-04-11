@@ -124,8 +124,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺名称',
     align: 'center',
-    width: 200,
-    showOverflowTooltip: true,
+    width: 160,
     prop: 'shop_name'
   },
   {

@@ -9,6 +9,7 @@ export interface WalmartProductProps {
   shop_id: string;
   shop_name: string;
   new_title: string;
+  is_deleted: 1 | 0;
   title: string;
   asin: string;
   pasin: string;
