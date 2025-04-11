@@ -49,7 +49,7 @@
         </template>
         <template #table-shop_name="{ row }">
           <TextEllipsis :text="row.shop_name" :line="1" />
-          <el-button v-if="row.is_deleted === 1" link type="danger">(死亡)</el-button>
+          <el-button v-if="row.is_deleted === 0" link type="danger">(死亡)</el-button>
         </template>
         <template #table-shopId="{ row }">
           <RenderCopyIcon :text="row.shopId" type="primary" title="店铺ID" margin="r" />{{
