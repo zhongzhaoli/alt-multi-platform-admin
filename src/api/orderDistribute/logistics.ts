@@ -17,6 +17,7 @@ export interface LogisticsProps {
   delivery_date: string;
   delivery_path: string;
   id: number;
+  distance: number;
   postal_code: string;
   ship_date: string;
   ship_path: string;

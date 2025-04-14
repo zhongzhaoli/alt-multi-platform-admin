@@ -82,6 +82,15 @@ export const tableColumns: TableColumnProps[] = [
     width: 120
   },
   {
+    label: '距离',
+    prop: 'distance',
+    align: 'center',
+    width: 120,
+    formatter: (_row, _column, cellValue) => {
+      return cellValue ? `${cellValue}km` : '-';
+    }
+  },
+  {
     label: '发货时间',
     prop: 'ship_date',
     align: 'center',
