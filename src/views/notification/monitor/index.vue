@@ -6,11 +6,7 @@
         :columns="config.filterColumns"
         @submit="getListFun"
         @reset="getListFun"
-      >
-        <template #shop_id="{ form, row }">
-          <SelectWalmartStore v-model="form[row.prop]" multiple @change="getListFun" />
-        </template>
-      </FilterContainer>
+      />
     </div>
     <div class="tableBox">
       <TsxElementTable
@@ -32,35 +28,44 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <span class="frequencyText">更新频率：实时更新</span>
+          <div class="frequencyText">更新时间：实时监控更新</div>
         </template>
       </TsxElementTable>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import TsxElementTable from 'tsx-element-table';
-import FilterContainer from '@/components/FilterContainer/index.vue';
-import SelectWalmartStore from '@/components/SelectWalmartStore/index.vue';
-import * as config from './config';
-import { getNotificationList, type NotificationProps } from '@/api/notification';
-import { shallowRef, ref } from 'vue';
+import {
+  getMonitorNotificationList,
+  FilterDto,
+  MonitorNotificationProps
+} from '@/api/notification/monitor';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
+import FilterContainer from '@/components/FilterContainer/index.vue';
+import TsxElementTable from 'tsx-element-table';
+import { ref, shallowRef } from 'vue';
+import * as config from './config';
 import moment from 'moment-timezone';
 
-const filterValue = ref<Partial<config.FilterDto>>({});
-const tableData = shallowRef<NotificationProps[]>([]);
+const filterValue = ref<Partial<FilterDto>>({});
 const loading = shallowRef(false);
+const tableData = shallowRef<MonitorNotificationProps[]>([]);
 const page = shallowRef(PAGE);
-const pageSize = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
+const pageSize = shallowRef(PAGE_SIZE);
+
+const startOfMonth = moment().startOf('month');
+const endOfMonth = moment().endOf('month');
+
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getNotificationList({
+    const { data } = await getMonitorNotificationList({
       page: page.value,
       page_size: pageSize.value,
-      ...filterValue.value
+      ...filterValue.value,
+      start_date: startOfMonth.format('YYYY-MM-DD'),
+      end_date: endOfMonth.format('YYYY-MM-DD')
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
@@ -76,14 +81,4 @@ const getListFun = async () => {
 
 getListFun();
 </script>
-<style lang="scss" scoped>
-.container {
-  & > .tableBox {
-    & .testText {
-      font-size: 13px;
-      color: #999;
-      padding-left: 4px;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
