@@ -1,7 +1,7 @@
 import { ProductStatus } from '@/api/product/tiktok';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
-import { ElText } from 'element-plus';
+import { ElText, FormRules } from 'element-plus';
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
@@ -208,6 +208,13 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center',
     prop: 'created_at',
     minWidth: 180
+  },
+  {
+    label: '操作',
+    align: 'center',
+    prop: 'action',
+    fixed: 'right',
+    width: 120
   }
 ];
 
@@ -220,3 +227,25 @@ export const handleRightColumns: HandleRightColumnProps[] = [
     icon: Download
   }
 ];
+
+export const updateInventoryRules: FormRules = {
+  stock: [
+    {
+      required: true,
+      message: '请输入库存',
+      trigger: 'blur'
+    },
+    {
+      type: 'number',
+      min: 0,
+      message: '库存必须大于等于0',
+      trigger: 'blur'
+    },
+    {
+      type: 'number',
+      max: 20,
+      message: '库存必须小于等于20',
+      trigger: 'blur'
+    }
+  ]
+};

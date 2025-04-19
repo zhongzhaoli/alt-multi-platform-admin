@@ -19,6 +19,7 @@ export interface WalmartOrderProps {
   shop_id: string;
   shop_name: string;
   update_time: string;
+  estimated_ship_date: string;
   carrier: string;
   phone: string;
   postal_address1: string;

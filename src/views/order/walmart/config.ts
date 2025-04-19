@@ -107,6 +107,12 @@ export const tableColumns: TableColumnProps[] = [
     minWidth: 180
   },
   {
+    label: '需求发货时间',
+    align: 'center',
+    prop: 'estimated_ship_date',
+    minWidth: 180
+  },
+  {
     label: '订单总金额',
     align: 'center',
     prop: 'order_total',

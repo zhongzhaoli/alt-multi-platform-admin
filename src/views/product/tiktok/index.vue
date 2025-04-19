@@ -101,8 +101,36 @@
             {{ row.stockWarning ? '库存正常' : '库存低于 5 个' }}
           </el-tag>
         </template>
+        <template #table-action="{ row }">
+          <el-button link type="primary" @click="openInventoryDialog(row)">修改库存</el-button>
+        </template>
       </TsxElementTable>
     </div>
+    <ConfirmDialog
+      v-model="inventoryVisible"
+      title="修改库存"
+      width="300px"
+      @submit="updateInventoryFun"
+      @closed="dialogClosed"
+    >
+      <el-form
+        ref="formRef"
+        :model="updateInfo"
+        label-position="top"
+        :rules="config.updateInventoryRules"
+      >
+        <el-form-item prop="stock" label="库存数量：">
+          <el-input-number
+            v-model="updateInfo.stock"
+            class="stockInputNumber"
+            placeholder="库存数量"
+            :controls="false"
+            :max="20"
+            :min="0"
+          />
+        </el-form-item>
+      </el-form>
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -110,6 +138,7 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
 import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ref, shallowRef } from 'vue';
@@ -117,11 +146,15 @@ import {
   getTiktokProductList,
   type TiktokProductProps,
   type TiktokProductFilterProps,
-  tiktokImageUrl
+  tiktokImageUrl,
+  updateInventory,
+  UpdateInventoryDto
 } from '@/api/product/tiktok';
 import ProductItem from '@/components/ProductItem/index.vue';
 import { RenderCopyIcon } from '@/utils';
 import moment from 'moment-timezone';
+import { useMessageBox } from '@/hooks/useMessageBox';
+import { ElMessage, FormInstance } from 'element-plus';
 
 const filterValue = ref<Partial<TiktokProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
@@ -153,12 +186,60 @@ const getListFun = async () => {
   }
 };
 getListFun();
+
+// 修改库存
+const inventoryVisible = shallowRef(false);
+const updateInfo = ref<UpdateInventoryDto>({
+  stock: 0,
+  warehouses_id: '',
+  product_id: '',
+  sku_id: '',
+  shop_id: ''
+});
+const formRef = ref<FormInstance | null>(null);
+const openInventoryDialog = (row: TiktokProductProps) => {
+  updateInfo.value = {
+    stock: row.stock,
+    warehouses_id: row.warehouses_id,
+    product_id: row.product_id,
+    sku_id: row.sku_id,
+    shop_id: row.shop_id
+  };
+  inventoryVisible.value = true;
+};
+const updateInventoryFun = () => {
+  formRef.value?.validate((valid) => {
+    if (!valid) return;
+    useMessageBox('确认修改库存？', async () => {
+      try {
+        await updateInventory(updateInfo.value);
+        ElMessage.success('修改成功');
+        inventoryVisible.value = false;
+        getListFun();
+      } catch (err) {
+        console.log(err);
+        ElMessage.error('修改失败');
+      }
+    });
+  });
+};
+const dialogClosed = () => {
+  formRef.value?.resetFields();
+};
 </script>
 <style lang="scss" scoped>
-.asinBox {
-  font-size: 12px;
-}
-.warehouses_id {
-  color: #999;
+.container {
+  & .asinBox {
+    font-size: 12px;
+  }
+  & .warehouses_id {
+    color: #999;
+  }
+  & .stockInputNumber {
+    width: 100%;
+    &:deep(input) {
+      text-align: left;
+    }
+  }
 }
 </style>
