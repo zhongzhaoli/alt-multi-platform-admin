@@ -243,8 +243,8 @@ export const updateInventoryRules: FormRules = {
     },
     {
       type: 'number',
-      max: 20,
-      message: '库存必须小于等于20',
+      max: 50,
+      message: '库存必须小于等于50',
       trigger: 'blur'
     }
   ]

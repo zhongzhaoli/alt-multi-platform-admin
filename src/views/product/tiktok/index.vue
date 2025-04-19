@@ -125,7 +125,7 @@
             class="stockInputNumber"
             placeholder="库存数量"
             :controls="false"
-            :max="20"
+            :max="50"
             :min="0"
           />
         </el-form-item>
