@@ -54,8 +54,8 @@ const page = shallowRef(PAGE);
 const total = shallowRef(0);
 const pageSize = shallowRef(PAGE_SIZE);
 
-const startOfMonth = moment().startOf('month');
-const endOfMonth = moment().endOf('month');
+const startOfMonth = moment();
+const endOfMonth = moment().subtract(1, 'month');
 
 const getListFun = async () => {
   loading.value = true;
