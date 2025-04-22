@@ -164,9 +164,15 @@
         </template>
         <template #table-address="{ row }">
           <TextEllipsis :text="`${row.postal_address_name} (${row.phone})`" />
-          <TextEllipsis
-            :text="`${row.postal_code} - ${row.postal_city} ${row.postal_state} ${row.postal_address1 || ''} ${row.postal_address2 || ''}`"
-          />
+          <div class="d-flex w-100">
+            <RenderCopyIcon type="primary" :text="`${row.postal_code}`" title="邮编" margin="r" />{{
+              row.postal_code
+            }}
+            <span style="padding: 0 4px">-</span>
+            <TextEllipsis
+              :text="`${row.postal_city} ${row.postal_state} ${row.postal_address1 || ''} ${row.postal_address2 || ''}`"
+            />
+          </div>
         </template>
         <template #table-logisticsInfo="{ row }">
           <div>{{ row.carrier }}</div>
