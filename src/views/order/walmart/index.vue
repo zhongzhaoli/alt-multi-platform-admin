@@ -240,7 +240,7 @@
               <el-option
                 v-for="item in carrierList"
                 :key="item.id"
-                :value="item.id"
+                :value="item.name"
                 :label="item.name"
               >
                 {{ item.name }}
