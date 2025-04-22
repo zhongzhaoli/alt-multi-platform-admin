@@ -64,6 +64,8 @@ function createService() {
       case ResponseCode.BODYERROR:
         if (response.config.customServerErrorMessage) {
           ElMessage.error(response.config.customServerErrorMessage(apiData) || apiData.msg);
+        } else {
+          ElMessage.error(apiData.msg);
         }
         return Promise.reject(apiData);
       case ResponseCode.UNAUTHORIZATION:
