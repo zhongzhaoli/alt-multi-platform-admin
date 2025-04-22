@@ -99,7 +99,13 @@
         </template>
         <template #table-address="{ row }">
           <TextEllipsis :text="`${row.buyer_name} (${row.buyer_phone_number})`" />
-          <TextEllipsis :text="`${row.postal_code} - ${row.buyer_full_address}`" />
+          <div class="d-flex w-100">
+            <RenderCopyIcon type="primary" :text="`${row.postal_code}`" title="邮编" margin="r" />{{
+              row.postal_code
+            }}
+            <span style="padding: 0 4px">-</span>
+            <TextEllipsis :text="`${row.buyer_full_address}`" />
+          </div>
         </template>
         <template #table-logisticsInfo="{ row }">
           <div>{{ row.shipping_provider || '-' }}</div>
