@@ -15,6 +15,7 @@ export interface StoreProps {
   listing_max_price: number;
   status: string;
   score: number;
+  available_1: 0 | 1;
 }
 export interface GetStoreDto {
   page: number;

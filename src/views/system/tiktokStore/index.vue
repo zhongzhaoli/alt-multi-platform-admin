@@ -125,8 +125,17 @@
       @closed="drawerClosed"
     >
       <template v-if="tempStoreValues">
-        <div v-if="tempStoreValues.score" class="scoreBox">
-          <div class="scoreTitle">{{ tempStoreValues.status }}</div>
+        <div
+          v-if="tempStoreValues.score !== null && tempStoreValues !== undefined"
+          class="scoreBox"
+        >
+          <div class="scoreTitle">
+            <div>{{ tempStoreValues.status }}</div>
+            <div v-if="tempStoreValues.available_1 === 0" class="avaliable">
+              <el-icon><CircleCloseFilled /></el-icon>
+              <span class="text">店铺已停用</span>
+            </div>
+          </div>
           <div class="currentScore">
             <div
               :style="{
@@ -274,6 +283,7 @@ import SwitchHandle from '@/components/SwitchHandle/index.vue';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import moment from 'moment-timezone';
 import { ElMessage } from 'element-plus';
+import { CircleCloseFilled } from '@element-plus/icons-vue';
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const currentPage = shallowRef(PAGE);
@@ -488,6 +498,17 @@ getListFun();
       font-size: 20px;
       font-weight: bold;
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      & > .avaliable {
+        display: flex;
+        align-items: center;
+        color: red;
+        & > span {
+          padding-left: 6px;
+        }
+      }
     }
     & > .currentScore {
       width: 100%;
