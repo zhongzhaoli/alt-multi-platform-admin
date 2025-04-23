@@ -13,6 +13,8 @@ export interface StoreProps {
   pause: 0 | 1;
   listing_min_price: number;
   listing_max_price: number;
+  status: string;
+  score: number;
 }
 export interface GetStoreDto {
   page: number;
@@ -79,5 +81,50 @@ export function userBindStore(data: TiktokBindDto): Promise<any> {
     url: '/user/authorize/tiktok/shops',
     method: 'put',
     data
+  });
+}
+
+// 违规记录
+export interface GetScoreDto {
+  shop_id: string;
+  page: number;
+  page_size?: number;
+}
+export interface ViolationProps {
+  created_at: string;
+  id: number;
+  shop_id: string;
+  updated_at: string;
+  violation_appeal_status: string;
+  violation_datetime: string;
+  violation_details: string;
+  violation_id: string;
+  violation_reason: string;
+  violation_status: string;
+}
+
+export function getViolationsList(params: GetScoreDto): Promise<ResponsePageJson<ViolationProps>> {
+  return request({
+    url: '/performance/violations/tiktok/list',
+    method: 'get',
+    params
+  });
+}
+
+export interface WarningsProps {
+  created_at: string;
+  id: number;
+  shop_id: string;
+  updated_at: string;
+  warning_datetime: string;
+  warning_id: string;
+  warning_reason: string;
+  warning_status: string;
+}
+export function getWarningsList(params: GetScoreDto): Promise<ResponsePageJson<WarningsProps>> {
+  return request({
+    url: '/performance/warnings/tiktok/list',
+    method: 'get',
+    params
   });
 }

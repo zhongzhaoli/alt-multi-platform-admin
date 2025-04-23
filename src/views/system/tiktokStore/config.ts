@@ -51,7 +51,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: 'ID',
     align: 'center',
-    width: 140,
+    width: 50,
     prop: 'id'
   },
   {
@@ -64,7 +64,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺名称',
     prop: 'shop_name',
-    minWidth: 140,
+    minWidth: 120,
     align: 'center',
     showOverflowTooltip: true
   },
@@ -91,7 +91,7 @@ export const tableColumns: TableColumnProps[] = [
     label: 'App Key',
     prop: 'app_key',
     align: 'center',
-    minWidth: 120
+    minWidth: 140
   },
   {
     label: 'App Secret',
@@ -116,7 +116,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '操作',
-    width: 100,
+    width: 160,
     align: 'center',
     fixed: 'right',
     prop: 'handle'

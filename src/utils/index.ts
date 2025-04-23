@@ -140,7 +140,7 @@ export const RenderCopyIcon = (props: {
   title: string;
   showAfter?: number;
   margin?: 'l' | 'r';
-  type?: 'primary';
+  type?: 'primary' | 'info';
 }) => {
   const { text, title, showAfter = 150, margin, type = undefined } = props;
   return h(
