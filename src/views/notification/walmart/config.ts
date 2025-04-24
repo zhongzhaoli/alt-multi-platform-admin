@@ -66,7 +66,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '数据获取时间',
-    prop: 'created_at',
+    prop: 'updated_at',
     align: 'center',
     minWidth: 240
   }
