@@ -97,6 +97,8 @@ function createService() {
           ElMessage.error(
             error.config.customServerErrorMessage(error) || '服务器错误，请联系管理员'
           );
+        } else {
+          ElMessage.error('服务器错误，请联系管理员');
         }
       } else if (code && code === 'ERR_CANCELED') {
         ElMessage.warning('请求取消');

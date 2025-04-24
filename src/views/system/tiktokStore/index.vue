@@ -218,6 +218,7 @@
               </div>
               <div class="paginationBox">
                 <el-pagination
+                  v-model="scorePage"
                   background
                   layout="total, prev, pager, next"
                   :total="scoreTotal"
@@ -231,6 +232,7 @@
                   v-loading="scoreTableLoading"
                   :data="warningsTableData"
                   border
+                  height="100%"
                   style="height: 100%"
                 >
                   <el-table-column label="警告原因">
@@ -264,6 +266,7 @@
               </div>
               <div class="paginationBox">
                 <el-pagination
+                  v-model:current-page="scorePage"
                   background
                   layout="total, prev, pager, next"
                   :total="scoreTotal"
@@ -396,6 +399,7 @@ const activeName = shallowRef<'violations' | 'warnings'>('violations');
 const scoreTableLoading = shallowRef(false);
 const violationsTableData = shallowRef<API_TIKTOK.ViolationProps[]>([]);
 const scoreTotal = shallowRef(0);
+const scorePage = shallowRef(PAGE);
 const scoreDialog = (row: API_TIKTOK.StoreProps) => {
   tempStoreValues.value = row;
   scoreDialogVisible.value = true;
@@ -407,8 +411,8 @@ const getViolationsList = async () => {
   try {
     const { data } = await API_TIKTOK.getViolationsList({
       shop_id: tempStoreValues.value!.shop_id,
-      page: currentPage.value,
-      page_size: pageSize.value
+      page: scorePage.value,
+      page_size: PAGE_SIZE
     });
     scoreTotal.value = data?.total || 0;
     violationsTableData.value = (data?.list || []).map((item) => ({
@@ -424,13 +428,14 @@ const getViolationsList = async () => {
 };
 const warningsTableData = shallowRef<API_TIKTOK.WarningsProps[]>([]);
 const getWarningsList = async () => {
+  console.log(scorePage.value);
   if (!tempStoreValues.value) return;
   scoreTableLoading.value = true;
   try {
     const { data } = await API_TIKTOK.getWarningsList({
       shop_id: tempStoreValues.value!.shop_id,
-      page: currentPage.value,
-      page_size: pageSize.value
+      page: scorePage.value,
+      page_size: PAGE_SIZE
     });
     scoreTotal.value = data?.total || 0;
     warningsTableData.value = (data?.list || []).map((item) => ({
@@ -496,6 +501,8 @@ getListFun();
     padding: 0;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
   }
   &:deep(.el-drawer__header) {
     display: none;
@@ -504,6 +511,7 @@ getListFun();
     position: relative;
     background: linear-gradient(to bottom, #fff3df, #ffffff);
     padding: 20px;
+    flex: 0 0 auto;
     & > .scoreTitle {
       font-size: 20px;
       font-weight: bold;
@@ -614,10 +622,10 @@ getListFun();
   }
   & .otherMessageBox {
     padding: 0 20px 20px 20px;
+    height: calc(100vh - 155px);
     &.pt {
       padding-top: 20px;
     }
-    flex: 1;
     & > .tabsBox {
       height: 100%;
       &:deep(.el-tab-pane) {
