@@ -44,7 +44,7 @@ export const tableColumns: TableColumnProps[] = [
         ElText,
         { type: cellValue ? 'danger' : 'info', style: { fontWeight: 'bold' } },
         {
-          default: () => (cellValue ? '存在' : '不存在')
+          default: () => cellValue
         }
       );
     }
@@ -59,7 +59,7 @@ export const tableColumns: TableColumnProps[] = [
         ElText,
         { type: cellValue ? 'danger' : 'info', style: { fontWeight: 'bold' } },
         {
-          default: () => (cellValue ? '存在' : '不存在')
+          default: () => cellValue
         }
       );
     }

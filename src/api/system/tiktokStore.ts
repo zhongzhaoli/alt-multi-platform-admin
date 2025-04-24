@@ -106,7 +106,7 @@ export interface ViolationProps {
 
 export function getViolationsList(params: GetScoreDto): Promise<ResponsePageJson<ViolationProps>> {
   return request({
-    url: '/performance/violations/tiktok/list',
+    url: '/tiktok/violations/list',
     method: 'get',
     params
   });
@@ -124,7 +124,7 @@ export interface WarningsProps {
 }
 export function getWarningsList(params: GetScoreDto): Promise<ResponsePageJson<WarningsProps>> {
   return request({
-    url: '/performance/warnings/tiktok/list',
+    url: '/tiktok/warnings/list',
     method: 'get',
     params
   });
