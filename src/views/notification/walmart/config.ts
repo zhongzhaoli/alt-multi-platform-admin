@@ -17,14 +17,6 @@ export const filterColumns: FilterColumnProps[] = [
     width: 240,
     multiple: true,
     selectOptions: []
-  },
-  {
-    label: '日期',
-    type: 'dateRange',
-    prop: 'created_date',
-    width: 240,
-    startKey: 'start_date',
-    endKey: 'end_date'
   }
 ];
 

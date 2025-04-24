@@ -217,7 +217,12 @@
                 </el-table>
               </div>
               <div class="paginationBox">
-                <el-pagination background layout="total, prev, pager, next" :total="scoreTotal" />
+                <el-pagination
+                  background
+                  layout="total, prev, pager, next"
+                  :total="scoreTotal"
+                  @change="getViolationsList"
+                />
               </div>
             </el-tab-pane>
             <el-tab-pane label="警告记录" name="warnings">
@@ -258,7 +263,12 @@
                 </el-table>
               </div>
               <div class="paginationBox">
-                <el-pagination background layout="total, prev, pager, next" :total="scoreTotal" />
+                <el-pagination
+                  background
+                  layout="total, prev, pager, next"
+                  :total="scoreTotal"
+                  @change="getWarningsList"
+                />
               </div>
             </el-tab-pane>
           </el-tabs>
