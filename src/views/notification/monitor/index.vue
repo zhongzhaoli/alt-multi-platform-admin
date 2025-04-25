@@ -64,8 +64,8 @@ const getListFun = async () => {
       page: page.value,
       page_size: pageSize.value,
       ...filterValue.value,
-      start_date: startOfMonth.format('YYYY-MM-DD'),
-      end_date: endOfMonth.format('YYYY-MM-DD')
+      start_date: endOfMonth.format('YYYY-MM-DD'),
+      end_date: startOfMonth.format('YYYY-MM-DD')
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,

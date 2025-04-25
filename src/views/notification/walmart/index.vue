@@ -64,7 +64,7 @@ const getListFun = async () => {
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
-      updated_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
+      updated_at: moment(item.updated_at).format('YYYY-MM-DD HH:mm:ss')
     }));
     total.value = data?.total || 0;
   } catch (err) {

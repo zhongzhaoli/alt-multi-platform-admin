@@ -10,6 +10,7 @@ export interface GetListDto {
 
 export interface NotificationProps {
   created_at: string;
+  updated_at: string;
   id: number;
   message: 0 | 1;
   notification: 0 | 1;
