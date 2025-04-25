@@ -47,3 +47,41 @@ export function getWalmartStoreBalance(params: GetWalmartBalanceDto): Promise<
     params
   });
 }
+
+export interface GetTiktokBalanceDto {
+  page: number;
+  page_size?: number;
+  shop_id?: string;
+  sort?: string;
+  available?: 0 | 1;
+}
+export interface TiktokStoreBalanceProps {
+  id: number;
+  shop_id: string;
+  shop_name: string;
+  paid: number;
+  paying: number;
+  awaiting_payment: number;
+  created_at: string;
+  updated_at: string;
+  available: 0 | 1;
+}
+
+export interface TiktokStoreBalanceSummaryProps {
+  total_paid: number;
+  total_paying: number;
+  total_awaiting_payment: number;
+}
+export function getTiktokStoreBalance(params: GetTiktokBalanceDto): Promise<
+  ResponseJson<{
+    list: TiktokStoreBalanceProps[];
+    total: number;
+    all: TiktokStoreBalanceSummaryProps;
+  }>
+> {
+  return request({
+    url: '/tiktok/payment',
+    method: 'get',
+    params
+  });
+}

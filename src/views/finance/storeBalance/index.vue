@@ -4,16 +4,16 @@
       <el-tab-pane label="Walmart" name="Walmart">
         <Walmart />
       </el-tab-pane>
-      <!-- <el-tab-pane label="Tiktok" name="Tiktok">
+      <el-tab-pane label="Tiktok" name="Tiktok">
         <Tiktok />
-      </el-tab-pane> -->
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import Walmart from './components/walmart/index.vue';
-// import Tiktok from './components/tiktok/index.vue';
+import Tiktok from './components/tiktok/index.vue';
 
 const activeName = ref<'Walmart' | 'Tiktok'>('Walmart');
 const handleClick = (val: 'Walmart' | 'Tiktok') => {
