@@ -60,7 +60,7 @@ import { getLastSeventDays } from '../../utils';
 const router = useRouter();
 
 const toDetail = () => {
-  router.push({ path: '/listing', query: { type: 'tiktok' } });
+  router.push({ path: '/listing/dashboard', query: { type: 'tiktok' } });
 };
 
 const summaryList = shallowRef<ListingSummaryProps[]>([]);

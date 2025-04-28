@@ -127,7 +127,6 @@ const getListFun = async () => {
     type: filterType.value,
     ...filterValue.value
   };
-  console.log(platform.value);
   if (platform.value === 'walmart') {
     getWalmartList(searchParams);
   } else {
