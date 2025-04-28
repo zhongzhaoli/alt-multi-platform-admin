@@ -69,7 +69,9 @@ export const tableColumns: TableColumnProps[] = [
     showOverflowTooltip: true,
     align: 'center',
     formatter: (row) => {
-      return row.submit_pasin_quantity ? `${(row.submit_pasin_quantity / 200) * 100}%` : '0%';
+      return row.submit_pasin_quantity
+        ? `${((row.submit_pasin_quantity / 200) * 100).toFixed(2)}%`
+        : '0%';
     }
   },
   {
@@ -88,7 +90,9 @@ export const tableColumns: TableColumnProps[] = [
     showOverflowTooltip: true,
     align: 'center',
     formatter: (row) => {
-      return row.pasin_successes_quantity ? `${(row.pasin_successes_quantity / 100) * 100}%` : '0%';
+      return row.pasin_successes_quantity
+        ? `${((row.pasin_successes_quantity / 100) * 100).toFixed(2)}%`
+        : '0%';
     }
   },
   {
