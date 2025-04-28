@@ -63,6 +63,16 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
+    label: '数据成功率',
+    prop: 'data_success_rate',
+    width: 120,
+    showOverflowTooltip: true,
+    align: 'center',
+    formatter: (row) => {
+      return row.submit_pasin_quantity ? `${(row.submit_pasin_quantity / 200) * 100}%` : '0%';
+    }
+  },
+  {
     label: 'Pasin成功',
     prop: 'pasin_successes_quantity',
     width: 120,
@@ -70,6 +80,16 @@ export const tableColumns: TableColumnProps[] = [
     sortable: 'custom',
     sortOrders: ['descending', 'ascending', null],
     align: 'center'
+  },
+  {
+    label: '上架成功率',
+    prop: 'listing_success_rate',
+    width: 120,
+    showOverflowTooltip: true,
+    align: 'center',
+    formatter: (row) => {
+      return row.pasin_successes_quantity ? `${(row.pasin_successes_quantity / 100) * 100}%` : '0%';
+    }
   },
   {
     label: 'Pasin为空',
