@@ -84,12 +84,8 @@ import moment from 'moment-timezone';
 
 const route = useRoute();
 const filterValue = ref<Partial<config.FilterDto>>({
-  start_date: moment()
-    .utcOffset(-16 * 60)
-    .format('YYYY-MM-DD'),
-  end_date: moment()
-    .utcOffset(-16 * 60)
-    .format('YYYY-MM-DD')
+  start_date: moment().subtract(16, 'hours').format('YYYY-MM-DD'),
+  end_date: moment().subtract(16, 'hours').format('YYYY-MM-DD')
 });
 const platform = ref<'walmart' | 'tiktok'>('walmart');
 const loading = shallowRef(false);

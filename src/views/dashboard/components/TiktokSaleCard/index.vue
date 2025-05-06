@@ -49,9 +49,7 @@ const getListFun = async () => {
   loading.value = true;
   try {
     const { data } = await getTiktokOrderSummary({
-      date: moment()
-        .utcOffset(-16 * 60)
-        .format('YYYY-MM-DD')
+      date: moment().subtract(16, 'hours').format('YYYY-MM-DD')
     });
     tableData.value = data.daily_summary_data || [];
     if (data.daily_summary_total_data) totalData.value = data.daily_summary_total_data;
