@@ -91,7 +91,6 @@ const filterValue = ref<Partial<config.FilterDto>>({
     .utcOffset(-16 * 60)
     .format('YYYY-MM-DD')
 });
-console.log(moment().utcOffset(-16 * 60));
 const platform = ref<'walmart' | 'tiktok'>('walmart');
 const loading = shallowRef(false);
 const tableData = shallowRef<SaleDashboardProps[]>([]);

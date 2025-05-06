@@ -3,10 +3,8 @@
     <div class="titleBox">
       <div class="title flex-center">TikTok 销量看板</div>
       <div>
-        <el-button type="primary" link @click="getListFun">
-          <el-button type="info" link @click="getListFun">
-            <el-icon><Refresh /></el-icon>
-          </el-button>
+        <el-button type="info" link @click="getListFun">
+          <el-icon><Refresh /></el-icon>
         </el-button>
         <el-button type="primary" link @click="toDetail">查看详情</el-button>
       </div>
@@ -51,7 +49,9 @@ const getListFun = async () => {
   loading.value = true;
   try {
     const { data } = await getTiktokOrderSummary({
-      date: moment().format('YYYY-MM-DD')
+      date: moment()
+        .utcOffset(-16 * 60)
+        .format('YYYY-MM-DD')
     });
     tableData.value = data.daily_summary_data || [];
     if (data.daily_summary_total_data) totalData.value = data.daily_summary_total_data;
