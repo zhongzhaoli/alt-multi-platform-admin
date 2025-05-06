@@ -14,6 +14,8 @@
     </div>
     <div class="tableBox">
       <TsxElementTable
+        v-model:current-page="page"
+        v-model:page-size="pageSize"
         :table-columns="config.tableColumns"
         :table="{
           data: tableData,
