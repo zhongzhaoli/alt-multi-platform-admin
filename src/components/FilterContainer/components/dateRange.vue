@@ -15,7 +15,7 @@
         :range-separator="column.rangeSeparator || '至'"
         :shortcuts="rangeShortcuts"
         type="daterange"
-        clearable
+        :clearable="column.clearable !== undefined ? column.clearable : true"
         @change="change"
       />
     </div>

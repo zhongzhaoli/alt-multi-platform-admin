@@ -80,9 +80,13 @@ import {
 } from '@/api/order/saleDashboard';
 import PriceItem from '@/components/PriceItem/index.vue';
 import { useRoute } from 'vue-router';
+import moment from 'moment-timezone';
 
 const route = useRoute();
-const filterValue = ref<Partial<config.FilterDto>>({});
+const filterValue = ref<Partial<config.FilterDto>>({
+  start_date: moment().format('YYYY-MM-DD'),
+  end_date: moment().format('YYYY-MM-DD')
+});
 const platform = ref<'walmart' | 'tiktok'>('walmart');
 const loading = shallowRef(false);
 const tableData = shallowRef<SaleDashboardProps[]>([]);

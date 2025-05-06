@@ -27,6 +27,9 @@
           <template v-else-if="column.type === 'dateRange'">
             <DateRange v-model="filterValue" :column="column" @change="preSubmit" />
           </template>
+          <template v-else-if="column.type === 'numberRange'">
+            <NumberRange v-model="filterValue" :column="column" @submit="preSubmit" />
+          </template>
           <template v-else>No Target Component!</template>
         </slot>
       </div>
@@ -47,68 +50,27 @@ import {
   MULTIPLE_INPUT_VALUE,
   PREFIX_SELECT_VALUE,
   DEFAULT_DATERANGE_START_KEY,
-  DEFAULT_DATERANGE_END_KEY
+  DEFAULT_DATERANGE_END_KEY,
+  DEFAULT_NUMBERRANGE_START_KEY,
+  DEFAULT_NUMBERRANGE_END_KEY
 } from './constants';
 import Input from './components/input.vue';
 import Select from './components/select.vue';
 import Date from './components/date.vue';
 import DateRange from './components/dateRange.vue';
-import { nextTick, shallowReactive, watch } from 'vue';
+import NumberRange from './components/numberRange.vue';
+import { nextTick, reactive, watch } from 'vue';
 
 const props = defineProps<FilterContainerComponentProps>();
 const emits = defineEmits(['update:modelValue', 'submit', 'reset']);
 
-let filterValue = shallowReactive(cloneDeep(props.modelValue));
+let filterValue = reactive(cloneDeep(props.modelValue));
 // 单向获取
 const columnsValue = useVModel(props, 'columns', undefined, {
   clone: (values: FilterColumnProps[]) => {
     return cloneDeep(values);
   }
 });
-
-watch(
-  columnsValue,
-  (newColumns) => {
-    newColumns.forEach((column) => {
-      if (!filterValue[column.prop]) {
-        filterValue[column.prop] = null;
-        // 多选输入框
-        if (column.multiple && column.type === 'input') {
-          filterValue[`${column.prop}_${MULTIPLE_INPUT_ACTIVE}`] = false;
-          filterValue[`${column.prop}_${MULTIPLE_INPUT_VALUE}`] = '';
-        }
-        // 前缀下拉框
-        if (column.prefixSelect) {
-          const defaultPrefixSelectValue =
-            typeof column.prefixSelect.options === 'function'
-              ? column.prefixSelect.options()[0].value
-              : column.prefixSelect.options[0].value;
-          filterValue[`${column.prop}_${PREFIX_SELECT_VALUE}`] = defaultPrefixSelectValue || '';
-        }
-        // 日期范围
-        if (column.type === 'dateRange') {
-          filterValue[column.prop] = [];
-          filterValue[column.startKey || DEFAULT_DATERANGE_START_KEY] = null;
-          filterValue[column.endKey || DEFAULT_DATERANGE_END_KEY] = null;
-        }
-      }
-    });
-  },
-  {
-    deep: true,
-    immediate: true
-  }
-);
-
-watch(
-  filterValue,
-  (newFilterValue) => {
-    emits('update:modelValue', dataHandle(nullHandle(cloneDeep(newFilterValue))));
-  },
-  {
-    deep: true
-  }
-);
 
 // 多行数据处理
 const multipleLineHandle = (text: string): Array<string> => {
@@ -167,6 +129,14 @@ const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
         prefixSelect ? `${originValue[`${prop}_${PREFIX_SELECT_VALUE}`]}_${endKey}` : endKey
       ] = propValue && propValue.length ? dateFormat(propValue[1]) : null;
     }
+    if (type === 'numberRange') {
+      const startKey = column.startKey || DEFAULT_NUMBERRANGE_START_KEY;
+      const endKey = column.endKey || DEFAULT_NUMBERRANGE_END_KEY;
+      formValue[startKey] =
+        (originValue && originValue[`${column.prop}_${DEFAULT_NUMBERRANGE_START_KEY}`]) || null;
+      formValue[endKey] =
+        (originValue && originValue[`${column.prop}_${DEFAULT_NUMBERRANGE_END_KEY}`]) || null;
+    }
   });
   return formValue;
 };
@@ -214,6 +184,56 @@ const preSubmit = () => {
     emits('submit', newValue);
   });
 };
+
+watch(
+  columnsValue,
+  (newColumns) => {
+    newColumns.forEach((column) => {
+      if (!filterValue[column.prop]) {
+        filterValue[column.prop] = null;
+        // 多选输入框
+        if (column.multiple && column.type === 'input') {
+          filterValue[`${column.prop}_${MULTIPLE_INPUT_ACTIVE}`] = false;
+          filterValue[`${column.prop}_${MULTIPLE_INPUT_VALUE}`] = '';
+        }
+        // 前缀下拉框
+        if (column.prefixSelect) {
+          const defaultPrefixSelectValue =
+            typeof column.prefixSelect.options === 'function'
+              ? column.prefixSelect.options()[0].value
+              : column.prefixSelect.options[0].value;
+          filterValue[`${column.prop}_${PREFIX_SELECT_VALUE}`] = defaultPrefixSelectValue || '';
+        }
+        // 日期范围
+        if (column.type === 'dateRange') {
+          const defaultStartDate = filterValue[column.startKey || DEFAULT_DATERANGE_START_KEY];
+          const defaultEndDate = filterValue[column.endKey || DEFAULT_DATERANGE_END_KEY];
+          filterValue[column.prop] =
+            defaultStartDate && defaultEndDate
+              ? [new window.Date(defaultStartDate), new window.Date(defaultEndDate)]
+              : [];
+          filterValue[column.startKey || DEFAULT_DATERANGE_START_KEY] = null;
+          filterValue[column.endKey || DEFAULT_DATERANGE_END_KEY] = null;
+        }
+      }
+    });
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+);
+
+watch(
+  filterValue,
+  (newFilterValue) => {
+    emits('update:modelValue', dataHandle(nullHandle(cloneDeep(newFilterValue))));
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+);
 </script>
 <style lang="scss" scoped>
 .filterContainer {

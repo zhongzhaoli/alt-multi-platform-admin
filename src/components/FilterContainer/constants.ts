@@ -15,3 +15,7 @@ export const PREFIX_SELECT_VALUE = 'prefixSelectValue';
 export const DEFAULT_DATERANGE_START_KEY = 'startDate';
 
 export const DEFAULT_DATERANGE_END_KEY = 'endDate';
+
+export const DEFAULT_NUMBERRANGE_START_KEY = 'startNumber';
+
+export const DEFAULT_NUMBERRANGE_END_KEY = 'endNumber';

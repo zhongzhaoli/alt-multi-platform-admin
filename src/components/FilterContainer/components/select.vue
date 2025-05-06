@@ -13,7 +13,7 @@
         :multiple-limit="multipleLimit"
         :collapse-tags="multipleCollapseTags"
         :placeholder="column.placeholder || column.label || '请选择'"
-        :clearable="column.clearable === undefined ? true : column.clearable"
+        clearable
         @change="change"
       >
         <template

@@ -1,4 +1,4 @@
-export type FilterTypes = 'input' | 'select' | 'date' | 'dateRange';
+export type FilterTypes = 'input' | 'select' | 'date' | 'dateRange' | 'numberRange';
 
 interface BaseFilterColumnProps {
   label: string;
@@ -27,11 +27,20 @@ export interface DateRangeColumnProps extends BaseFilterColumnProps {
   startPlaceholder?: string;
   endPlaceholder?: string;
   rangeSeparator?: string;
+  clearable?: boolean;
 }
 
 // Date的额外类型
 export interface DateColumnProps extends BaseFilterColumnProps {
   type: 'date';
+}
+
+// numberRange的额外类型
+export interface NumberRangeColumnProps extends BaseFilterColumnProps {
+  type: 'numberRange';
+  startKey?: string;
+  endKey?: string;
+  precision?: number;
 }
 
 interface FilterSelectOptionsProp<T = string, P = any> {
@@ -40,7 +49,6 @@ interface FilterSelectOptionsProp<T = string, P = any> {
 }
 export interface SelectColumnProps extends BaseFilterColumnProps {
   type: 'select';
-  clearable?: boolean;
   selectOptions: FilterSelectOptionsProp[] | (() => FilterSelectOptionsProp[]);
   arrayHandle?: (arr: any[]) => any;
 }
@@ -63,7 +71,8 @@ export type FilterColumnProps =
   | InputColumnProps
   | DateRangeColumnProps
   | SelectColumnProps
-  | DateColumnProps;
+  | DateColumnProps
+  | NumberRangeColumnProps;
 
 // Component Props
 export interface FilterContainerComponentProps {
