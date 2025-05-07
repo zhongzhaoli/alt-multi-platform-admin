@@ -41,7 +41,16 @@ export const filterColumns: FilterColumnProps[] = [
     prop: 'status',
     type: 'select',
     multiple: true,
+    width: 180,
     selectOptions: tiktokProductStatusMap
+  },
+  {
+    label: '库存数量',
+    type: 'numberRange',
+    prop: 'stock',
+    startKey: 'start_stock_number',
+    endKey: 'end_stock_number',
+    width: 180
   },
   {
     label: '产品ASIN信息',

@@ -115,6 +115,10 @@ import moment from 'moment-timezone';
 import { useMessageBox } from '@/hooks/useMessageBox';
 import { ElMessage } from 'element-plus';
 
+defineOptions({
+  name: 'ProductWalmart'
+});
+
 const filterValue = ref<Partial<WalmartProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);

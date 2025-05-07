@@ -110,6 +110,10 @@ import {
 import { cloneDeep } from 'lodash-es';
 import { useRoute } from 'vue-router';
 
+defineOptions({
+  name: 'ListingDashboard'
+});
+
 const platform = ref<'walmart' | 'tiktok'>('walmart');
 const route = useRoute();
 // 获取列表

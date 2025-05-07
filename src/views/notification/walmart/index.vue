@@ -48,6 +48,10 @@ import { shallowRef, ref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import moment from 'moment-timezone';
 
+defineOptions({
+  name: 'NotificationWalmart'
+});
+
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = shallowRef<NotificationProps[]>([]);
 const loading = shallowRef(false);

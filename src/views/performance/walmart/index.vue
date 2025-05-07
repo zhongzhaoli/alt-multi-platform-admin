@@ -41,6 +41,10 @@ import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { GetListDto, getPerformanceList, PerformanceProps } from '@/api/performance';
 import moment from 'moment-timezone';
 
+defineOptions({
+  name: 'PerformanceWalmart'
+});
+
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = shallowRef<PerformanceProps[]>([]);
 const page = shallowRef(PAGE);

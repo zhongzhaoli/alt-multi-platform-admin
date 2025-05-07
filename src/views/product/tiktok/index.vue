@@ -156,6 +156,10 @@ import moment from 'moment-timezone';
 import { useMessageBox } from '@/hooks/useMessageBox';
 import { ElMessage, FormInstance } from 'element-plus';
 
+defineOptions({
+  name: 'ProductTiktok'
+});
+
 const filterValue = ref<Partial<TiktokProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);

@@ -103,6 +103,10 @@ import axios, { CancelTokenSource } from 'axios';
 import { useFullLoading } from '@/hooks/useFullLoading';
 import moment from 'moment-timezone';
 
+defineOptions({
+  name: 'RefundTiktok'
+});
+
 const filterValue = ref<Partial<TiktokRefunFilterProps>>({});
 const tableData = shallowRef<RefundTiktokProps[]>([]);
 const total = shallowRef(0);

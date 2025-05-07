@@ -221,6 +221,10 @@ import axios, { CancelTokenSource } from 'axios';
 import { useFullLoading } from '@/hooks/useFullLoading';
 import { ElMessage } from 'element-plus';
 
+defineOptions({
+  name: 'OrderTiktok'
+});
+
 // 排序条件变化
 const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {

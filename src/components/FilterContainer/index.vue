@@ -133,9 +133,9 @@ const dataHandle = (originValue: Record<string, any>): Record<string, any> => {
       const startKey = column.startKey || DEFAULT_NUMBERRANGE_START_KEY;
       const endKey = column.endKey || DEFAULT_NUMBERRANGE_END_KEY;
       formValue[startKey] =
-        (originValue && originValue[`${column.prop}_${DEFAULT_NUMBERRANGE_START_KEY}`]) || null;
+        (originValue && originValue[`${column.prop}_${DEFAULT_NUMBERRANGE_START_KEY}`]) ?? null;
       formValue[endKey] =
-        (originValue && originValue[`${column.prop}_${DEFAULT_NUMBERRANGE_END_KEY}`]) || null;
+        (originValue && originValue[`${column.prop}_${DEFAULT_NUMBERRANGE_END_KEY}`]) ?? null;
     }
   });
   return formValue;

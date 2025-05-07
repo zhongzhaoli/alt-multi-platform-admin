@@ -107,6 +107,10 @@ import { useDebounceFn } from '@vueuse/core';
 import { ElMessage } from 'element-plus';
 import { useMessageBox } from '@/hooks/useMessageBox';
 
+defineOptions({
+  name: 'OrderDistributeIndex'
+});
+
 // 获取用户列表
 const loading = shallowRef(true);
 const tableData = shallowRef<DistributeUserProps[]>([]);

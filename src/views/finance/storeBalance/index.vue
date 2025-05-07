@@ -15,6 +15,10 @@ import { ref } from 'vue';
 import Walmart from './components/walmart/index.vue';
 import Tiktok from './components/tiktok/index.vue';
 
+defineOptions({
+  name: 'FinanceStoreBalance'
+});
+
 const activeName = ref<'Walmart' | 'Tiktok'>('Walmart');
 const handleClick = (val: 'Walmart' | 'Tiktok') => {
   activeName.value = val;

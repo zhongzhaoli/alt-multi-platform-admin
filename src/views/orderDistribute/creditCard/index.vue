@@ -87,6 +87,10 @@ import {
 import { ElMessage } from 'element-plus';
 import moment from 'moment-timezone';
 
+defineOptions({
+  name: 'OrderDistributeCreditCard'
+});
+
 const page = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const tableData = ref<CardInfoProps[]>([]);

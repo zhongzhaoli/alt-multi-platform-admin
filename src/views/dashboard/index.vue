@@ -41,6 +41,10 @@ import TiktokSaleCard from './components/TiktokSaleCard/index.vue';
 import MonitorCard from './components/MonitorCard/index.vue';
 import { getCssVariableValue } from '@/utils/css';
 
+defineOptions({
+  name: 'Dashboard'
+});
+
 let normalPadding: string | number = getCssVariableValue('--normal-padding');
 normalPadding = parseFloat((normalPadding as string).replace('px', ''));
 </script>

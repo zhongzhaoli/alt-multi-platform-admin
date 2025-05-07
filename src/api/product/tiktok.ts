@@ -31,6 +31,8 @@ export interface TiktokProductFilterProps {
   status: ProductStatus;
   asin: string;
   sku: string;
+  start_stock_number: number;
+  end_stock_number: number;
 }
 
 export interface GetProductDto extends Partial<TiktokProductFilterProps> {

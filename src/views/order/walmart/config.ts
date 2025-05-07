@@ -64,11 +64,25 @@ export const filterColumns: FilterColumnProps[] = [
     prop: 'customer_order_id'
   },
   {
+    label: 'SKU',
+    type: 'input',
+    multiple: true,
+    prop: 'skus'
+  },
+  {
     label: '订单状态',
     type: 'select',
     prop: 'order_line_status',
     multiple: true,
     selectOptions: walmartStatusMap
+  },
+  {
+    label: '下单时间',
+    type: 'dateRange',
+    startKey: 'start_date',
+    endKey: 'end_date',
+    prop: 'order_date',
+    width: 240
   }
 ];
 

@@ -54,6 +54,10 @@ import { downloadCore, RenderCopyIcon } from '@/utils';
 import { useFullLoading } from '@/hooks/useFullLoading';
 import axios, { CancelTokenSource } from 'axios';
 
+defineOptions({
+  name: 'OrderPurchaseLogistics'
+});
+
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = shallowRef<LogisticsProps[]>([]);
 const page = shallowRef(PAGE);

@@ -44,6 +44,10 @@ import FilterContainer from '@/components/FilterContainer/index.vue';
 import { ref, shallowRef, unref } from 'vue';
 import * as config from './config';
 
+defineOptions({
+  name: 'ListingTiktokLogs'
+});
+
 const filterValue = ref<Partial<FilterDto>>({});
 const tableData = shallowRef<TiktokLogsProps[]>([]);
 const total = shallowRef(0);

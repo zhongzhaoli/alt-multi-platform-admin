@@ -292,6 +292,10 @@ import { ElMessage } from 'element-plus';
 import { useFullLoading } from '@/hooks/useFullLoading';
 import axios, { CancelTokenSource } from 'axios';
 
+defineOptions({
+  name: 'OrderWalmart'
+});
+
 // 排序条件变化
 const sortOrder = shallowRef<{ [key: string]: 'DESC' | 'ASC' } | null>(null);
 const sortChange = (data: { column: any; prop: string; order: any }) => {

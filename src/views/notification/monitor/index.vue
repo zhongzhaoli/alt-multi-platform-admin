@@ -47,6 +47,10 @@ import { ref, shallowRef } from 'vue';
 import * as config from './config';
 import moment from 'moment-timezone';
 
+defineOptions({
+  name: 'NotificationMonitor'
+});
+
 const filterValue = ref<Partial<FilterDto>>({});
 const loading = shallowRef(false);
 const tableData = shallowRef<MonitorNotificationProps[]>([]);

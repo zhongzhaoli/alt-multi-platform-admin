@@ -104,6 +104,10 @@ import { RenderCopyIcon } from '@/utils/index';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import moment from 'moment-timezone';
 
+defineOptions({
+  name: 'RefundWalmart'
+});
+
 const filterValue = ref<Partial<WalmartRefunFilterProps>>({});
 const tableData = shallowRef<RefundWalmartProps[]>([]);
 const total = shallowRef(0);

@@ -206,6 +206,10 @@ import CreditCard from './components/CreditCard.vue';
 import CreditCardInfo from './components/CreditCardInfo.vue';
 import AdminPurchase from './components/AdminPurchase.vue';
 
+defineOptions({
+  name: 'OrderPurchase'
+});
+
 const filterValue = ref<Partial<config.FilterDto>>({});
 const tableData = ref<OrderProps[]>([]);
 const page = shallowRef(PAGE);
