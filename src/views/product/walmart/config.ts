@@ -66,6 +66,14 @@ export const filterColumns: FilterColumnProps[] = [
     selectOptions: walmartProductStatusMap
   },
   {
+    label: '库存数量',
+    type: 'numberRange',
+    prop: 'stock',
+    startKey: 'start_stock_number',
+    endKey: 'end_stock_number',
+    width: 180
+  },
+  {
     label: '产品信息',
     prop: 'keyword',
     type: 'input',
