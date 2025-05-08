@@ -1,4 +1,4 @@
-import { type TableColumnProps, HandleColumnProps } from 'tsx-element-table';
+import { type TableColumnProps } from 'tsx-element-table';
 import { type FilterColumnProps } from '@/components/FilterContainer/types';
 import { CreateRouterDto } from '@/api/system/router';
 
@@ -62,21 +62,6 @@ export const tableColumns: TableColumnProps[] = [
     width: '100',
     prop: 'sort'
   }
-  // {
-  //   prop: 'action',
-  //   label: '操作',
-  //   width: '160',
-  //   fixed: 'right',
-  //   align: 'center',
-  // },
-];
-
-export const handleLeftButtons: HandleColumnProps[] = [
-  // {
-  //   label: '新增',
-  //   key: 'create',
-  //   type: 'primary'
-  // }
 ];
 
 export const initFormValue: CreateRouterDto = {

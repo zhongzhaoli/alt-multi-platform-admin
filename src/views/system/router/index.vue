@@ -1,13 +1,5 @@
 <template>
   <div class="container">
-    <div class="filterBox">
-      <FilterContainer
-        v-model="filterValue"
-        :columns="config.filterColumns"
-        @submit="getListFun"
-        @reset="getListFun"
-      />
-    </div>
     <div v-loading="loading" class="tableBox">
       <TsxElementTable
         :table-columns="config.tableColumns"
@@ -17,8 +9,7 @@
           rowKey: 'id'
         }"
         :handle="{
-          show: true,
-          columns: config.handleLeftButtons
+          show: false
         }"
         :pagination="{
           show: false
@@ -39,25 +30,19 @@
 </template>
 <script setup lang="ts">
 import TsxElementTable from 'tsx-element-table';
-import FilterContainer from '@/components/FilterContainer/index.vue';
-// import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import { MenusProps } from './components/Form.vue';
 import * as config from './config';
-import { ref, shallowReactive, shallowRef } from 'vue';
-import * as API_ROUTER from '@/api/system/router';
+import { shallowReactive, shallowRef } from 'vue';
+import * as API_USER from '@/api/user/user';
 import { _RouteRecordBase } from 'vue-router';
 
-let tableData = shallowReactive<API_ROUTER.DataProps[]>([]);
-// let treeSelectData = shallowReactive<MenusProps[]>([]);
+let tableData = shallowReactive<API_USER.UserRoutesProps[]>([]);
 const loading = shallowRef(false);
-const filterValue = ref<Partial<config.FilterDto>>({});
 
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await API_ROUTER.getRouterList({
-      ...filterValue.value
-    });
+    const { data } = await API_USER.getUserRoutes();
     const handledData = (data || []).map((item) => {
       return {
         ...item,
@@ -68,7 +53,6 @@ const getListFun = async () => {
       };
     });
     tableData = handledData;
-    // treeSelectData = generatePidList(handledData);
     generatePidList(handledData);
   } catch (err) {
     console.log(err);
@@ -80,8 +64,8 @@ const getListFun = async () => {
 getListFun();
 
 // 生成树目录 选择上级菜单元数据
-const generatePidList = (arr: API_ROUTER.DataProps[]): MenusProps[] => {
-  const fn = (list: API_ROUTER.DataProps[]) => {
+const generatePidList = (arr: API_USER.UserRoutesProps[]): MenusProps[] => {
+  const fn = (list: API_USER.UserRoutesProps[]) => {
     const result: MenusProps[] = [];
     list.forEach((item) => {
       let newItem: MenusProps;
@@ -99,7 +83,7 @@ const generatePidList = (arr: API_ROUTER.DataProps[]): MenusProps[] => {
           children: []
         };
         if (item.children) {
-          newItem.children.push(...fn(item.children as API_ROUTER.DataProps[]));
+          newItem.children.push(...fn(item.children as API_USER.UserRoutesProps[]));
         }
         result.push(newItem);
       }
@@ -110,4 +94,10 @@ const generatePidList = (arr: API_ROUTER.DataProps[]): MenusProps[] => {
   return [{ label: '根目录', type: 'ROOT', value: 0, children }];
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  & > .tableBox {
+    margin-top: 0;
+  }
+}
+</style>

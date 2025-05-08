@@ -87,7 +87,7 @@ import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ROUTE_TYPE_ENUM } from '@/constants/route';
 import * as API_ROLE from '@/api/system/role';
-import { DataProps, getRouterList } from '@/api/system/router';
+import { getUserRoutes, UserRoutesProps } from '@/api/user/user';
 import { ElMessage, FormInstance } from 'element-plus';
 import moment from 'moment-timezone';
 
@@ -187,7 +187,7 @@ const editRoleFun = async () => {
 // 设置权限
 const selectPermissionVisible = shallowRef(false);
 const permissionLoading = shallowRef(false);
-const menuList = shallowRef<DataProps[]>([]);
+const menuList = shallowRef<UserRoutesProps[]>([]);
 const defaultCheckedKeys = shallowRef<string[]>([]);
 const tempRoleId = shallowRef<string>('');
 const perimissionTreeRef = shallowRef<{
@@ -203,7 +203,7 @@ const getPermissionList = async () => {
   permissionLoading.value = true;
   try {
     const [data1, data2] = await Promise.all([
-      getRouterList(),
+      getUserRoutes(),
       API_ROLE.getRoleRouter(tempRoleId.value)
     ]);
     menuList.value = data1.data || [];
