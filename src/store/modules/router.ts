@@ -1,19 +1,18 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { RouteRecordRaw } from 'vue-router';
-import { getUserRoutes } from '@/api/user/user';
+import { getUserRoutes, UserRoutesProps } from '@/api/user/user';
 
 export const useRouterStore = defineStore('router', () => {
   // 处理后的路由
-  const allRoutes = ref<RouteRecordRaw[]>([]);
+  const allRoutes = ref<UserRoutesProps[]>([]);
   // 接口获取的路由
-  const asyncRoutes = ref<RouteRecordRaw[]>([]);
+  const asyncRoutes = ref<UserRoutesProps[]>([]);
 
-  const setAllRoutes = (routes: RouteRecordRaw[]) => {
+  const setAllRoutes = (routes: UserRoutesProps[]) => {
     allRoutes.value = routes;
   };
 
-  const setAsyncRoutes = (routes: RouteRecordRaw[]) => {
+  const setAsyncRoutes = (routes: UserRoutesProps[]) => {
     asyncRoutes.value = routes;
   };
 
