@@ -21,6 +21,7 @@
             data: summaryList,
             border: true,
             showSummary: true,
+            loading,
             summaryMethod: getSummaries
           }"
           :pagination="{
