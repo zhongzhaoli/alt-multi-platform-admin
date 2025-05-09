@@ -38,7 +38,7 @@ import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import { ref, shallowRef } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import { GetListDto, getPerformanceList, PerformanceProps } from '@/api/performance';
+import { GetListDto, getPerformanceList, PerformanceProps } from '@/api/performance/walmart';
 import moment from 'moment-timezone';
 
 defineOptions({

@@ -59,7 +59,6 @@
         </template>
         <template #table-handle="{ row }">
           <el-button type="primary" link @click="editDialog(row)"> 编辑 </el-button>
-          <el-button type="primary" link @click="scoreDialog(row)">健康评分</el-button>
         </template>
       </TsxElementTable>
     </div>
@@ -117,167 +116,6 @@
         </el-form-item>
       </el-form>
     </ConfirmDialog>
-    <el-drawer
-      v-model="scoreDialogVisible"
-      title="健康评分"
-      size="800px"
-      header-class="hidden"
-      @closed="drawerClosed"
-    >
-      <template v-if="tempStoreValues">
-        <div
-          v-if="tempStoreValues.score !== null && tempStoreValues !== undefined"
-          class="scoreBox"
-        >
-          <div class="scoreTitle">
-            <div>{{ tempStoreValues.status }}</div>
-            <div v-if="tempStoreValues.available_1 === 0" class="avaliable">
-              <el-icon><CircleCloseFilled /></el-icon>
-              <span class="text">店铺已停用</span>
-            </div>
-          </div>
-          <div class="currentScore">
-            <div
-              :style="{
-                left: `calc(${(tempStoreValues.score / 1000) * 100}% - 15px)`
-              }"
-            >
-              {{ tempStoreValues.score }}
-              <i class="ri-arrow-down-s-fill" />
-            </div>
-          </div>
-          <div class="scoreProgress">
-            <div class="scale" />
-            <div class="scale" />
-            <div class="scale" />
-            <div class="scale" />
-            <el-progress
-              :percentage="tempStoreValues.score / 10"
-              color="#f0a82c"
-              stroke-linecap="square"
-              :show-text="false"
-            />
-          </div>
-          <div class="scoreScaleTextBox">
-            <div>0</div>
-            <div>50</div>
-            <div>100</div>
-            <div>150</div>
-            <div>200</div>
-            <div>1000</div>
-          </div>
-          <div class="assembleBox">
-            <div>差</div>
-            <div>优秀</div>
-          </div>
-        </div>
-        <div class="otherMessageBox" :class="{ pt: !tempStoreValues.score }">
-          <el-tabs v-model="activeName" class="tabsBox" @tab-click="handleClick">
-            <el-tab-pane label="违规记录" name="violations">
-              <div class="tableBox">
-                <el-table
-                  v-loading="scoreTableLoading"
-                  :data="violationsTableData"
-                  border
-                  style="height: 100%"
-                >
-                  <el-table-column label="违规原因" width="200px">
-                    <template #default="{ row }">
-                      <TextEllipsis :text="row.violation_reason" :line="1" />
-                      <div class="d-flex align-center w-100">
-                        <RenderCopyIcon
-                          :text="row.violation_id"
-                          margin="r"
-                          title="编号"
-                          type="info"
-                        />
-                        <span class="copyText">
-                          <TextEllipsis :text="row.violation_id" :line="1" />
-                        </span>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="violation_details" label="处罚" />
-                  <el-table-column label="日期">
-                    <template #default="{ row }">
-                      <div>{{ row.violation_date }}</div>
-                      <div>{{ row.violation_time }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="申诉状态" width="120px" align="center">
-                    <template #default="{ row }">
-                      <div class="appealStatus">{{ row.violation_appeal_status }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="状态" width="120px" align="center">
-                    <template #default="{ row }">
-                      <el-tag type="danger" disable-transitions>{{ row.violation_status }}</el-tag>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </div>
-              <div class="paginationBox">
-                <el-pagination
-                  v-model="scorePage"
-                  background
-                  layout="total, prev, pager, next"
-                  :total="scoreTotal"
-                  @change="getViolationsList"
-                />
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="警告记录" name="warnings">
-              <div class="tableBox">
-                <el-table
-                  v-loading="scoreTableLoading"
-                  :data="warningsTableData"
-                  border
-                  height="100%"
-                  style="height: 100%"
-                >
-                  <el-table-column label="警告原因">
-                    <template #default="{ row }">
-                      <TextEllipsis :text="row.warning_reason" :line="1" />
-                      <div class="d-flex align-center w-100">
-                        <RenderCopyIcon
-                          :text="row.warning_id"
-                          margin="r"
-                          title="编号"
-                          type="info"
-                        />
-                        <span class="copyText">
-                          <TextEllipsis :text="row.warning_id" :line="1" />
-                        </span>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="警告日期">
-                    <template #default="{ row }">
-                      <div>{{ row.warning_date }}</div>
-                      <div>{{ row.warning_time }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="状态" width="100px" align="center">
-                    <template #default="{ row }">
-                      <el-tag type="warning" disable-transitions>{{ row.warning_status }}</el-tag>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </div>
-              <div class="paginationBox">
-                <el-pagination
-                  v-model:current-page="scorePage"
-                  background
-                  layout="total, prev, pager, next"
-                  :total="scoreTotal"
-                  @change="getWarningsList"
-                />
-              </div>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-      </template>
-    </el-drawer>
   </div>
 </template>
 <script setup lang="ts">
@@ -296,7 +134,6 @@ import SwitchHandle from '@/components/SwitchHandle/index.vue';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import moment from 'moment-timezone';
 import { ElMessage } from 'element-plus';
-import { CircleCloseFilled } from '@element-plus/icons-vue';
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const currentPage = shallowRef(PAGE);
@@ -390,80 +227,6 @@ const submitFun = () => {
       }
     });
   });
-};
-
-// 健康评分
-const scoreDialogVisible = shallowRef(false);
-const tempStoreValues = ref<API_TIKTOK.StoreProps>();
-const activeName = shallowRef<'violations' | 'warnings'>('violations');
-const scoreTableLoading = shallowRef(false);
-const violationsTableData = shallowRef<API_TIKTOK.ViolationProps[]>([]);
-const scoreTotal = shallowRef(0);
-const scorePage = shallowRef(PAGE);
-const scoreDialog = (row: API_TIKTOK.StoreProps) => {
-  tempStoreValues.value = row;
-  scoreDialogVisible.value = true;
-  getViolationsList();
-};
-const getViolationsList = async () => {
-  if (!tempStoreValues.value) return;
-  scoreTableLoading.value = true;
-  try {
-    const { data } = await API_TIKTOK.getViolationsList({
-      shop_id: tempStoreValues.value!.shop_id,
-      page: scorePage.value,
-      page_size: PAGE_SIZE
-    });
-    scoreTotal.value = data?.total || 0;
-    violationsTableData.value = (data?.list || []).map((item) => ({
-      ...item,
-      violation_date: moment(item.violation_datetime).format('YYYY/MM/DD'),
-      violation_time: moment(item.violation_datetime).format('HH:mm:ss')
-    }));
-  } catch (err) {
-    console.log(err);
-  } finally {
-    scoreTableLoading.value = false;
-  }
-};
-const warningsTableData = shallowRef<API_TIKTOK.WarningsProps[]>([]);
-const getWarningsList = async () => {
-  console.log(scorePage.value);
-  if (!tempStoreValues.value) return;
-  scoreTableLoading.value = true;
-  try {
-    const { data } = await API_TIKTOK.getWarningsList({
-      shop_id: tempStoreValues.value!.shop_id,
-      page: scorePage.value,
-      page_size: PAGE_SIZE
-    });
-    scoreTotal.value = data?.total || 0;
-    warningsTableData.value = (data?.list || []).map((item) => ({
-      ...item,
-      warning_date: moment(item.warning_datetime).format('YYYY/MM/DD'),
-      warning_time: moment(item.warning_datetime).format('HH:mm:ss')
-    }));
-  } catch (err) {
-    console.log(err);
-  } finally {
-    scoreTableLoading.value = false;
-  }
-};
-const drawerClosed = () => {
-  tempStoreValues.value = undefined;
-  violationsTableData.value = [];
-  warningsTableData.value = [];
-  scoreTotal.value = 0;
-  activeName.value = 'violations';
-};
-
-const handleClick = (tab: any) => {
-  activeName.value = tab.name;
-  if (activeName.value === 'violations') {
-    getViolationsList();
-  } else {
-    getWarningsList();
-  }
 };
 
 getListFun();

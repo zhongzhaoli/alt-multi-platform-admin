@@ -116,7 +116,7 @@ export const tableColumns: TableColumnProps[] = [
   },
   {
     label: '操作',
-    width: 160,
+    width: 80,
     align: 'center',
     fixed: 'right',
     prop: 'handle'
