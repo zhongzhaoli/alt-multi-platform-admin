@@ -19,7 +19,7 @@ export interface SheinProductProps {
   supplier_code: string;
   supplier_sku: string;
   up_datetime: string;
-  new_title: string;
+  product_name: string;
 }
 
 export interface SheinProductFilterProps {

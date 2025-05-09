@@ -46,7 +46,7 @@
             type="ordinary"
             :size="40"
             :image-url="row.img_path_list.length ? row.img_path_list[0] : null"
-            :product-name="row.new_title"
+            :product-name="row.product_name"
             :desc-list="[
               {
                 text: row.shein_sku,

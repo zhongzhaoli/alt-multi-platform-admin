@@ -34,7 +34,7 @@
           </div>
         </template>
         <template #table-shop_status="{ row }">
-          <el-tag v-if="row.status" type="success" disable-transitions>存活</el-tag>
+          <el-tag v-if="row.shop_status" type="success" disable-transitions>存活</el-tag>
           <el-tag v-else type="danger" disable-transitions>死亡</el-tag>
         </template>
       </TsxElementTable>
