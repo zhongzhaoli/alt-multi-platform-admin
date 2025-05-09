@@ -107,7 +107,7 @@ import { RenderCopyIcon } from '@/utils';
 import moment from 'moment-timezone';
 
 defineOptions({
-  name: 'ProductTiktok'
+  name: 'ProductShein'
 });
 
 const filterValue = ref<Partial<SheinProductFilterProps>>({});
