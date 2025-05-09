@@ -58,18 +58,13 @@ const page = shallowRef(PAGE);
 const total = shallowRef(0);
 const pageSize = shallowRef(PAGE_SIZE);
 
-const startOfMonth = moment();
-const endOfMonth = moment().subtract(1, 'month');
-
 const getListFun = async () => {
   loading.value = true;
   try {
     const { data } = await getMonitorNotificationList({
       page: page.value,
       page_size: pageSize.value,
-      ...filterValue.value,
-      start_date: endOfMonth.format('YYYY-MM-DD'),
-      end_date: startOfMonth.format('YYYY-MM-DD')
+      ...filterValue.value
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
