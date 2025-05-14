@@ -146,11 +146,12 @@
               </div>
               <div class="paginationBox">
                 <el-pagination
-                  v-model="scorePage"
+                  v-model:current-page="scorePage"
                   background
                   layout="total, prev, pager, next"
                   :total="violotionsTotal"
-                  @change="getViolationsList"
+                  :page-size="PAGE_SIZE"
+                  @change="getViolationsListFun"
                 />
               </div>
             </el-tab-pane>
@@ -198,7 +199,8 @@
                   background
                   layout="total, prev, pager, next"
                   :total="warningsTotal"
-                  @change="getWarningsList"
+                  :page-size="PAGE_SIZE"
+                  @change="getWarningsListFun"
                 />
               </div>
             </el-tab-pane>
@@ -289,7 +291,6 @@ const getViolationsListFun = async () => {
 };
 const warningsTableData = shallowRef<WarningsProps[]>([]);
 const getWarningsListFun = async () => {
-  console.log(scorePage.value);
   if (!tempStoreValues.value) return;
   scoreTableLoading.value = true;
   try {
@@ -321,6 +322,7 @@ const drawerClosed = () => {
 
 const handleClick = (tab: any) => {
   activeName.value = tab.name;
+  scorePage.value = PAGE;
   if (activeName.value === 'violations') {
     getViolationsListFun();
   } else {
