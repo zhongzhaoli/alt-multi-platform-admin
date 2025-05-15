@@ -8,7 +8,7 @@
         @reset="getListFun"
       >
         <template #shop_id="{ form, row, change }">
-          <SelectSheinStore v-model="form[row.prop]" multiple @change="change" />
+          <SelectTemuStore v-model="form[row.prop]" multiple @change="change" />
         </template>
       </FilterContainer>
     </div>
@@ -49,8 +49,8 @@
             :product-name="row.product_name"
             :desc-list="[
               {
-                text: row.shein_sku,
-                prefix: 'SKU'
+                text: row.skuId,
+                prefix: 'SKU ID'
               }
             ]"
           />
@@ -78,8 +78,8 @@
           <TextEllipsis :text="row.pasin" :line="1" bold />
         </template>
         <template #table-supplier="{ row }">
-          <TextEllipsis :text="row.supplier_code" :line="1" />
-          <TextEllipsis :text="row.supplier_sku" :line="1" bold />
+          <TextEllipsis :text="row.asin_to_sku" :line="1" />
+          <TextEllipsis :text="row.pasin_to_sku" :line="1" bold />
         </template>
         <template #table-skc="{ row }">
           <TextEllipsis :text="row.skc_name" :line="1" />
@@ -92,44 +92,38 @@
 <script setup lang="ts">
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import TsxElementTable from 'tsx-element-table';
-import SelectSheinStore from '@/components/SelectSheinStore/index.vue';
+import SelectTemuStore from '@/components/SelectTemuStore/index.vue';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import * as config from './config';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { ref, shallowRef } from 'vue';
 import {
-  getSheinProductList,
-  type SheinProductProps,
-  type SheinProductFilterProps
-} from '@/api/product/shein';
+  getTemuProductList,
+  type TemuProductProps,
+  type TemuProductFilterProps
+} from '@/api/product/temu';
 import ProductItem from '@/components/ProductItem/index.vue';
 import { RenderCopyIcon } from '@/utils';
-import moment from 'moment-timezone';
 
 defineOptions({
   name: 'ProductShein'
 });
 
-const filterValue = ref<Partial<SheinProductFilterProps>>({});
+const filterValue = ref<Partial<TemuProductFilterProps>>({});
 const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
-const tableData = shallowRef<SheinProductProps[]>([]);
+const tableData = shallowRef<TemuProductProps[]>([]);
 const loading = shallowRef(false);
 const total = shallowRef(0);
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await getSheinProductList({
+    const { data } = await getTemuProductList({
       page: currentPage.value,
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = (data?.list || []).map((item) => {
-      return {
-        ...item,
-        updated_at: moment(item.up_datetime).format('YYYY-MM-DD HH:mm:ss')
-      };
-    });
+    tableData.value = data?.list || [];
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

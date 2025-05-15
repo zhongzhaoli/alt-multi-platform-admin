@@ -42,8 +42,14 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
+    label: 'ms Cookie',
+    prop: 'miaoshou_cookie',
+    minWidth: 200,
+    align: 'center'
+  },
+  {
     label: 'Cookie',
-    prop: 'shein_cookie',
+    prop: 'temu_cookie',
     minWidth: 200,
     align: 'center'
   }

@@ -18,7 +18,7 @@
   />
 </template>
 <script setup lang="ts">
-import { GetStoreDto, getStoreList, StoreProps } from '@/api/system/sheinStore';
+import { GetStoreDto, getStoreList, StoreProps } from '@/api/system/temuStore';
 import SelectLoadMore from '@/components/SelectLoadMore/index.vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
 import { useVModel } from '@vueuse/core';
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<ComponentProps>(), {
   remote: true,
   filterable: true,
   defaultOptions: () => [],
-  componentKey: 'selectSheinStore'
+  componentKey: 'selectTemuStore'
 });
 const emits = defineEmits(['update:modelValue', 'change']);
 const selectValue = useVModel(props, 'modelValue', emits);

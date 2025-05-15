@@ -27,10 +27,16 @@
         @page-change="getListFun"
         @table-refresh="getListFun"
       >
-        <template #table-shein_cookie="{ row }">
+        <template #table-miaoshou_cookie="{ row }">
           <div class="textBox">
-            <RenderCopyIcon title="Shein Cookie" :text="row.shein_cookie" margin="r" />
-            <TextEllipsis :text="row.shein_cookie" :line="1" />
+            <RenderCopyIcon title="Miaoshou Cookie" :text="row.miaoshou_cookie" margin="r" />
+            <TextEllipsis :text="row.miaoshou_cookie" :line="1" />
+          </div>
+        </template>
+        <template #table-temu_cookie="{ row }">
+          <div class="textBox">
+            <RenderCopyIcon title="Temu Cookie" :text="row.temu_cookie" margin="r" />
+            <TextEllipsis :text="row.temu_cookie" :line="1" />
           </div>
         </template>
         <template #table-shop_status="{ row }">
@@ -46,7 +52,7 @@ import TsxElementTable from 'tsx-element-table';
 import * as config from './config';
 import { ref, shallowRef, unref } from 'vue';
 import { PAGE, PAGE_SIZE } from '@/constants/app';
-import * as API_SHEIN from '@/api/system/sheinStore';
+import * as API_TEMU from '@/api/system/temuStore';
 import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import { RenderCopyIcon } from '@/utils';
 import FilterContainer from '@/components/FilterContainer/index.vue';
@@ -56,13 +62,13 @@ const currentPage = shallowRef(PAGE);
 const pageSize = shallowRef(PAGE_SIZE);
 const total = shallowRef(0);
 const loading = shallowRef(false);
-const tableData = shallowRef<API_SHEIN.StoreProps[]>([]);
+const tableData = shallowRef<API_TEMU.StoreProps[]>([]);
 
 const getListFun = async () => {
   if (loading.value) return;
   loading.value = true;
   try {
-    const { data } = await API_SHEIN.getStoreList({
+    const { data } = await API_TEMU.getStoreList({
       page: currentPage.value,
       page_size: pageSize.value,
       ...unref(filterValue)
