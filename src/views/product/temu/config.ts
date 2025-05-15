@@ -65,6 +65,22 @@ export const filterColumns: FilterColumnProps[] = [
     selectOptions: sheinProductStatusMap
   },
   {
+    label: '监控',
+    prop: 'monitor',
+    type: 'select',
+    width: 180,
+    selectOptions: [
+      {
+        label: '已开启',
+        value: 1
+      },
+      {
+        label: '未开启',
+        value: 0
+      }
+    ]
+  },
+  {
     label: '产品ASIN信息',
     prop: 'keyword',
     type: 'input',

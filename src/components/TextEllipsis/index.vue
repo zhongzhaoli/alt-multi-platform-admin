@@ -18,7 +18,7 @@
 import { onMounted, shallowRef, watch } from 'vue';
 
 interface ComponentProps {
-  text: string | number;
+  text: string | number | null;
   line?: number;
   showAfter?: number;
   prefix?: string;
