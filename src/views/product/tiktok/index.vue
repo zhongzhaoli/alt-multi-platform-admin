@@ -7,8 +7,8 @@
         @submit="getListFun"
         @reset="getListFun"
       >
-        <template #shop_id="{ form, row }">
-          <SelectTiktokStore v-model="form[row.prop]" multiple @change="getListFun" />
+        <template #shop_id="{ form, row, change }">
+          <SelectTiktokStore v-model="form[row.prop]" multiple @change="change" />
         </template>
       </FilterContainer>
     </div>
