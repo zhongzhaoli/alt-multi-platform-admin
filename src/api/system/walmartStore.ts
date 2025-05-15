@@ -23,6 +23,7 @@ export interface StoreProps {
   pause: 1 | 0;
   listing_min_price: number;
   listing_max_price: number;
+  loading: boolean;
 }
 
 export interface HandleStoreProps {

@@ -75,7 +75,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '是否存活',
     prop: 'available',
-    width: 100,
+    width: 130,
     align: 'center'
   },
   {

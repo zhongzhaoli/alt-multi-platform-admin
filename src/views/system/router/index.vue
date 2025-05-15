@@ -33,16 +33,16 @@ import TsxElementTable from 'tsx-element-table';
 import { MenusProps } from './components/Form.vue';
 import * as config from './config';
 import { shallowReactive, shallowRef } from 'vue';
-import * as API_USER from '@/api/user/user';
+import * as API_ROUTER from '@/api/system/router';
 import { _RouteRecordBase } from 'vue-router';
 
-let tableData = shallowReactive<API_USER.UserRoutesProps[]>([]);
+let tableData = shallowReactive<API_ROUTER.DataProps[]>([]);
 const loading = shallowRef(false);
 
 const getListFun = async () => {
   loading.value = true;
   try {
-    const { data } = await API_USER.getUserRoutes();
+    const { data } = await API_ROUTER.getRouterList();
     const handledData = (data || []).map((item) => {
       return {
         ...item,
@@ -64,8 +64,8 @@ const getListFun = async () => {
 getListFun();
 
 // 生成树目录 选择上级菜单元数据
-const generatePidList = (arr: API_USER.UserRoutesProps[]): MenusProps[] => {
-  const fn = (list: API_USER.UserRoutesProps[]) => {
+const generatePidList = (arr: API_ROUTER.DataProps[]): MenusProps[] => {
+  const fn = (list: API_ROUTER.DataProps[]) => {
     const result: MenusProps[] = [];
     list.forEach((item) => {
       let newItem: MenusProps;
@@ -83,7 +83,7 @@ const generatePidList = (arr: API_USER.UserRoutesProps[]): MenusProps[] => {
           children: []
         };
         if (item.children) {
-          newItem.children.push(...fn(item.children as API_USER.UserRoutesProps[]));
+          newItem.children.push(...fn(item.children as API_ROUTER.DataProps[]));
         }
         result.push(newItem);
       }

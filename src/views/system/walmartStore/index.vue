@@ -52,8 +52,21 @@
           </div>
         </template>
         <template #table-available="{ row }">
-          <el-tag v-if="row.available" type="success" disable-transitions>存活</el-tag>
-          <el-tag v-else type="danger" disable-transitions>死亡</el-tag>
+          <div v-permission="{ value: 'system:walmartStore:avaliable', type: 'some' }">
+            <el-radio-group
+              v-model="row.available"
+              v-loading="row.loading"
+              size="small"
+              @change="changeAvailable(row)"
+            >
+              <el-radio-button label="存活" :value="1" />
+              <el-radio-button label="死亡" :value="0" />
+            </el-radio-group>
+          </div>
+          <div v-permission="{ value: 'system:walmartStore:avaliable', type: 'noSome' }">
+            <el-tag v-if="row.available" type="success" disable-transitions>存活</el-tag>
+            <el-tag v-else type="danger" disable-transitions>死亡</el-tag>
+          </div>
         </template>
         <template #table-handle="{ row }">
           <el-button type="primary" link @click="editDialog(row)"> 编辑 </el-button>
@@ -181,6 +194,7 @@ const getListFun = async () => {
     });
     tableData.value = (data?.list || []).map((item) => ({
       ...item,
+      loading: false,
       created_at: moment(item.created_at).format('YYYY-MM-DD HH:mm:ss')
     }));
     total.value = data?.total || 0;
@@ -229,6 +243,19 @@ const dialogClosed = () => {
   editFormValues.value = {};
   editFormRef.value?.resetFields();
 };
+
+const changeAvailable = async (row: StoreProps) => {
+  row.loading = true;
+  try {
+    await editStore(row as EditStoreDto);
+    ElMessage.success('编辑成功');
+  } catch (err) {
+    console.log(err);
+  } finally {
+    row.loading = false;
+  }
+};
+
 const submitFun = () => {
   editFormRef.value?.validate(async (valid) => {
     if (!valid) {

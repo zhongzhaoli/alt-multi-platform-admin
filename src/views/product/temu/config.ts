@@ -1,4 +1,4 @@
-import { ProductStatus } from '@/api/product/shein';
+import { ProductStatus } from '@/api/product/temu';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
 import { ElTag, ElText, FormRules } from 'element-plus';
@@ -44,6 +44,11 @@ const sheinProductStatusMap: Array<{
     label: '下架',
     value: 6,
     type: 'warning'
+  },
+  {
+    label: '类目匹配错误',
+    value: 7,
+    type: 'danger'
   }
 ];
 

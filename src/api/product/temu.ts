@@ -1,7 +1,7 @@
 import { ResponsePageJson } from '@/config/request';
 import { request } from '@/utils/request';
 
-export type ProductStatus = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type ProductStatus = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export interface TemuProductProps {
   amazon_price: null | number;

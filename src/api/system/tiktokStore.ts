@@ -16,6 +16,7 @@ export interface StoreProps {
   status: string;
   score: number;
   available_1: 0 | 1;
+  loading: boolean;
 }
 export interface GetStoreDto {
   page: number;
