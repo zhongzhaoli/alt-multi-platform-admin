@@ -104,6 +104,7 @@ import {
 } from '@/api/product/temu';
 import ProductItem from '@/components/ProductItem/index.vue';
 import { RenderCopyIcon } from '@/utils';
+import moment from 'moment-timezone';
 
 defineOptions({
   name: 'ProductShein'
@@ -123,7 +124,12 @@ const getListFun = async () => {
       page_size: pageSize.value,
       ...filterValue.value
     });
-    tableData.value = data?.list || [];
+    tableData.value = (data?.list || []).map((item) => ({
+      ...item,
+      amazon_uptime: item.amazon_uptime
+        ? moment(item.amazon_uptime).format('YYYY-MM-DD HH:mm:ss')
+        : '-'
+    }));
     total.value = data?.total || 0;
   } catch (err) {
     console.log(err);

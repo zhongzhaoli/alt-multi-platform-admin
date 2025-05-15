@@ -4,15 +4,15 @@ import { request } from '@/utils/request';
 export type ProductStatus = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface TemuProductProps {
-  amazon_price: null;
-  amazon_stock: null;
-  amazon_uptime: null;
+  amazon_price: null | number;
+  amazon_stock: null | number;
+  amazon_uptime: string | null;
   asin: string;
   asin_to_sku: string;
   collectBoxDetailId: string;
   id: number;
   img_path_list: string[];
-  monitor: null;
+  monitor: null | 1 | 0;
   moveCollectTaskDetailIds: string;
   pasin: string;
   pasin_to_sku: string;

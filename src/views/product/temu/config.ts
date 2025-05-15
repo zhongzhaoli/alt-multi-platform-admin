@@ -1,7 +1,7 @@
 import { ProductStatus } from '@/api/product/shein';
 import type { FilterColumnProps } from '@/components/FilterContainer/types';
 import { Download } from '@element-plus/icons-vue';
-import { ElText, FormRules } from 'element-plus';
+import { ElTag, ElText, FormRules } from 'element-plus';
 import type { HandleRightColumnProps, TableColumnProps } from 'tsx-element-table';
 import { h } from 'vue';
 
@@ -130,8 +130,19 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '店铺ID',
     align: 'center',
-    width: 180,
+    width: 120,
     prop: 'shop_id'
+  },
+  {
+    label: '监控',
+    align: 'center',
+    width: 120,
+    prop: 'monitor',
+    formatter: (_row, _column, cellValue) => {
+      return h(ElTag, { disableTransitions: true, type: cellValue ? 'success' : 'info' }, () =>
+        cellValue ? '已开启' : '未开启'
+      );
+    }
   },
   {
     label: '原价 / 卖家报价 / Temu报价',
@@ -174,6 +185,16 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
+    label: '最新亚马逊价格',
+    align: 'center',
+    minWidth: 120,
+    prop: 'amazon_price',
+    formatter: (row) => {
+      const price = row.amazon_price ? `$${row.amazon_price.toFixed(2)}` : '-';
+      return h('b', {}, price);
+    }
+  },
+  {
     label: '状态',
     align: 'center',
     minWidth: 210,
@@ -184,13 +205,23 @@ export const tableColumns: TableColumnProps[] = [
     }
   },
   {
-    label: '库存',
+    label: '库存 / 亚马逊库存',
     align: 'center',
     prop: 'stock',
-    minWidth: 120,
-    formatter: (_row, _column, cellValue) => {
-      return h('b', null, cellValue || 0);
+    minWidth: 140,
+    formatter: (row, _column, cellValue) => {
+      return h('span', null, [
+        h('b', null, cellValue || 0),
+        h('span', { style: { color: '#999' } }, ' / '),
+        h('span', null, row.amazon_stock || 0)
+      ]);
     }
+  },
+  {
+    label: '亚马逊更新时间',
+    align: 'center',
+    minWidth: 160,
+    prop: 'amazon_uptime'
   }
 ];
 
