@@ -128,6 +128,10 @@ const getListFun = async () => {
       ...item,
       amazon_uptime: item.amazon_uptime
         ? moment(item.amazon_uptime).format('YYYY-MM-DD HH:mm:ss')
+        : '-',
+      push_date: item.push_date ? moment(item.push_date).format('YYYY-MM-DD HH:mm:ss') : '-',
+      confirm_date: item.confirm_date
+        ? moment(item.confirm_date).format('YYYY-MM-DD HH:mm:ss')
         : '-'
     }));
     total.value = data?.total || 0;

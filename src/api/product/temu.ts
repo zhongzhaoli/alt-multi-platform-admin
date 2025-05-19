@@ -26,6 +26,8 @@ export interface TemuProductProps {
   status: ProductStatus;
   stock: number;
   temu_price: number;
+  push_date: string;
+  confirm_date: string;
 }
 
 export interface TemuProductFilterProps {

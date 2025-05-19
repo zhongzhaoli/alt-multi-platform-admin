@@ -104,6 +104,28 @@ export const filterColumns: FilterColumnProps[] = [
       ],
       width: 100
     }
+  },
+  {
+    label: '日期范围',
+    prop: 'date',
+    type: 'dateRange',
+    multiple: true,
+    width: 320,
+    startKey: 'start_date',
+    endKey: 'end_date',
+    prefixSelect: {
+      options: [
+        {
+          label: '发布日期',
+          value: 'push_date'
+        },
+        {
+          label: '核对日期',
+          value: 'confirm_date'
+        }
+      ],
+      width: 100
+    }
   }
 ];
 
@@ -241,8 +263,20 @@ export const tableColumns: TableColumnProps[] = [
   {
     label: '亚马逊更新时间',
     align: 'center',
-    minWidth: 160,
+    minWidth: 180,
     prop: 'amazon_uptime'
+  },
+  {
+    label: '发布日期',
+    align: 'center',
+    minWidth: 180,
+    prop: 'push_date'
+  },
+  {
+    label: '核价日期',
+    align: 'center',
+    minWidth: 180,
+    prop: 'confirm_date'
   }
 ];
 
