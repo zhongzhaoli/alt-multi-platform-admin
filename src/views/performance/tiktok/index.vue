@@ -42,7 +42,7 @@
     <el-drawer
       v-model="scoreDialogVisible"
       title="健康评分"
-      size="800px"
+      size="1000px"
       header-class="hidden"
       @closed="drawerClosed"
     >
@@ -142,6 +142,11 @@
                       <el-tag type="danger" disable-transitions>{{ row.violation_status }}</el-tag>
                     </template>
                   </el-table-column>
+                  <el-table-column label="操作" width="100px" align="center">
+                    <template #default="{ row }">
+                      <el-button link type="primary" @click="openDetailV(row)">详情</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
               <div class="paginationBox">
@@ -191,6 +196,11 @@
                       <el-tag type="warning" disable-transitions>{{ row.warning_status }}</el-tag>
                     </template>
                   </el-table-column>
+                  <el-table-column label="操作" width="100px" align="center">
+                    <template #default="{ row }">
+                      <el-button link type="primary" @click="openDetailW(row)">详情</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
               <div class="paginationBox">
@@ -208,6 +218,50 @@
         </div>
       </template>
     </el-drawer>
+    <ConfirmDialog
+      v-model="reasonDetailVisible"
+      width="600px"
+      top="10vh"
+      title="违规/警告详情"
+      :show-confirm-btn="false"
+      cancel-btn-text="关闭"
+      @closed="reasonClosed"
+    >
+      <template v-if="reasonDetailV || reasonDetailW">
+        <template v-if="reasonDetailV">
+          <div class="violationDetailBox">
+            <template v-if="reasonDetailV.violation">
+              <b>警告详细信息</b>
+              <div v-html="reasonDetailV.violation" />
+            </template>
+            <template v-if="reasonDetailV.violation_detail">
+              <b>警告</b>
+              <div v-html="reasonDetailV.violation_detail" />
+            </template>
+            <template v-if="reasonDetailV.next_steps">
+              <b>后续步骤</b>
+              <div v-html="reasonDetailV.next_steps" />
+            </template>
+          </div>
+        </template>
+        <template v-if="reasonDetailW">
+          <div class="WarningDetailBox">
+            <template v-if="reasonDetailW.warning">
+              <b>警告详细信息</b>
+              <div v-html="reasonDetailW.warning" />
+            </template>
+            <template v-if="reasonDetailW.warning_detail">
+              <b>警告</b>
+              <div v-html="reasonDetailW.warning_detail" />
+            </template>
+            <template v-if="reasonDetailW.next_steps">
+              <b>后续步骤</b>
+              <div v-html="reasonDetailW.next_steps" />
+            </template>
+          </div>
+        </template>
+      </template>
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -220,14 +274,18 @@ import TextEllipsis from '@/components/TextEllipsis/index.vue';
 import { RenderCopyIcon } from '@/utils';
 import FilterContainer from '@/components/FilterContainer/index.vue';
 import SelectTiktokStore from '@/components/SelectTiktokStore/index.vue';
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue';
 import moment from 'moment-timezone';
 import { CircleCloseFilled } from '@element-plus/icons-vue';
 import {
   getViolationsList,
   getWarningsList,
   ViolationProps,
-  WarningsProps
+  ViolationReasonDetail,
+  WarningsProps,
+  WarningsReasonDetail
 } from '@/api/system/tiktokStore';
+import { ElMessage } from 'element-plus';
 
 const filterValue = ref<Partial<config.FilterDto>>({});
 const currentPage = shallowRef(PAGE);
@@ -289,6 +347,7 @@ const getViolationsListFun = async () => {
     scoreTableLoading.value = false;
   }
 };
+
 const warningsTableData = shallowRef<WarningsProps[]>([]);
 const getWarningsListFun = async () => {
   if (!tempStoreValues.value) return;
@@ -311,6 +370,37 @@ const getWarningsListFun = async () => {
     scoreTableLoading.value = false;
   }
 };
+
+const reasonDetailV = ref<ViolationReasonDetail | null>(null);
+const reasonDetailW = ref<WarningsReasonDetail | null>(null);
+const reasonDetailVisible = ref(false);
+const reasonClosed = () => {
+  reasonDetailV.value = null;
+  reasonDetailW.value = null;
+};
+const openDetailV = (row: ViolationProps) => {
+  if (row.specific_violation === null) {
+    return ElMessage.error('没有违规详情信息');
+  }
+  reasonDetailV.value = [row.specific_violation].map((item) => ({
+    violation: item.violation.replaceAll('\n', '<br />'),
+    violation_detail: item.violation_detail.replaceAll('\n', '<br />'),
+    next_steps: item.next_steps.replaceAll('\n', '<br />')
+  }))[0];
+  reasonDetailVisible.value = true;
+};
+const openDetailW = (row: WarningsProps) => {
+  if (row.specific_warning === null) {
+    return ElMessage.error('没有违规详情信息');
+  }
+  reasonDetailW.value = [row.specific_warning].map((item) => ({
+    warning: item.warning.replaceAll('\n', '<br />'),
+    warning_detail: item.warning_detail.replaceAll('\n', '<br />'),
+    next_steps: item.next_steps.replaceAll('\n', '<br />')
+  }))[0];
+  reasonDetailVisible.value = true;
+};
+
 const drawerClosed = () => {
   tempStoreValues.value = undefined;
   violationsTableData.value = [];
@@ -517,6 +607,19 @@ getListFun();
       height: 32px;
       display: flex;
       justify-content: flex-end;
+    }
+  }
+  & .violationDetailBox,
+  & .WarningDetailBox {
+    & b {
+      font-size: 16px;
+    }
+    & > div {
+      margin-left: 10px;
+      margin-top: 10px;
+    }
+    & > div:not(:last-child) {
+      margin-bottom: calc(var(--normal-padding) * 2);
     }
   }
 }

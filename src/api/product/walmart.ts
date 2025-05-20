@@ -55,3 +55,17 @@ export function retireProduct(data: { products: RetireProductProps[] }): Promise
     data
   });
 }
+
+export interface UpdateInventoryDto {
+  shop_id: string;
+  sku: string;
+  stock: number;
+}
+
+export function updateInventory(data: UpdateInventoryDto): Promise<any> {
+  return request({
+    url: '/walmart/products/setting/up/inventory',
+    method: 'put',
+    data
+  });
+}

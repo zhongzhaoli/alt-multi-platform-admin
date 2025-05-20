@@ -7,6 +7,9 @@ export interface ListingSummaryProps {
   shop_name: string;
   upload_products: number;
   reupload_products: number;
+  in_stock_products: number;
+  inventory_link_ratio: string;
+  out_of_stock_products: number;
 }
 export interface OrderSummaryProps {
   shop_id: string;
@@ -17,7 +20,10 @@ export interface OrderSummaryProps {
 export interface ListingSummaryTotalProps {
   publish_products: number | null;
   unpublish_products: number | null;
-  total_sale_products: number | null;
+  sale_products: number | null;
+  in_stock_products: number | null;
+  out_of_stock_products: number | null;
+  inventory_link_ratio: string | null;
 }
 export interface WalmartListingSummaryTotalProps extends ListingSummaryTotalProps {
   retire_products: number | null;

@@ -92,6 +92,11 @@ export interface GetScoreDto {
   page: number;
   page_size?: number;
 }
+export interface ViolationReasonDetail {
+  next_steps: string;
+  violation: string;
+  violation_detail: string;
+}
 export interface ViolationProps {
   created_at: string;
   id: number;
@@ -103,6 +108,7 @@ export interface ViolationProps {
   violation_id: string;
   violation_reason: string;
   violation_status: string;
+  specific_violation: ViolationReasonDetail;
 }
 
 export function getViolationsList(params: GetScoreDto): Promise<ResponsePageJson<ViolationProps>> {
@@ -113,6 +119,11 @@ export function getViolationsList(params: GetScoreDto): Promise<ResponsePageJson
   });
 }
 
+export interface WarningsReasonDetail {
+  next_steps: string;
+  warning: string;
+  warning_detail: string;
+}
 export interface WarningsProps {
   created_at: string;
   id: number;
@@ -122,7 +133,9 @@ export interface WarningsProps {
   warning_id: string;
   warning_reason: string;
   warning_status: string;
+  specific_warning: WarningsReasonDetail;
 }
+
 export function getWarningsList(params: GetScoreDto): Promise<ResponsePageJson<WarningsProps>> {
   return request({
     url: '/tiktok/warnings/list',

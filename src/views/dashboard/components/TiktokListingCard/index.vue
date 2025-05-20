@@ -68,7 +68,10 @@ const summaryList = shallowRef<ListingSummaryProps[]>([]);
 const summaryTotal = shallowRef<ListingSummaryTotalProps>({
   publish_products: 0,
   unpublish_products: 0,
-  total_sale_products: 0
+  sale_products: 0,
+  inventory_link_ratio: '0%',
+  in_stock_products: 0,
+  out_of_stock_products: 0
 });
 const loading = shallowRef(false);
 const getSummaryFun = async () => {
@@ -125,7 +128,10 @@ getSummaryFun();
 const getSummaries = () => {
   return [
     '汇总',
-    summaryTotal.value.total_sale_products || 0,
+    summaryTotal.value.sale_products || 0,
+    summaryTotal.value.in_stock_products || 0,
+    summaryTotal.value.out_of_stock_products || 0,
+    summaryTotal.value.inventory_link_ratio || '0%',
     summaryTotal.value.publish_products || 0,
     summaryTotal.value.unpublish_products || 0
   ];
