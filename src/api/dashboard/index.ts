@@ -25,8 +25,11 @@ export interface ListingSummaryTotalProps {
   out_of_stock_products: number | null;
   inventory_link_ratio: string | null;
 }
-export interface WalmartListingSummaryTotalProps extends ListingSummaryTotalProps {
+export interface WalmartListingSummaryTotalProps {
+  publish_products: number | null;
   retire_products: number | null;
+  total_sale_products: number | null;
+  unpublish_products: number | null;
 }
 export interface OrderSummaryTotalProps {
   today_total_sales: number | null;
