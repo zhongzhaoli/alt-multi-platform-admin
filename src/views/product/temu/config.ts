@@ -100,6 +100,10 @@ export const filterColumns: FilterColumnProps[] = [
         {
           label: 'PASIN',
           value: 'pasin'
+        },
+        {
+          label: 'ATU',
+          value: 'asin_to_sku'
         }
       ],
       width: 100
