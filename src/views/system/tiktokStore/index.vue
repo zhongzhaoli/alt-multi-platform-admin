@@ -28,7 +28,7 @@
         @table-refresh="getListFun"
       >
         <template #handle-left>
-          <el-button type="primary" disabled>新增店铺</el-button>
+          <el-button type="primary" @click="addStore">新增店铺</el-button>
         </template>
         <template #table-app_key="{ row }">
           <div class="textBox">
@@ -129,6 +129,15 @@
         </el-form-item>
       </el-form>
     </ConfirmDialog>
+    <ConfirmDialog
+      v-model="addStoreVisible"
+      title="新增店铺"
+      width="400px"
+      @submit="addStoreFun"
+      @closed="closedStoreVisible"
+    >
+      <el-input v-model="addStoreUrl" type="textarea" :rows="4" placeholder="请输入授权链接" />
+    </ConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -208,6 +217,29 @@ const dialogClosed = () => {
   editFormRef.value?.resetFields();
 };
 
+const addStoreVisible = shallowRef(false);
+const addStoreUrl = ref('');
+const closedStoreVisible = () => {
+  addStoreUrl.value = '';
+};
+const addStore = () => {
+  addStoreVisible.value = true;
+};
+const addStoreFun = () => {
+  useMessageBox('确认添加Tiktok店铺？', async () => {
+    try {
+      const params: API_TIKTOK.CreateStoreDto = {
+        url: addStoreUrl.value
+      };
+      await API_TIKTOK.createStore(params);
+      ElMessage.success('添加成功');
+      addStoreVisible.value = false;
+      getListFun();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
 const changeAvailable = async (row: API_TIKTOK.StoreProps) => {
   row.loading = true;
   try {

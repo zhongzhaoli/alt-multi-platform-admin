@@ -35,6 +35,18 @@ export function getStoreList(params?: GetStoreDto): Promise<ResponsePageJson<Sto
   });
 }
 
+// 新增店铺
+export interface CreateStoreDto {
+  url: string;
+}
+export function createStore(data: CreateStoreDto): Promise<any> {
+  return request({
+    url: '/tiktok/shop/add',
+    method: 'post',
+    data
+  });
+}
+
 // 用户绑定店铺回显
 export function userStoreIds(userId: string): Promise<ResponseJson<string[]>> {
   return request({
@@ -44,7 +56,7 @@ export function userStoreIds(userId: string): Promise<ResponseJson<string[]>> {
   });
 }
 
-export interface CreateStoreDto {
+export interface EditStoreDtoProps {
   shop_id: string;
   shop_name: string;
   app_secret: string;
@@ -54,7 +66,7 @@ export interface CreateStoreDto {
 }
 
 // 编辑店铺
-export interface EditStoreDto extends Partial<CreateStoreDto> {
+export interface EditStoreDto extends Partial<EditStoreDtoProps> {
   id: number;
   pause: 1 | 0;
 }

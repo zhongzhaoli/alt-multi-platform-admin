@@ -84,6 +84,15 @@ export const tableColumns: TableColumnProps[] = [
     align: 'center'
   },
   {
+    label: 'asin成功',
+    prop: 'asin_successes_quantity',
+    width: 120,
+    showOverflowTooltip: true,
+    sortable: 'custom',
+    sortOrders: ['descending', 'ascending', null],
+    align: 'center'
+  },
+  {
     label: '上架成功率',
     prop: 'listing_success_rate',
     width: 120,
