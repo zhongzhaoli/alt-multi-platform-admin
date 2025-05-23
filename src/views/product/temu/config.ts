@@ -110,6 +110,22 @@ export const filterColumns: FilterColumnProps[] = [
     }
   },
   {
+    label: '是否有库存',
+    prop: 'is_stock',
+    type: 'select',
+    width: 140,
+    selectOptions: [
+      {
+        label: '是',
+        value: 'True'
+      },
+      {
+        label: '否',
+        value: 'False'
+      }
+    ]
+  },
+  {
     label: '日期范围',
     prop: 'date',
     type: 'dateRange',

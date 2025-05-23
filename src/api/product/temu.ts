@@ -38,6 +38,7 @@ export interface TemuProductFilterProps {
   start_stock_number: number;
   end_stock_number: number;
   asin_to_sku: string;
+  is_stock: 'True' | 'False';
 }
 
 export interface GetProductDto extends Partial<TemuProductFilterProps> {
