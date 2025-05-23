@@ -4,6 +4,7 @@ export const tableColumns: TableColumnProps[] = [
   {
     type: 'index',
     width: 60,
+    label: '#',
     align: 'center',
     prop: 'id'
   },
